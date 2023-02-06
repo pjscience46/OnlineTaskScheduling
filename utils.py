@@ -11,7 +11,9 @@ from random import*
 import csv
 import codecs
 from numerics import*
-
+from processors import*
+from statistics import*
+import matplotlib.pyplot as plt
 
 
 
@@ -97,3 +99,197 @@ def load_nodes_from_csv(file):
             nodes += [Task(w,p_tild,d,c)]
     return nodes
 
+
+def compute_and_save(variation_parameter,result_directory, instances_nb) :
+    """
+
+    :param variation_parameter: Can be : 'fat', 'density', 'regular', 'jump', 'p', 'n'
+    :param result_directory: A path to a directory containing 4 empty directories named 'Amdahl', 'communication',
+                            'General', 'Roofline'.
+    :param instances_nb: The number of different tasks graphs you want to run for each set of parameters. Must be picked
+                         in the range [1,30]
+    :return: Save the results in the corresponding directory depending on the speedup model
+    """
+
+    # Fixed parameters
+    name_list = ['Amdahl', 'Communication', 'General', 'Roofline']
+    mu_paper = [(1 - sqrt(8 * sqrt(2) - 11)) / 2, (23 - sqrt(313)) / 18, (33 - sqrt(738)) / 27, (3 - sqrt(5)) / 2]
+    alpha_paper = [(sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2, 4 / 3, 2, 1]
+    P = 1500
+    n = 500
+
+    # Variations
+    p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate fat, density and regular
+    jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
+
+
+    for j in range(len(name_list)):
+
+        # Opening the result file
+        f = open(result_directory + str(name_list[j]) +
+                 "/all.csv", 'w', newline='')
+        writer = csv.writer(f)
+        writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
+
+        for k in range(len(parameter_list)):
+            for i in range(1, instances_nb + 1):
+
+                if variation_parameter == 'fat' or variation_parameter == 'density' or \
+                        variation_parameter == 'regular' :
+                    daggen_file = "DAGGEN/"+variation_parameter+"_variation/" + variation_parameter + "=" + \
+                                  str(parameter_list[k]) + "/" + str(i) + ".csv"
+                    node_file = "TASKS/n=500/" + str(i) + ".csv"
+                elif variation_parameter == 'jump' :
+                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
+                                  str(jump[k]) + "/" + str(i) + ".csv"
+                    node_file = "TASKS/n=500/" + str(i) + ".csv"
+
+                elif variation_parameter == 'n' :
+                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
+                                  str(n_list[k]) + "/" + str(i) + ".csv"
+                    node_file = "TASKS/n=" + str(n_list[k]) + "/" + str(i) + ".csv"
+                else :
+                    daggen_file = "DAGGEN/density_variation/density=0.5/" + str(i) + ".csv"
+                    node_file = "TASKS/n=500/" + str(i) + ".csv"
+
+
+                nodes = load_nodes_from_csv(node_file)
+                edges = extract_dependencies_from_csv(daggen_file)
+
+                mu_tild = mu_paper[j]
+                alpha_tild = alpha_paper[j]
+
+                if variation_parameter == 'p' :
+                    p_tild = p_list[k]
+                else :
+                    p_tild = P
+
+                task_graph = Graph(nodes, edges)
+                processors = Processors(p_tild)
+
+                if variation_parameter == 'n' :
+                    print("model : " + name_list[j], variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
+                elif variation_parameter == 'p' :
+                    print("model : " + name_list[j], variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
+                elif variation_parameter == 'jump' :
+                    print("model : " + name_list[j], variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
+                print("Computing adjacency matrix...")
+                adjacency = task_graph.get_adjacency()
+
+                speedup_model = name_list[j]
+
+                time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
+                time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
+                                                                     adjacency=adjacency, mu_tild=mu_tild
+                                                                     , speedup_model=speedup_model, P_tild=p_tild)
+
+                time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
+                                                                     adjacency=adjacency, mu_tild=mu_tild
+                                                                     , speedup_model=speedup_model, P_tild=p_tild)
+                if variation_parameter == "fat" or parameter_list == "density" or parameter_list == "regular" :
+                    writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
+                elif variation_parameter == "jump" :
+                    writer.writerow([str(jump[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
+                elif variation_parameter == "n" :
+                    writer.writerow([str(n_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
+                else :
+                    writer.writerow([str(p_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
+        f.close()
+
+def display_results(variation_parameter,result_directory) :
+
+    name_list = ["Amdahl", "Communication", "General", "Roofline"]
+    p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    for name in name_list:
+        Paper = [[] for i in range(10)]
+        Min_time = [[] for i in range(10)]
+        f = open(result_directory + name + "/all.csv", newline='')
+        reader = csv.reader(f)
+        for row in reader:
+            if row[0] != variation_parameter:
+                if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p")\
+                        or (row[0] == "1" and variation_parameter == "jump"):
+                    index = 0
+                if (row[0] == "0.2") or (row[0] == "2") or (row[0] == "200") or (row[0] == "1000"):
+                    index = 1
+                if (row[0] == "0.3") or (row[0] == "3") or (row[0] == "300") or (row[0] == "1500"):
+                    index = 2
+                if (row[0] == "0.4") or (row[0] == "4") or (row[0] == "400") or (row[0] == "2000"):
+                    index = 3
+                if (row[0] == "0.5") or (row[0] == "5") or (row[0] == "500" and variation_parameter == "n")\
+                        or (row[0] == "2500"):
+                    index = 4
+                if (row[0] == "0.6") or (row[0] == "6") or (row[0] == "600") or (row[0] == "3000"):
+                    index = 5
+                if (row[0] == "0.7") or (row[0] == "7") or (row[0] == "700") or (row[0] == "3500"):
+                    index = 6
+                if (row[0] == "0.8") or (row[0] == "8") or (row[0] == "800") or (row[0] == "4000"):
+                    index = 7
+                if (row[0] == "0.9") or (row[0] == "9") or (row[0] == "900") or (row[0] == "4500"):
+                    index = 8
+                if (row[0] == "1" and ( variation_parameter =="fat" or variation_parameter == "density"
+                                        or variation_parameter == "regular")) or \
+                                        (row[0] == "10" and variation_parameter == "jump") or \
+                                        (row[0] == "1000" and variation_parameter == 'n') \
+                                        or (row[0] == "5000"):
+                    index = 9
+
+                Paper[index] += [float(row[1]) / float(row[3])]
+                Min_time[index] += [float(row[2]) / float(row[3])]
+
+        f.close()
+        f = open(result_directory + name + "/mean.csv", 'w', newline='')
+        writer = csv.writer(f)
+        mean_Paper = []
+        mean_Time = []
+        if variation_parameter == "density" or variation_parameter == "fat" or variation_parameter == "regular" :
+            new_list = parameter_list
+        elif variation_parameter == "jump" :
+            new_list = jump_list
+        elif variation_parameter == "n" :
+            new_list = n_list
+        else :
+            new_list = p_list
+        for k in new_list:
+            if k == new_list[0]:
+                index = 0
+            if k == new_list[1]:
+                index = 1
+            if k == new_list[2]:
+                index = 2
+            if k == new_list[3]:
+                index = 3
+            if k == new_list[4]:
+                index = 4
+            if k == new_list[5]:
+                index = 5
+            if k == new_list[6]:
+                index = 6
+            if k == new_list[7]:
+                index = 7
+            if k == new_list[8]:
+                index = 8
+            if k == new_list[9]:
+                index = 9
+
+            writer.writerow([k, mean(Paper[index]), mean(Min_time[index])])
+            mean_Paper += [mean(Paper[index])]
+            mean_Time += [mean(Min_time[index])]
+        f.close()
+
+        # Graphic parameters for the display
+
+        plt.plot(new_list, mean_Paper, label='Algo Paper')
+        plt.plot(new_list, mean_Time, label='Min Time')
+        # plt.boxplot([Paper[0],Min_time[0]])
+        plt.xlabel(variation_parameter)
+        plt.legend()
+        plt.ylabel("Normalized Makespan")
+        plt.savefig(result_directory + variation_parameter + "_" + name)
+        plt.show()

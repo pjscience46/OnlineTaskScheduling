@@ -133,7 +133,7 @@ class Task:
         p_max = min(inter, p_tild)
         return round(p_max)
 
-    def allocate_processor_algo(self, P, mu_tild,speedup_model):
+    def allocate_processor_algo(self, P, mu_tild, alpha,speedup_model):
         """Return the number of processors needed to compute a given task. It's the implementation of the algorithm 2
         from the paper."""
 
@@ -147,16 +147,16 @@ class Task:
         t_min = self.get_execution_time(p_max,speedup_model)
         a_min = p_max * t_min
 
-        Alpha_min = inf
+        Beta_min = inf
         final_nb_processors = -1
 
         for i in range(1, p_max + 1,):
             Alpha = self.get_area(i,speedup_model) / a_min
             Beta = self.get_execution_time(i,speedup_model) / t_min
 
-            if Beta < (1 - 2 * mu_tild) / (mu_tild * (1 - mu_tild)):
-                if Alpha < Alpha_min:
-                    Alpha_min = Alpha
+            if Alpha <= alpha:
+                if Beta < Beta_min:
+                    Beta_min = Beta
                     final_nb_processors = i
 
         if speedup_model == "Roofline":

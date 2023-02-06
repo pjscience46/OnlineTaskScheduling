@@ -43,7 +43,7 @@ class Processors:
     ## Methods
     ############################################################
 
-    def online_scheduling_algorithm(self,task_graph,allocation_function,save_in_logs=True,adjacency=[],
+    def online_scheduling_algorithm(self,task_graph,allocation_function,alpha,save_in_logs=True,adjacency=[],
                                     P_tild=P,mu_tild=mu,speedup_model="General"):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
@@ -76,7 +76,7 @@ class Processors:
         for task in nodes:  # Insert all tasks without parents in the waiting queue
             if task_graph.get_parents(nodes.index(task),adjacency) == []:
                 if allocation_function == 1 :
-                    task.allocate_processor_algo(P_tild,mu_tild,speedup_model)
+                    task.allocate_processor_algo(P_tild,mu_tild,alpha,speedup_model)
                 elif allocation_function == 2 :
                     task.allocate_processor_Min_time(P_tild,mu_tild,speedup_model)
                 elif allocation_function == 3 :
@@ -110,7 +110,7 @@ class Processors:
                 for task in nodes:
                     if task.get_status() == 1:
                         if allocation_function == 1:
-                            task.allocate_processor_algo(P_tild, mu_tild,speedup_model)
+                            task.allocate_processor_algo(P_tild, mu_tild,alpha,speedup_model)
                         elif allocation_function == 2:
                             task.allocate_processor_Min_time(P_tild, mu_tild,speedup_model)
                         elif allocation_function == 3:
@@ -149,9 +149,8 @@ class Processors:
         ## Reseting the status and the clock of the processors
         task_graph.init_status()
         final_time = self.get_time()
-        self.set_time(0)
-
         print("Total Execution time :", self.get_time(), "seconds")
+        self.set_time(0)
         return final_time
 
 
