@@ -175,6 +175,8 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
                     print("model : " + name_list[j], variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'jump' :
                     print("model : " + name_list[j], variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
+                else :
+                    print("model : " + name_list[j], variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
                 print("Computing adjacency matrix...")
                 adjacency = task_graph.get_adjacency()
 
@@ -188,7 +190,7 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild)
-                if variation_parameter == "fat" or parameter_list == "density" or parameter_list == "regular" :
+                if variation_parameter == "fat" or variation_parameter == "density" or variation_parameter == "regular" :
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
                 elif variation_parameter == "jump" :
                     writer.writerow([str(jump[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
@@ -242,7 +244,6 @@ def display_results(variation_parameter,result_directory) :
 
                 Paper[index] += [float(row[1]) / float(row[3])]
                 Min_time[index] += [float(row[2]) / float(row[3])]
-
         f.close()
         f = open(result_directory + name + "/mean.csv", 'w', newline='')
         writer = csv.writer(f)

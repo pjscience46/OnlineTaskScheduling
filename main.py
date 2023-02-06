@@ -5,9 +5,11 @@ from statistics import*
 import matplotlib.pyplot as plt
 
 
-#compute_and_save('jump','Results_DAGGEN/WEEK 7/test/',1)
+compute_and_save('regular','Results_V2/',5)
 
-#display_results('jump','Results_DAGGEN/WEEK 7/test/')
+display_results('regular','Results_V2/')
+
+
 
 
 
