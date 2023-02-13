@@ -103,7 +103,7 @@ def load_nodes_from_csv(file):
 def compute_and_save(variation_parameter,result_directory, instances_nb) :
     """
 
-    :param variation_parameter: Can be : 'fat', 'density', 'regular', 'jump', 'p', 'n'
+    :param variation_parameter: Can be : 'Fat', 'density', 'regular', 'jump', 'p', 'n'
     :param result_directory: A path to a directory containing 4 empty directories named 'Amdahl', 'communication',
                             'General', 'Roofline'.
     :param instances_nb: The number of different tasks graphs you want to run for each set of parameters. Must be picked
@@ -121,7 +121,7 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
     # Variations
     p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate fat, density and regular
+    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
 
@@ -136,7 +136,7 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
         for k in range(len(parameter_list)):
             for i in range(1, instances_nb + 1):
 
-                if variation_parameter == 'fat' or variation_parameter == 'density' or \
+                if variation_parameter == 'Fat' or variation_parameter == 'density' or \
                         variation_parameter == 'regular' :
                     daggen_file = "DAGGEN/"+variation_parameter+"_variation/" + variation_parameter + "=" + \
                                   str(parameter_list[k]) + "/" + str(i) + ".csv"
@@ -190,7 +190,7 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild)
-                if variation_parameter == "fat" or variation_parameter == "density" or variation_parameter == "regular" :
+                if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular" :
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
                 elif variation_parameter == "jump" :
                     writer.writerow([str(jump[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
@@ -235,7 +235,7 @@ def display_results(variation_parameter,result_directory) :
                     index = 7
                 if (row[0] == "0.9") or (row[0] == "9") or (row[0] == "900") or (row[0] == "4500"):
                     index = 8
-                if (row[0] == "1" and ( variation_parameter =="fat" or variation_parameter == "density"
+                if (row[0] == "1" and ( variation_parameter =="Fat" or variation_parameter == "density"
                                         or variation_parameter == "regular")) or \
                                         (row[0] == "10" and variation_parameter == "jump") or \
                                         (row[0] == "1000" and variation_parameter == 'n') \
@@ -249,7 +249,7 @@ def display_results(variation_parameter,result_directory) :
         writer = csv.writer(f)
         mean_Paper = []
         mean_Time = []
-        if variation_parameter == "density" or variation_parameter == "fat" or variation_parameter == "regular" :
+        if variation_parameter == "density" or variation_parameter == "Fat" or variation_parameter == "regular" :
             new_list = parameter_list
         elif variation_parameter == "jump" :
             new_list = jump_list
@@ -293,4 +293,53 @@ def display_results(variation_parameter,result_directory) :
         plt.legend()
         plt.ylabel("Normalized Makespan")
         plt.savefig(result_directory + variation_parameter + "_" + name)
+        plt.show()
+
+def display_multiple_results(variation_parameter,saving_directory) :
+
+    name_1 = "Paper V1"
+    name_2 = "Paper V2"
+
+    name_list = ["Amdahl", "Communication", "General", "Roofline"]
+
+    for name in name_list :
+        file_1 = "Results_V1/" + variation_parameter + "/" + name + "/"
+        file_2 = "Results_V2/" + variation_parameter + "/" + name + "/"
+        p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+        n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+        jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+        if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
+            new_list = parameter_list
+        elif variation_parameter == "Jump":
+            new_list = jump_list
+        elif variation_parameter == "n":
+            new_list = n_list
+        else:
+            new_list = p_list
+
+        f = open(file_1 + "/mean.csv", 'r', newline='')
+        reader = csv.reader(f)
+        mean_Paper_file_1 = []
+        if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
+            next(reader)
+        for line in reader :
+            mean_Paper_file_1 += [float(line[1])]
+        f.close()
+        f = open(file_2 + "/mean.csv", 'r', newline='')
+        reader = csv.reader(f)
+        mean_Paper_file_2 = []
+        mean_Time = []
+        for line in reader :
+            mean_Paper_file_2 += [float(line[1])]
+            mean_Time += [float(line[2])]
+        plt.plot(new_list, mean_Paper_file_1, label=name_1)
+        plt.plot(new_list, mean_Paper_file_2, label=name_2)
+        plt.plot(new_list, mean_Time, label='Min Time')
+        plt.xlabel(variation_parameter)
+        plt.legend()
+        plt.title(variation_parameter + " , " + name)
+        plt.ylabel("Normalized Makespan")
+        plt.savefig(saving_directory + "/" + variation_parameter + "/" + name + ".png")
         plt.show()

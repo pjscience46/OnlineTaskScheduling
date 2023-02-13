@@ -17,7 +17,7 @@ for name in name_list :
     f = open(name+"/all.csv",newline='')
     reader = csv.reader(f)
     for row in reader :
-        if row[0] != "fat" :
+        if row[0] != "Fat" :
             index = int(float(row[0])*10)
             Paper[index] += [float(row[1]) / float(row[3])]
             Min_time[index] += [float(row[2]) / float(row[3])]
