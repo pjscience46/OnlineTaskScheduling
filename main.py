@@ -24,6 +24,8 @@ import matplotlib.pyplot as plt
 #display_multiple_results("Density","Merging_V1_and_V2")
 #display_multiple_results("Fat","Merging_V1_and_V2")
 #display_multiple_results("Jump","Merging_V1_and_V2")
-display_multiple_results("n","Merging_V1_and_V2")
-display_multiple_results("p","Merging_V1_and_V2")
-display_multiple_results("Regular","Merging_V1_and_V2")
+#display_multiple_results("n","Merging_V1_and_V2")
+#display_multiple_results("p","Merging_V1_and_V2")
+#display_multiple_results("Regular","Merging_V1_and_V2")
+
+display_results_boxplot("Merging_V1_and_V2")

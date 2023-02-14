@@ -334,6 +334,9 @@ def display_multiple_results(variation_parameter,saving_directory) :
         for line in reader :
             mean_Paper_file_2 += [float(line[1])]
             mean_Time += [float(line[2])]
+
+        # Display parameters
+        ###############################################################################################################
         plt.plot(new_list, mean_Paper_file_1, label=name_1)
         plt.plot(new_list, mean_Paper_file_2, label=name_2)
         plt.plot(new_list, mean_Time, label='Min Time')
@@ -342,4 +345,30 @@ def display_multiple_results(variation_parameter,saving_directory) :
         plt.title(variation_parameter + " , " + name)
         plt.ylabel("Normalized Makespan")
         plt.savefig(saving_directory + "/" + variation_parameter + "/" + name + ".png")
+        plt.show()
+
+def display_results_boxplot(saving_directory) :
+    name_list = ["Amdahl", "Communication", "General", "Roofline"]
+    parameters = ["Density", "Fat", "Jump", "n", "p"]
+    for name in name_list :
+        Paper_V1 = []
+        Paper_V2 = []
+        Min_Time = []
+        f = open("Results_V1/P/" + name + "/all.csv",'r',newline = '')
+        reader = csv.reader(f)
+        for line in reader :
+            if line[0] == "1500" :
+                Paper_V1 += [float(line[1]) / float(line[3])]
+        f.close()
+        f = open("Results_V2/P/" + name + "/all.csv", 'r', newline='')
+        reader = csv.reader(f)
+        for line in reader:
+            if line[0] == "1500":
+                Paper_V2 += [float(line[1]) / float(line[3])]
+                Min_Time += [float(line[2]) / float(line[3])]
+        f.close()
+        plt.boxplot([Paper_V1,Paper_V2,Min_Time])
+        plt.xticks([1, 2, 3], ['Paper_V1', 'Paper_V2', 'Min Time'])
+        plt.ylabel('Normalized Makespan')
+        plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
         plt.show()
