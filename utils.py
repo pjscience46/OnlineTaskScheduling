@@ -295,16 +295,16 @@ def display_results(variation_parameter,result_directory) :
         plt.savefig(result_directory + variation_parameter + "_" + name)
         plt.show()
 
-def display_multiple_results(variation_parameter,saving_directory) :
+def display_multiple_results(version1,version2,variation_parameter,saving_directory) :
 
-    name_1 = "Paper V1"
-    name_2 = "Paper V2"
+    name_1 = "Paper " + version1
+    name_2 = "Paper " + version2
 
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
 
     for name in name_list :
-        file_1 = "Results_V1/" + variation_parameter + "/" + name + "/"
-        file_2 = "Results_V2/" + variation_parameter + "/" + name + "/"
+        file_1 = "Results_"+version1+"/" + variation_parameter + "/" + name + "/"
+        file_2 = "Results_"+version2+"/" + variation_parameter + "/" + name + "/"
         p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
         n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
@@ -322,8 +322,9 @@ def display_multiple_results(variation_parameter,saving_directory) :
         f = open(file_1 + "/mean.csv", 'r', newline='')
         reader = csv.reader(f)
         mean_Paper_file_1 = []
-        if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
-            next(reader)
+        if version1 == "V1" :
+            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
+                next(reader)
         for line in reader :
             mean_Paper_file_1 += [float(line[1])]
         f.close()
@@ -347,20 +348,20 @@ def display_multiple_results(variation_parameter,saving_directory) :
         plt.savefig(saving_directory + "/" + variation_parameter + "/" + name + ".png")
         plt.show()
 
-def display_results_boxplot(saving_directory) :
+def display_results_boxplot(version1,version2,saving_directory) :
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
     parameters = ["Density", "Fat", "Jump", "n", "p"]
     for name in name_list :
         Paper_V1 = []
         Paper_V2 = []
         Min_Time = []
-        f = open("Results_V1/P/" + name + "/all.csv",'r',newline = '')
+        f = open("Results_"+version1+"/P/" + name + "/all.csv",'r',newline = '')
         reader = csv.reader(f)
         for line in reader :
             if line[0] == "1500" :
                 Paper_V1 += [float(line[1]) / float(line[3])]
         f.close()
-        f = open("Results_V2/P/" + name + "/all.csv", 'r', newline='')
+        f = open("Results_"+version2+"/P/" + name + "/all.csv", 'r', newline='')
         reader = csv.reader(f)
         for line in reader:
             if line[0] == "1500":
@@ -368,7 +369,7 @@ def display_results_boxplot(saving_directory) :
                 Min_Time += [float(line[2]) / float(line[3])]
         f.close()
         plt.boxplot([Paper_V1,Paper_V2,Min_Time])
-        plt.xticks([1, 2, 3], ['Paper_V1', 'Paper_V2', 'Min Time'])
+        plt.xticks([1, 2, 3], ['Paper_'+version1, 'Paper_'+version2, 'Min Time'])
         plt.ylabel('Normalized Makespan')
         plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
         plt.show()

@@ -145,7 +145,7 @@ class Task:
 
         p_max = self.get_p_max(P,speedup_model)
         t_min = self.get_execution_time(p_max,speedup_model)
-        a_min = p_max * t_min
+        a_min = self.get_execution_time(1,speedup_model)
 
         Beta_min = inf
         final_nb_processors = -1
