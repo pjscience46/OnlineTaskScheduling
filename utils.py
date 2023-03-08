@@ -323,7 +323,8 @@ def display_multiple_results(version1,version2,variation_parameter,saving_direct
         reader = csv.reader(f)
         mean_Paper_file_1 = []
         if version1 == "V1" :
-            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
+            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular"\
+                    or variation_parameter == "Jump":
                 next(reader)
         for line in reader :
             mean_Paper_file_1 += [float(line[1])]
