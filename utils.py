@@ -100,7 +100,7 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save(variation_parameter,result_directory, instances_nb) :
+def compute_and_save(variation_parameter,result_directory, instances_nb,version) :
     """
 
     :param variation_parameter: Can be : 'Fat', 'density', 'regular', 'jump', 'p', 'n'
@@ -185,11 +185,13 @@ def compute_and_save(variation_parameter,result_directory, instances_nb) :
                 time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
-                                                                     , speedup_model=speedup_model, P_tild=p_tild)
+                                                                     , speedup_model=speedup_model, P_tild=p_tild
+                                                                     ,version=version)
 
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
-                                                                     , speedup_model=speedup_model, P_tild=p_tild)
+                                                                     , speedup_model=speedup_model, P_tild=p_tild
+                                                                     ,version=version)
                 if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular" :
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
                 elif variation_parameter == "jump" :

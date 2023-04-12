@@ -44,7 +44,7 @@ class Processors:
     ############################################################
 
     def online_scheduling_algorithm(self,task_graph,allocation_function,alpha,save_in_logs=True,adjacency=[],
-                                    P_tild=P,mu_tild=mu,speedup_model="General"):
+                                    P_tild=P,mu_tild=mu,speedup_model="General",version=0):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
         It's the implementation of the algorithm 1 from the paper. Concerning the allocation_function :
@@ -76,7 +76,7 @@ class Processors:
         for task in nodes:  # Insert all tasks without parents in the waiting queue
             if task_graph.get_parents(nodes.index(task),adjacency) == []:
                 if allocation_function == 1 :
-                    task.allocate_processor_algo(P_tild,mu_tild,alpha,speedup_model)
+                    task.allocate_processor_algo(P_tild,mu_tild,alpha,speedup_model,version)
                 elif allocation_function == 2 :
                     task.allocate_processor_Min_time(P_tild,mu_tild,speedup_model)
                 elif allocation_function == 3 :
@@ -110,7 +110,7 @@ class Processors:
                 for task in nodes:
                     if task.get_status() == 1:
                         if allocation_function == 1:
-                            task.allocate_processor_algo(P_tild, mu_tild,alpha,speedup_model)
+                            task.allocate_processor_algo(P_tild, mu_tild,alpha,speedup_model,version)
                         elif allocation_function == 2:
                             task.allocate_processor_Min_time(P_tild, mu_tild,speedup_model)
                         elif allocation_function == 3:
