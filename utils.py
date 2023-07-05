@@ -6,15 +6,14 @@
 
 # A bunch of usefull function to generate task graph and manipulate csv files.
 
-from task import*
-from random import*
+from task import *
+from random import *
 import csv
 import codecs
-from numerics import*
-from processors import*
-from statistics import*
+from numerics import *
+from processors import *
+from statistics import *
 import matplotlib.pyplot as plt
-
 
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
@@ -27,14 +26,16 @@ def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds
         2 ** (randint(r_c_bounds[0], r_c_bounds[1]))
     return Task(w, p, d, c)
 
-def generate_n_tasks(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds) :
+
+def generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
     """Generate a list of n tasks based on the boundaries written in numerics"""
     output = []
-    for i in range(n) :
+    for i in range(n):
         output += [generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)]
     return output
 
-def extract_dependencies_from_csv(file,utf_code="utf-16") :
+
+def extract_dependencies_from_csv(file, utf_code="utf-16"):
     """
     This function extract dependencies from a DAGGEN Output under a csv format.
 
@@ -43,38 +44,41 @@ def extract_dependencies_from_csv(file,utf_code="utf-16") :
 
     """
     edges = []
-    f = codecs.open(file,"rb",utf_code)
+    f = codecs.open(file, "rb", utf_code)
     reader = csv.reader(f)
-    for row in reader :
-        if len(row)==1 and row[0][0] != '/' and row[0][0] != 'd' and row[0][0] != '}':
+    for row in reader:
+        if len(row) == 1 and row[0][0] != '/' and row[0][0] != 'd' and row[0][0] != '}':
             element = row[0][2:]
             i = 0
             while element[i] != ' ':
                 i += 1
             first_node = int(element[0:i]) - 1
-            while element[i] == "-" or element[i] == ">" or element[i] == " " :
+            while element[i] == "-" or element[i] == ">" or element[i] == " ":
                 i += 1
-            j=i
+            j = i
             while element[j] != ' ':
                 j += 1
             second_node = int(element[i:j]) - 1
-            edge = [first_node,second_node]
+            edge = [first_node, second_node]
             edges += [edge]
     f.close()
     return edges
 
-def generate_nodes_edges(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds,dependency_file) :
-    nodes = generate_n_tasks(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
+
+def generate_nodes_edges(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds,
+                         dependency_file):
+    nodes = generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
     edges = extract_dependencies_from_csv(dependency_file)
-    for edge in edges :             # We need to pass from numbers to task objects
+    for edge in edges:  # We need to pass from numbers to task objects
         edge[0] = nodes[edge[0]]
         edge[1] = nodes[edge[1]]
-    return [nodes,edges]
+    return [nodes, edges]
 
-def save_nodes_in_csv(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds,file):
+
+def save_nodes_in_csv(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds, file):
     """Saves a set of nodes and their parameters in a csv file"""
-    nodes = generate_n_tasks(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
-    f = open(file, 'w',newline='')
+    nodes = generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
+    f = open(file, 'w', newline='')
     writer = csv.writer(f)
     writer.writerow(['w', 'p', 'd', 'c'])
     for task in nodes:
@@ -82,25 +86,26 @@ def save_nodes_in_csv(n,w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_
         p = task.get_p()
         d = task.get_d()
         c = task.get_c()
-        writer.writerow([str(w),str(p),str(d),str(c)])
+        writer.writerow([str(w), str(p), str(d), str(c)])
     f.close()
+
 
 def load_nodes_from_csv(file):
     """Loads a set of nodes from a csv file"""
     f = open(file, 'r', newline='')
     reader = csv.reader(f)
     nodes = []
-    for row in reader :
+    for row in reader:
         if row[0] != 'w':
             w = float(row[0])
             p_tild = float(row[1])
             d = float(row[2])
             c = float(row[3])
-            nodes += [Task(w,p_tild,d,c)]
+            nodes += [Task(w, p_tild, d, c)]
     return nodes
 
 
-def compute_and_save(variation_parameter,result_directory, instances_nb,version) :
+def compute_and_save(variation_parameter, result_directory, instances_nb, version):
     """
 
     :param variation_parameter: Can be : 'Fat', 'density', 'regular', 'jump', 'p', 'n'
@@ -121,9 +126,10 @@ def compute_and_save(variation_parameter,result_directory, instances_nb,version)
     # Variations
     p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    # n_list = [1000]
     parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
+    # parameter_list = [0.1]
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
-
 
     for j in range(len(name_list)):
 
@@ -137,23 +143,22 @@ def compute_and_save(variation_parameter,result_directory, instances_nb,version)
             for i in range(1, instances_nb + 1):
 
                 if variation_parameter == 'Fat' or variation_parameter == 'density' or \
-                        variation_parameter == 'regular' :
-                    daggen_file = "DAGGEN/"+variation_parameter+"_variation/" + variation_parameter + "=" + \
+                        variation_parameter == 'regular':
+                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
                                   str(parameter_list[k]) + "/" + str(i) + ".csv"
                     node_file = "TASKS/n=500/" + str(i) + ".csv"
-                elif variation_parameter == 'jump' :
+                elif variation_parameter == 'jump':
                     daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
                                   str(jump[k]) + "/" + str(i) + ".csv"
                     node_file = "TASKS/n=500/" + str(i) + ".csv"
 
-                elif variation_parameter == 'n' :
+                elif variation_parameter == 'n':
                     daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
                                   str(n_list[k]) + "/" + str(i) + ".csv"
                     node_file = "TASKS/n=" + str(n_list[k]) + "/" + str(i) + ".csv"
-                else :
+                else:
                     daggen_file = "DAGGEN/density_variation/density=0.5/" + str(i) + ".csv"
                     node_file = "TASKS/n=500/" + str(i) + ".csv"
-
 
                 nodes = load_nodes_from_csv(node_file)
                 edges = extract_dependencies_from_csv(daggen_file)
@@ -161,22 +166,24 @@ def compute_and_save(variation_parameter,result_directory, instances_nb,version)
                 mu_tild = mu_paper[j]
                 alpha_tild = alpha_paper[j]
 
-                if variation_parameter == 'p' :
+                if variation_parameter == 'p':
                     p_tild = p_list[k]
-                else :
+                else:
                     p_tild = P
 
                 task_graph = Graph(nodes, edges)
                 processors = Processors(p_tild)
 
-                if variation_parameter == 'n' :
-                    print("model : " + name_list[j], variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
-                elif variation_parameter == 'p' :
+                if variation_parameter == 'n':
+                    print("\nmodel : " + name_list[j],
+                          variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
+                elif variation_parameter == 'p':
                     print("model : " + name_list[j], variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
-                elif variation_parameter == 'jump' :
+                elif variation_parameter == 'jump':
                     print("model : " + name_list[j], variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
-                else :
-                    print("model : " + name_list[j], variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
+                else:
+                    print("model : " + name_list[j],
+                          variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
                 print("Computing adjacency matrix...")
                 adjacency = task_graph.get_adjacency()
 
@@ -186,28 +193,30 @@ def compute_and_save(variation_parameter,result_directory, instances_nb,version)
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
-                                                                     ,version=version)
+                                                                     , version=version)
 
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
-                                                                     ,version=version)
-                if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular" :
+                                                                     , version=version)
+                if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular":
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                elif variation_parameter == "jump" :
+                elif variation_parameter == "jump":
                     writer.writerow([str(jump[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                elif variation_parameter == "n" :
+                elif variation_parameter == "n":
                     writer.writerow([str(n_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                else :
+                else:
                     writer.writerow([str(p_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
         f.close()
 
-def display_results(variation_parameter,result_directory) :
 
+def display_results(variation_parameter, result_directory):
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
     p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    # n_list = [100, 200, 300]
     parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    # parameter_list = [0.1, 0.5, 1]
     jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     for name in name_list:
@@ -217,7 +226,7 @@ def display_results(variation_parameter,result_directory) :
         reader = csv.reader(f)
         for row in reader:
             if row[0] != variation_parameter:
-                if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p")\
+                if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p") \
                         or (row[0] == "1" and variation_parameter == "jump"):
                     index = 0
                 if (row[0] == "0.2") or (row[0] == "2") or (row[0] == "200") or (row[0] == "1000"):
@@ -226,7 +235,7 @@ def display_results(variation_parameter,result_directory) :
                     index = 2
                 if (row[0] == "0.4") or (row[0] == "4") or (row[0] == "400") or (row[0] == "2000"):
                     index = 3
-                if (row[0] == "0.5") or (row[0] == "5") or (row[0] == "500" and variation_parameter == "n")\
+                if (row[0] == "0.5") or (row[0] == "5") or (row[0] == "500" and variation_parameter == "n") \
                         or (row[0] == "2500"):
                     index = 4
                 if (row[0] == "0.6") or (row[0] == "6") or (row[0] == "600") or (row[0] == "3000"):
@@ -237,11 +246,11 @@ def display_results(variation_parameter,result_directory) :
                     index = 7
                 if (row[0] == "0.9") or (row[0] == "9") or (row[0] == "900") or (row[0] == "4500"):
                     index = 8
-                if (row[0] == "1" and ( variation_parameter =="Fat" or variation_parameter == "density"
-                                        or variation_parameter == "regular")) or \
-                                        (row[0] == "10" and variation_parameter == "jump") or \
-                                        (row[0] == "1000" and variation_parameter == 'n') \
-                                        or (row[0] == "5000"):
+                if (row[0] == "1" and (variation_parameter == "Fat" or variation_parameter == "density"
+                                       or variation_parameter == "regular")) or \
+                        (row[0] == "10" and variation_parameter == "jump") or \
+                        (row[0] == "1000" and variation_parameter == 'n') \
+                        or (row[0] == "5000"):
                     index = 9
 
                 Paper[index] += [float(row[1]) / float(row[3])]
@@ -251,13 +260,13 @@ def display_results(variation_parameter,result_directory) :
         writer = csv.writer(f)
         mean_Paper = []
         mean_Time = []
-        if variation_parameter == "density" or variation_parameter == "Fat" or variation_parameter == "regular" :
+        if variation_parameter == "density" or variation_parameter == "Fat" or variation_parameter == "regular":
             new_list = parameter_list
-        elif variation_parameter == "jump" :
+        elif variation_parameter == "jump":
             new_list = jump_list
-        elif variation_parameter == "n" :
+        elif variation_parameter == "n":
             new_list = n_list
-        else :
+        else:
             new_list = p_list
         for k in new_list:
             if k == new_list[0]:
@@ -297,16 +306,16 @@ def display_results(variation_parameter,result_directory) :
         plt.savefig(result_directory + variation_parameter + "_" + name)
         plt.show()
 
-def display_multiple_results(version1,version2,variation_parameter,saving_directory) :
 
+def display_multiple_results(version1, version2, variation_parameter, saving_directory):
     name_1 = "Paper " + version1
     name_2 = "Paper " + version2
 
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
 
-    for name in name_list :
-        file_1 = "Results_"+version1+"/" + variation_parameter + "/" + name + "/"
-        file_2 = "Results_"+version2+"/" + variation_parameter + "/" + name + "/"
+    for name in name_list:  
+        file_1 = "Results_" + version1 + "/" + variation_parameter + "/" + name + "/"
+        file_2 = "Results_" + version2 + "/" + variation_parameter + "/" + name + "/"
         p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
         n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
         parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
@@ -324,18 +333,18 @@ def display_multiple_results(version1,version2,variation_parameter,saving_direct
         f = open(file_1 + "/mean.csv", 'r', newline='')
         reader = csv.reader(f)
         mean_Paper_file_1 = []
-        if version1 == "V1" :
-            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular"\
+        if version1 == "V1":
+            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular" \
                     or variation_parameter == "Jump":
                 next(reader)
-        for line in reader :
+        for line in reader:
             mean_Paper_file_1 += [float(line[1])]
         f.close()
         f = open(file_2 + "/mean.csv", 'r', newline='')
         reader = csv.reader(f)
         mean_Paper_file_2 = []
         mean_Time = []
-        for line in reader :
+        for line in reader:
             mean_Paper_file_2 += [float(line[1])]
             mean_Time += [float(line[2])]
 
@@ -351,28 +360,29 @@ def display_multiple_results(version1,version2,variation_parameter,saving_direct
         plt.savefig(saving_directory + "/" + variation_parameter + "/" + name + ".png")
         plt.show()
 
-def display_results_boxplot(version1,version2,saving_directory) :
+
+def display_results_boxplot(version1, version2, saving_directory):
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
     parameters = ["Density", "Fat", "Jump", "n", "p"]
-    for name in name_list :
+    for name in name_list:
         Paper_V1 = []
         Paper_V2 = []
         Min_Time = []
-        f = open("Results_"+version1+"/P/" + name + "/all.csv",'r',newline = '')
+        f = open("Results_" + version1 + "/P/" + name + "/all.csv", 'r', newline='')
         reader = csv.reader(f)
-        for line in reader :
-            if line[0] == "1500" :
+        for line in reader:
+            if line[0] == "1500":
                 Paper_V1 += [float(line[1]) / float(line[3])]
         f.close()
-        f = open("Results_"+version2+"/P/" + name + "/all.csv", 'r', newline='')
+        f = open("Results_" + version2 + "/P/" + name + "/all.csv", 'r', newline='')
         reader = csv.reader(f)
         for line in reader:
             if line[0] == "1500":
                 Paper_V2 += [float(line[1]) / float(line[3])]
                 Min_Time += [float(line[2]) / float(line[3])]
         f.close()
-        plt.boxplot([Paper_V1,Paper_V2,Min_Time])
-        plt.xticks([1, 2, 3], ['Paper_'+version1, 'Paper_'+version2, 'Min Time'])
+        plt.boxplot([Paper_V1, Paper_V2, Min_Time])
+        plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
         plt.ylabel('Normalized Makespan')
         plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
         plt.show()
