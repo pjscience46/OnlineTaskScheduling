@@ -11,6 +11,7 @@ from graph import *
 import csv
 from math import *
 from datetime import datetime
+from model import *
 
 
 class Processors:
@@ -45,7 +46,7 @@ class Processors:
     ############################################################
 
     def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, save_in_logs=True, adjacency=[],
-                                    P_tild=P, mu_tild=mu, speedup_model="General", version=0):
+                                    P_tild=P, mu_tild=mu, speedup_model: Model = GeneralModel(), version=0):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
         It's the implementation of the algorithm 1 from the paper. Concerning the allocation_function :

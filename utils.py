@@ -14,7 +14,9 @@ from numerics import *
 from processors import *
 from statistics import *
 import matplotlib.pyplot as plt
+from model import *
 
+MODEL_LIST = [AmdahlModel(), CommunicationModel(), GeneralModel(), RooflineModel()]
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
     """Generate a task based on the boundaries written in numerics"""
@@ -117,9 +119,10 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     """
 
     # Fixed parameters
-    name_list = ['Amdahl', 'Communication', 'General', 'Roofline']
-    mu_paper = [(1 - sqrt(8 * sqrt(2) - 11)) / 2, (23 - sqrt(313)) / 18, (33 - sqrt(738)) / 27, (3 - sqrt(5)) / 2]
-    alpha_paper = [(sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2, 4 / 3, 2, 1]
+    model_list = MODEL_LIST
+    # name_list = ['Amdahl', 'Communication', 'General', 'Roofline']
+    # mu_paper = [(1 - sqrt(8 * sqrt(2) - 11)) / 2, (23 - sqrt(313)) / 18, (33 - sqrt(738)) / 27, (3 - sqrt(5)) / 2]
+    # alpha_paper = [(sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2, 4 / 3, 2, 1]
     P = 1500
     n = 500
 
@@ -131,10 +134,10 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     # parameter_list = [0.1]
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
-    for j in range(len(name_list)):
-
+    # for j in range(len(name_list)):
+    for model in model_list:
         # Opening the result file
-        f = open(result_directory + str(name_list[j]) +
+        f = open(result_directory + str(model.name) +
                  "/all.csv", 'w', newline='')
         writer = csv.writer(f)
         writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
@@ -163,8 +166,8 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                 nodes = load_nodes_from_csv(node_file)
                 edges = extract_dependencies_from_csv(daggen_file)
 
-                mu_tild = mu_paper[j]
-                alpha_tild = alpha_paper[j]
+                mu_tild = model.get_mu()
+                alpha_tild = model.get_alpha()
 
                 if variation_parameter == 'p':
                     p_tild = p_list[k]
@@ -175,19 +178,19 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                 processors = Processors(p_tild)
 
                 if variation_parameter == 'n':
-                    print("\nmodel : " + name_list[j],
+                    print("\nmodel : " + model.name,
                           variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'p':
-                    print("model : " + name_list[j], variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
+                    print("model : " + model.name, variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'jump':
-                    print("model : " + name_list[j], variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
+                    print("model : " + model.name, variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
                 else:
-                    print("model : " + name_list[j],
+                    print("model : " + model.name,
                           variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
                 print("Computing adjacency matrix...")
                 adjacency = task_graph.get_adjacency()
 
-                speedup_model = name_list[j]
+                speedup_model = model
 
                 time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
@@ -211,7 +214,8 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
 
 
 def display_results(variation_parameter, result_directory):
-    name_list = ["Amdahl", "Communication", "General", "Roofline"]
+    model_list = MODEL_LIST
+    # name_list = ["Amdahl", "Communication", "General", "Roofline"]
     p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
     n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
     # n_list = [100, 200, 300]
@@ -219,10 +223,10 @@ def display_results(variation_parameter, result_directory):
     # parameter_list = [0.1, 0.5, 1]
     jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    for name in name_list:
+    for model in model_list:
         Paper = [[] for i in range(10)]
         Min_time = [[] for i in range(10)]
-        f = open(result_directory + name + "/all.csv", newline='')
+        f = open(result_directory + model.name + "/all.csv", newline='')
         reader = csv.reader(f)
         for row in reader:
             if row[0] != variation_parameter:
@@ -256,7 +260,7 @@ def display_results(variation_parameter, result_directory):
                 Paper[index] += [float(row[1]) / float(row[3])]
                 Min_time[index] += [float(row[2]) / float(row[3])]
         f.close()
-        f = open(result_directory + name + "/mean.csv", 'w', newline='')
+        f = open(result_directory + model.name + "/mean.csv", 'w', newline='')
         writer = csv.writer(f)
         mean_Paper = []
         mean_Time = []
@@ -303,7 +307,7 @@ def display_results(variation_parameter, result_directory):
         plt.xlabel(variation_parameter)
         plt.legend()
         plt.ylabel("Normalized Makespan")
-        plt.savefig(result_directory + variation_parameter + "_" + name)
+        plt.savefig(result_directory + variation_parameter + "_" + model.name)
         plt.show()
 
 
