@@ -11,7 +11,8 @@ from graph import *
 import csv
 from math import *
 from datetime import datetime
-from model import *
+from models import *
+import logging
 
 
 class Processors:
@@ -55,14 +56,14 @@ class Processors:
         3 : allocate_processor_Min_area
         """
 
-        print("  ---- Starting ----")
-        print("Number of processors :", self.get_nbProcessors())
+        logging.debug("  ---- Starting ----")
+        logging.debug("Number of processors :", self.get_nbProcessors())
         if allocation_function == 1:
-            print("Allocation algorithm : Paper")
+            logging.debug("Allocation algorithm : Paper")
         elif allocation_function == 2:
-            print("Allocation algorithm : Min Time")
+            logging.debug("Allocation algorithm : Min Time")
         elif allocation_function == 3:
-            print("Allocation algorithm : Min Area")
+            logging.debug("Allocation algorithm : Min Area")
 
         Q = []  # Initialize a waiting queue Q
         B_P = []  # List of the task being processed
@@ -151,6 +152,6 @@ class Processors:
         # Resetting the status and the clock of the processors
         task_graph.init_status()
         final_time = self.get_time()
-        print("Total Execution time :", self.get_time(), "seconds")
+        logging.debug("Total Execution time :", self.get_time(), "seconds")
         self.set_time(0)
         return final_time

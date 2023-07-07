@@ -8,7 +8,7 @@
 # number of processors that will be used to complete this task.
 
 from math import *
-from model import *
+from model import Model
 
 
 class Task:
@@ -95,7 +95,7 @@ class Task:
     ## Methods
     ############################################################
 
-    def get_execution_time(self, nb_processors, speedup_model : Model):
+    def get_execution_time(self, nb_processors, speedup_model: Model):
         """
         Return the execution time for a given task,speedup model ( Amdahl, Communication, General, Roofline ).
         """
@@ -104,34 +104,15 @@ class Task:
         if nb_processors < 1:
             raise ValueError("The number of processors must be superior to 1")
 
-        if speedup_model.name == "Amdahl":
-            return self.get_w() * ((1 - self.get_d()) / nb_processors + self.get_d())
-        if speedup_model.name == "Communication":
-            return self.get_w() / nb_processors + self.get_c() * (nb_processors - 1)
-        if speedup_model.name == "General":
-            return self.get_w() * ((1 - self.get_d()) / min(nb_processors, self.get_p()) + self.get_d()) + \
-                self.get_c() * (nb_processors - 1)
-        if speedup_model.name == "Roofline":
-            return self.get_w() / min(nb_processors, self.get_p())
+        return speedup_model.time(self, nb_processors)
 
     def get_area(self, number_of_processors, speedup_model: Model):
-        "Return the area of a task depending on the number of processor allocated and the speedup model"
+        """Return the area of a task depending on the number of processor allocated and the speedup model"""
         return self.get_execution_time(number_of_processors, speedup_model) * number_of_processors
 
     def get_p_max(self, P, speedup_model: Model):
         """"Allocating more than p_max processors to the task will no longer decrease its execution time"""
-        if speedup_model.name == "Roofline":
-            return min(ceil(self.get_p()), P)
-        if speedup_model.name == "Amdahl":
-            return P
-        s = sqrt(self.get_w() / self.get_c())
-        if self.get_execution_time(floor(s), speedup_model) <= self.get_execution_time(ceil(s), speedup_model):
-            p_tild = floor(s)
-        else:
-            p_tild = ceil(s)
-        inter = min(P, self.get_p())
-        p_max = min(inter, p_tild)
-        return round(p_max)
+        return speedup_model.p_max(self, P)
 
     def allocate_processor_algo(self, P, mu_tild, alpha, speedup_model: Model, version):
         """

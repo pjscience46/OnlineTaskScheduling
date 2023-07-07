@@ -9,6 +9,7 @@
 
 from task import Task
 import numpy as np
+import logging
 
 
 class Graph:
@@ -101,13 +102,13 @@ class Graph:
         maximum_weight = 0
         weights = [0 for i in range(len(nodes))]
         offspring = []
-        print("Selecting starting nodes...")
+        logging.debug("Selecting starting nodes...")
 
         # Selecting the tasks without parents as starting points
         for index_task in range(len(nodes)):
             if self.get_parents(index_task, adjacency) == []:
                 offspring += [index_task]
-        print("Calculating Optimal time...")
+        logging.debug("Calculating Optimal time...")
         compteur = 0
         while offspring != []:
             compteur += 1
@@ -133,7 +134,7 @@ class Graph:
     def get_T_opt(self, P, adjacency, speedup_model):
         """Return the inferior bound for T optimal for a given graph"""
         output = max(self.get_A_min(P, speedup_model) / P, self.get_C_min(P, adjacency, speedup_model))
-        print("Optimal execution time :", output)
+        logging.debug("Optimal execution time :", output)
         return output
 
     def init_status(self):

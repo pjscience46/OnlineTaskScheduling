@@ -3,8 +3,10 @@ from processors import *
 from utils import *
 from statistics import *
 import matplotlib.pyplot as plt
+import logging
 
-nb_iterations = 1
+nb_iterations = 2
+
 
 # Computations for the first version of the processor allocation algorithm (minimizing alpha)
 

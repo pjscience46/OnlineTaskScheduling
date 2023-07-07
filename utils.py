@@ -4,7 +4,7 @@
 # Internship Kansas University #
 ################################
 
-# A bunch of usefull function to generate task graph and manipulate csv files.
+# A bunch of useful function to generate task graph and manipulate csv files.
 
 from task import *
 from random import *
@@ -14,9 +14,11 @@ from numerics import *
 from processors import *
 from statistics import *
 import matplotlib.pyplot as plt
+from logging import log
 from model import *
 
-MODEL_LIST = [AmdahlModel(), CommunicationModel(), GeneralModel(), RooflineModel()]
+MODEL_LIST = [AmdahlModel(), CommunicationModel(), GeneralModel(), RooflineModel(), Power0Model(), Power1Model()]
+
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
     """Generate a task based on the boundaries written in numerics"""
@@ -135,7 +137,8 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
     # for j in range(len(name_list)):
-    for model in model_list:
+    for idx, model in enumerate(model_list):
+        print(f"Model {model.name} ({idx+1}/{len(MODEL_LIST)})")
         # Opening the result file
         f = open(result_directory + str(model.name) +
                  "/all.csv", 'w', newline='')
@@ -143,8 +146,9 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
         writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
 
         for k in range(len(parameter_list)):
+            print(f"  Parameter {k+1}/{len(parameter_list)}")
             for i in range(1, instances_nb + 1):
-
+                print(f"    Instance {i}/{instances_nb}")
                 if variation_parameter == 'Fat' or variation_parameter == 'density' or \
                         variation_parameter == 'regular':
                     daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
@@ -178,16 +182,16 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                 processors = Processors(p_tild)
 
                 if variation_parameter == 'n':
-                    print("\nmodel : " + model.name,
+                    logging.debug("\nmodel : " + model.name,
                           variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'p':
-                    print("model : " + model.name, variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
+                    logging.debug("model : " + model.name, variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'jump':
-                    print("model : " + model.name, variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
+                    logging.debug("model : " + model.name, variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
                 else:
-                    print("model : " + model.name,
+                    logging.debug("model : " + model.name,
                           variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
-                print("Computing adjacency matrix...")
+                logging.debug("Computing adjacency matrix...")
                 adjacency = task_graph.get_adjacency()
 
                 speedup_model = model
@@ -307,6 +311,7 @@ def display_results(variation_parameter, result_directory):
         plt.xlabel(variation_parameter)
         plt.legend()
         plt.ylabel("Normalized Makespan")
+        plt.title(model.name)
         plt.savefig(result_directory + variation_parameter + "_" + model.name)
         plt.show()
 
@@ -317,7 +322,7 @@ def display_multiple_results(version1, version2, variation_parameter, saving_dir
 
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
 
-    for name in name_list:  
+    for name in name_list:
         file_1 = "Results_" + version1 + "/" + variation_parameter + "/" + name + "/"
         file_2 = "Results_" + version2 + "/" + variation_parameter + "/" + name + "/"
         p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
