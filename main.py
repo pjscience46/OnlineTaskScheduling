@@ -5,7 +5,7 @@ from statistics import *
 import matplotlib.pyplot as plt
 import logging
 
-nb_iterations = 2
+nb_iterations = 10
 
 
 # Computations for the first version of the processor allocation algorithm (minimizing alpha)
