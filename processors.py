@@ -8,6 +8,7 @@
 
 from numerics import *
 from graph import *
+from task import Status
 import csv
 from math import *
 from datetime import datetime
@@ -65,7 +66,7 @@ class Processors:
         elif allocation_function == 3:
             logging.debug("Allocation algorithm : Min Area")
 
-        Q = []  # Initialize a waiting queue Q
+        queue = []  # Initialize a waiting queue Q
         B_P = []  # List of the task being processed
         nodes = task_graph.get_nodes()
         new_task_available = False
@@ -85,25 +86,25 @@ class Processors:
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                Q += [task]
-                task.set_status(2)
+                queue += [task]
+                task.set_status(Status.PROCESSING)
 
-        while Q != [] or B_P != []:
+        while queue != [] or B_P != []:
 
             # Cleaning of the processors
             for task in B_P:
                 if self.get_time() - task.get_starting_time() >= task.get_needed_time():
                     del B_P[B_P.index(task)]
-                    task.set_status(3)
-                    for task_offspring in task_graph.get_offsprings(nodes.index(task), adjacency):
-                        if nodes[task_offspring].get_status() == 0:
-                            parents = task_graph.get_parents(task_offspring, adjacency)
+                    task.set_status(Status.PROCESSED)
+                    for task_child in task_graph.get_children(nodes.index(task), adjacency):
+                        if nodes[task_child].get_status() == Status.BLOCKED:
+                            parents = task_graph.get_parents(task_child, adjacency)
                             available = True
                             for parent in parents:
-                                if nodes[parent].get_status() != 3:
+                                if nodes[parent].get_status() != Status.PROCESSED:
                                     available = False
                             if available:
-                                nodes[task_offspring].set_status(1)
+                                nodes[task_child].set_status(Status.AVAILABLE)
                     self.set_availableProcessors(self.get_availableProcessors() + task.get_allocation())
                     new_task_available = True
 
@@ -111,7 +112,7 @@ class Processors:
             if self.get_time() == 0 or new_task_available:
                 new_task_available = False
                 for task in nodes:
-                    if task.get_status() == 1:
+                    if task.get_status() == Status.AVAILABLE:
                         if allocation_function == 1:
                             task.allocate_processor_algo(P_tild, mu_tild, alpha, speedup_model, version)
                         elif allocation_function == 2:
@@ -119,23 +120,29 @@ class Processors:
                         elif allocation_function == 3:
                             task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
                         task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                        Q += [task]
-                        task.set_status(2)
+                        queue += [task]
+                        task.set_status(Status.PROCESSING)
 
             # Writing the status in the log
             if save_in_logs:
-                line = [self.get_time(), [nodes.index(task) for task in Q], [nodes.index(task) for task in B_P],
+                line = [self.get_time(), [nodes.index(task) for task in queue], [nodes.index(task) for task in B_P],
                         self.get_availableProcessors()]
                 writer.writerow(line)
 
             # List Scheduling
-            for i in range(2):  # When we only look at the list Q one time it doesn't get every element ?????
-                for task in Q:
-                    if self.get_availableProcessors() >= task.get_allocation():
-                        B_P += [task]
-                        del Q[Q.index(task)]
-                        task.set_starting_time(self.get_time())
-                        self.set_availableProcessors(self.get_availableProcessors() - task.get_allocation())
+            to_remove = set()
+            for task in queue:
+                if self.get_availableProcessors() >= task.get_allocation():
+                    B_P.append(task)
+                    to_remove.add(task)
+                    task.set_starting_time(self.get_time())
+                    self.set_availableProcessors(self.get_availableProcessors() - task.get_allocation())
+            new_queue = []
+            for el in queue:
+                if el not in to_remove:
+                    new_queue.append(el)
+            queue = new_queue
+
 
             # Incrementing time
             minimum_time_left = float('inf')

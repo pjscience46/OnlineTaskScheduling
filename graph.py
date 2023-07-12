@@ -10,6 +10,7 @@
 from task import Task
 import numpy as np
 import logging
+from task import Status
 
 
 class Graph:
@@ -55,34 +56,29 @@ class Graph:
         edges = self.get_edges()
         adjacency = np.zeros((len(nodes), len(nodes)))
 
-        # for i in range(len(nodes)):
-        #     for j in range(len(nodes)):
-        #        if [i, j] in edges:
-        #            adjacency[i, j] = 1
         for [i, j] in edges:
             adjacency[i, j] = 1
         return adjacency
 
-    def get_offsprings(self, task, adjacency=[]):
-        """Return a list of the offsprings of a certain task. The argument 'task' take an int value corresponding
+    def get_children(self, task, adjacency=None):
+        """Return a list of the children of a certain task. The argument 'task' take an int value corresponding
         to the index of the task in the nodes list"""
-        offsprings = []
+        children = []
         nodes = self.get_nodes()
-        if adjacency == []:
+        if adjacency is None:
             adjacency = self.get_adjacency()
         for i in range(len(nodes)):
-
             if adjacency[task, i] == 1:
-                offsprings += [i]
+                children += [i]
 
-        return offsprings
+        return children
 
-    def get_parents(self, task, adjacency=[]):
+    def get_parents(self, task, adjacency=None):
         """Return a list of the parents of a certain task. The argument 'task' take an int value corresponding
         to the index of the task in the nodes list"""
         parents = []
         nodes = self.get_nodes()
-        if adjacency == []:
+        if adjacency is None:
             adjacency = self.get_adjacency()
         for i in range(len(nodes)):
             if adjacency[i, task] == 1:
@@ -100,19 +96,23 @@ class Graph:
         """C_min is the minimal execution time for the graph"""
         nodes = self.get_nodes()
         maximum_weight = 0
-        weights = [0 for i in range(len(nodes))]
-        offspring = []
+        weights = [0 for _ in range(len(nodes))]
+
         logging.debug("Selecting starting nodes...")
 
+        free_nodes = []
+        free_nodes_set = set()
         # Selecting the tasks without parents as starting points
         for index_task in range(len(nodes)):
-            if self.get_parents(index_task, adjacency) == []:
-                offspring += [index_task]
+            if not self.get_parents(index_task, adjacency):
+                free_nodes += [index_task]
+                free_nodes_set.add(index_task)
         logging.debug("Calculating Optimal time...")
-        compteur = 0
-        while offspring != []:
-            compteur += 1
-            index_task = offspring[0]
+
+        idx = 0
+        while idx < len(free_nodes):
+            index_task = free_nodes[idx]
+            idx += 1
             weight = nodes[index_task].get_minimum_execution_time(P, speedup_model)[0]
             p_weight = 0
             for index_parent in self.get_parents(index_task, adjacency):
@@ -122,13 +122,12 @@ class Graph:
             if weight > maximum_weight:
                 maximum_weight = weight
             weights[index_task] = weight
-            offspring.remove(index_task)
-            offspring += self.get_offsprings(index_task, adjacency)
-            new_list = []  # Avoiding duplicate
-            for i in offspring:
-                if i not in new_list:
-                    new_list.append(i)
-            offspring = new_list
+
+            for children in self.get_children(index_task, adjacency):
+                if children not in free_nodes_set:
+                    free_nodes_set.add(children)
+                    free_nodes.append(children)
+
         return maximum_weight
 
     def get_T_opt(self, P, adjacency, speedup_model):
@@ -140,4 +139,4 @@ class Graph:
     def init_status(self):
         """Reset the status of each task in the graph"""
         for task in self.get_nodes():
-            task.set_status(0)
+            task.set_status(Status.BLOCKED)

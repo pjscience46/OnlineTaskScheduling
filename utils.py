@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [AmdahlModel(), CommunicationModel(), GeneralModel(), RooflineModel(), Power0Model(), Power1Model()]
+MODEL_LIST = [Power0Model(), Power1Model()]
 
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
@@ -138,7 +138,7 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
 
     # for j in range(len(name_list)):
     for idx, model in enumerate(model_list):
-        print(f"Model {model.name} ({idx+1}/{len(MODEL_LIST)})")
+        print(f"Model {model.name} ({idx + 1}/{len(MODEL_LIST)})")
         # Opening the result file
         f = open(result_directory + str(model.name) +
                  "/all.csv", 'w', newline='')
@@ -146,7 +146,7 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
         writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
 
         for k in range(len(parameter_list)):
-            print(f"  Parameter {k+1}/{len(parameter_list)}")
+            print(f"  Parameter {k + 1}/{len(parameter_list)}")
             for i in range(1, instances_nb + 1):
                 print(f"    Instance {i}/{instances_nb}")
                 if variation_parameter == 'Fat' or variation_parameter == 'density' or \
@@ -183,29 +183,33 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
 
                 if variation_parameter == 'n':
                     logging.debug("\nmodel : " + model.name,
-                          variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
+                                  variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'p':
-                    logging.debug("model : " + model.name, variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
+                    logging.debug("model : " + model.name,
+                                  variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
                 elif variation_parameter == 'jump':
-                    logging.debug("model : " + model.name, variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
+                    logging.debug("model : " + model.name,
+                                  variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
                 else:
                     logging.debug("model : " + model.name,
-                          variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
+                                  variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
                 logging.debug("Computing adjacency matrix...")
                 adjacency = task_graph.get_adjacency()
 
                 speedup_model = model
 
                 time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
+                print("start paper")
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
                                                                      , version=version)
-
+                print("start min")
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
                                                                      , version=version)
+                print("end")
                 if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular":
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
                 elif variation_parameter == "jump":

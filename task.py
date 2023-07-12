@@ -9,11 +9,19 @@
 
 from math import *
 from model import Model
+from enum import Enum
+
+
+class Status(Enum):
+    BLOCKED = 0
+    AVAILABLE = 1
+    PROCESSING = 2
+    PROCESSED = 3
 
 
 class Task:
 
-    def __init__(self, w, p, d, c, status=0, allocation=None, needed_time=None, starting_time=None, ):
+    def __init__(self, w, p, d, c, status: Status = Status.BLOCKED, allocation=None, needed_time=None, starting_time=None, ):
         """
         :param w: The total parallelizable work of the task
         :param p: The maximum degree of parallelism of the task
@@ -24,13 +32,13 @@ class Task:
         :param allocation: If None, the algorithm "allocate_processor" has not been run yet, else it's the number
                            of processor needed for the completion of the task.
         :param needed_time: The time needed by the task to be processed ( it depends on the allocation)
-        :param starting_time: The time where the task start being processed.
+        :param starting_time: The time when the task start being processed.
         """
         self._w = w
         self._p = p
         self._d = d
         self._c = c
-        self._status = status
+        self._status: Status = status
         self._allocation = allocation
         self._needed_time = needed_time
         self._starting_time = starting_time
@@ -50,7 +58,7 @@ class Task:
     def get_c(self):
         return self._c
 
-    def get_status(self):
+    def get_status(self) -> Status:
         return self._status
 
     def get_allocation(self):
@@ -76,9 +84,7 @@ class Task:
     def set_c(self, value):
         self._c = value
 
-    def set_status(self, value):
-        if value != 0 and value != 1 and value != 2 and value != 3:
-            raise ValueError("status value must be 0,1,2 or 3")
+    def set_status(self, value: Status):
         self._status = value
 
     def set_allocation(self, value):
