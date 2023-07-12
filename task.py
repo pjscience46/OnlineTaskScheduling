@@ -101,6 +101,13 @@ class Task:
     ## Methods
     ############################################################
 
+    def __lt__(self, other):
+        if self.get_needed_time() is None:
+            return False
+        if other.get_needed_time() is None:
+            return True
+        return self.get_needed_time() + self.get_starting_time() < other.get_needed_time() + other.get_starting_time()
+
     def get_execution_time(self, nb_processors, speedup_model: Model):
         """
         Return the execution time for a given task,speedup model ( Amdahl, Communication, General, Roofline ).

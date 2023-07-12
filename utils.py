@@ -3,6 +3,7 @@
 # Summer - 2022                #
 # Internship Kansas University #
 ################################
+import time
 
 # A bunch of useful function to generate task graph and manipulate csv files.
 
@@ -17,7 +18,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [Power0Model(), Power1Model()]
+MODEL_LIST = [Power0Model()]
 
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
@@ -137,18 +138,25 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
     # for j in range(len(name_list)):
+    start_time = time.process_time_ns()
+    num = 1
     for idx, model in enumerate(model_list):
-        print(f"Model {model.name} ({idx + 1}/{len(MODEL_LIST)})")
         # Opening the result file
         f = open(result_directory + str(model.name) +
                  "/all.csv", 'w', newline='')
         writer = csv.writer(f)
         writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
 
-        for k in range(len(parameter_list)):
-            print(f"  Parameter {k + 1}/{len(parameter_list)}")
-            for i in range(1, instances_nb + 1):
-                print(f"    Instance {i}/{instances_nb}")
+        for i in range(1, instances_nb + 1):
+            for k in range(len(parameter_list)):
+                pc = num / (instances_nb * len(parameter_list) * len(MODEL_LIST))
+                eta = ((time.process_time_ns() - start_time) / 1e9) * ((1 - pc) / pc)
+                print(f"[{pc * 100:.2f} %]"
+                      f" {model.name} model ({idx + 1}/{len(MODEL_LIST)}),"
+                      f" instance {i:2d}/{instances_nb},"
+                      f" parameter {k + 1:2d}/{len(parameter_list)}"
+                      f" ETA: {int(eta)}s")
+                num += 1
                 if variation_parameter == 'Fat' or variation_parameter == 'density' or \
                         variation_parameter == 'regular':
                     daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
@@ -199,17 +207,17 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                 speedup_model = model
 
                 time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
-                print("start paper")
+                # print("start paper")
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
                                                                      , version=version)
-                print("start min")
+                # print("start min")
                 time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
                                                                      adjacency=adjacency, mu_tild=mu_tild
                                                                      , speedup_model=speedup_model, P_tild=p_tild
                                                                      , version=version)
-                print("end")
+                # print("end")
                 if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular":
                     writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
                 elif variation_parameter == "jump":

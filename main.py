@@ -7,7 +7,7 @@ from statistics import *
 import matplotlib.pyplot as plt
 import logging
 
-nb_iterations = 1
+nb_iterations = 10
 
 start_time = time.process_time_ns()
 
