@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [Power0Model()]
+MODEL_LIST = [Power25Model()]
 
 
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):

@@ -7,7 +7,7 @@ from statistics import *
 import matplotlib.pyplot as plt
 import logging
 
-nb_iterations = 10
+nb_iterations = 30
 
 start_time = time.process_time_ns()
 
@@ -26,8 +26,8 @@ start_time = time.process_time_ns()
 # compute_and_save('density','Results_V3/Density/',nb_iterations,version=1)
 # compute_and_save('Fat','Results_V3/Fat/',nb_iterations,version=1)
 # compute_and_save('jump','Results_V3/Jump/',nb_iterations,version=1)
-compute_and_save('n', 'Results_V3/n/', nb_iterations, version=1)
-# compute_and_save('p', 'Results_V3/P/', nb_iterations, version=1)
+# compute_and_save('n', 'Results_V3/n/', nb_iterations, version=1)
+compute_and_save('p', 'Results_V3/P/', nb_iterations, version=1)
 
 end_time = time.process_time_ns()
 
@@ -48,8 +48,8 @@ print(f"Finished computing in {(end_time-start_time)/(10**9):.3f}s")
 # display_results('density','Results_V3/Density/')
 # display_results('Fat','Results_V3/Fat/')
 # display_results('jump','Results_V3/Jump/')
-display_results('n', 'Results_V3/n/')
-# display_results('p', 'Results_V3/P/')
+# display_results('n', 'Results_V3/n/')
+display_results('p', 'Results_V3/P/')
 
 # To compare the two version of the processor allocation algorithm
 
