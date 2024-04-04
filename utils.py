@@ -134,7 +134,7 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
     # n_list = [1000]
     parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
-    # parameter_list = [0.1]
+       # parameter_list = [0.1]
     jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
     # for j in range(len(name_list)):
@@ -246,6 +246,7 @@ def display_results(variation_parameter, result_directory):
         reader = csv.reader(f)
         for row in reader:
             if row[0] != variation_parameter:
+                print(row[0])
                 if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p") \
                         or (row[0] == "1" and variation_parameter == "jump"):
                     index = 0

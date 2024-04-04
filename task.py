@@ -132,8 +132,8 @@ class Task:
         Return the number of processors needed to compute a given task. It's the implementation of the algorithm 2
         from the paper.
 
-        - version = 0 : the first version of the algorithm.
-        - version = 1 : the second version of the algorithm.
+        - version = 0 : thm.e first version of the algorithm.
+        - version = 1 : the second version of the algorith
 
 
         """
