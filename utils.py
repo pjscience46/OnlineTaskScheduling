@@ -1,8 +1,4 @@
-################################
-# Verrecchia Thomas            #
-# Summer - 2022                #
-# Internship Kansas University #
-################################
+
 import time
 
 # A bunch of useful function to generate task graph and manipulate csv files.
@@ -18,9 +14,9 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [Power25Model()]
+MODEL_LIST = [Power0Model(),Power1Model(),Power25Model(),Power50Model(),Power75Model()]
 
-
+#MODEL_LIST = [Power75Model()]
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
     """Generate a task based on the boundaries written in numerics"""
     w = uniform(w_bounds[0], w_bounds[1])
@@ -175,18 +171,18 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                     daggen_file = "DAGGEN/density_variation/density=0.5/" + str(i) + ".csv"
                     node_file = "TASKS/n=500/" + str(i) + ".csv"
 
-                nodes = load_nodes_from_csv(node_file)
+                nodes = load_nodes_from_csv(node_file) #w,p,c,d
                 edges = extract_dependencies_from_csv(daggen_file)
 
-                mu_tild = model.get_mu()
-                alpha_tild = model.get_alpha()
+                mu_tild = model.get_mu() #constant value depends up on model
+                alpha_tild = model.get_alpha() #constant value depends up on model
 
                 if variation_parameter == 'p':
                     p_tild = p_list[k]
                 else:
                     p_tild = P
 
-                task_graph = Graph(nodes, edges)
+                task_graph = Graph(nodes, edges) #generate task graphs
                 processors = Processors(p_tild)
 
                 if variation_parameter == 'n':
@@ -205,7 +201,7 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                 adjacency = task_graph.get_adjacency()
 
                 speedup_model = model
-
+               #opt time is max (Amin/p , cmin)
                 time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
                 # print("start paper")
                 time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
@@ -228,6 +224,10 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
                     writer.writerow([str(p_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
         f.close()
 
+def normalize_list(data_list, mean_value):
+    if mean_value == 0:
+        return data_list  # Avoid division by zero, return original data if mean is zero
+    return [(abs(x - mean_value)) / abs(mean_value) for x in data_list]
 
 def display_results(variation_parameter, result_directory):
     model_list = MODEL_LIST
@@ -238,7 +238,7 @@ def display_results(variation_parameter, result_directory):
     parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     # parameter_list = [0.1, 0.5, 1]
     jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
+    var_par_val = []
     for model in model_list:
         Paper = [[] for i in range(10)]
         Min_time = [[] for i in range(10)]
@@ -246,7 +246,7 @@ def display_results(variation_parameter, result_directory):
         reader = csv.reader(f)
         for row in reader:
             if row[0] != variation_parameter:
-                print(row[0])
+                
                 if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p") \
                         or (row[0] == "1" and variation_parameter == "jump"):
                     index = 0
@@ -276,6 +276,7 @@ def display_results(variation_parameter, result_directory):
 
                 Paper[index] += [float(row[1]) / float(row[3])]
                 Min_time[index] += [float(row[2]) / float(row[3])]
+        
         f.close()
         f = open(result_directory + model.name + "/mean.csv", 'w', newline='')
         writer = csv.writer(f)
@@ -314,16 +315,23 @@ def display_results(variation_parameter, result_directory):
             writer.writerow([k, mean(Paper[index]), mean(Min_time[index])])
             mean_Paper += [mean(Paper[index])]
             mean_Time += [mean(Min_time[index])]
+
+      
+
+            
+            
+            
         f.close()
 
         # Graphic parameters for the display
-
-        plt.plot(new_list, mean_Paper, label='Algo Paper')
+      
+        print(new_list,"Mean paper",mean_Paper,"Mean Time",mean_Time)
+        plt.plot(new_list, mean_Paper, label='Paper Time')
         plt.plot(new_list, mean_Time, label='Min Time')
         # plt.boxplot([Paper[0],Min_time[0]])
         plt.xlabel(variation_parameter)
         plt.legend()
-        plt.ylabel("Normalized Makespan")
+        plt.ylabel("Normalized Makespan(Mean)")
         plt.title(model.name)
         plt.savefig(result_directory + variation_parameter + "_" + model.name)
         plt.show()

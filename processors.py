@@ -78,6 +78,7 @@ class Processors:
         #     writer.writerow(['Time', 'Waiting Queue', 'Processors Queue', 'Number of available processors'])
 
         for task in nodes:  # Insert all tasks without parents in the waiting queue
+            #If a task has no parents, it means it is ready to be processed.
             if not task_graph.get_parents(nodes.index(task), adjacency):
                 if allocation_function == 1:
                     task.allocate_processor_algo(P_tild, mu_tild, alpha, speedup_model, version)
@@ -109,7 +110,8 @@ class Processors:
                         if available:
                             nodes[child].set_status(Status.AVAILABLE)
                             available_tasks.add(nodes[child])
-
+# For each child task, it checks if the child is currently in a blocked state (meaning it's waiting for its dependencies to be fulfilled). If the child is blocked, it checks if all of its parents have been processed. If all parents are processed,
+                            # it sets the child's status to Status.AVAILABLE and adds it to the available_tasks set.
             # Processor allocation
             for task in available_tasks:
                 if allocation_function == 1:
