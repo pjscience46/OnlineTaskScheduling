@@ -7,13 +7,13 @@ from statistics import *
 import matplotlib.pyplot as plt
 import logging
 
-nb_iterations = 10
+nb_iterations = 2
 
 start_time = time.process_time_ns()
 
 # Computations for the first version of the processor allocation algorithm (minimizing alpha)
 
-#compute_and_save('regular','Results_V4_p1/Regular/',nb_iterations,version=0)
+compute_and_save('regular','Results_V4_test/Regular/',nb_iterations,version=0)
 #compute_and_save('density','Results_V4_p1/Density/',nb_iterations,version=0)
 #compute_and_save('Fat','Results_V4_p1/Fat/',nb_iterations,version=0)
 #compute_and_save('jump','Results_V4_p1/Jump/',nb_iterations,version=0)
@@ -27,7 +27,7 @@ start_time = time.process_time_ns()
 #compute_and_save('Fat','Results_V4/Fat/',nb_iterations,version=1)
 #compute_and_save('jump','Results_V4/Jump/',nb_iterations,version=1)
 #compute_and_save('n', 'Results_V4/n/', nb_iterations, version=1)
-compute_and_save('p', 'Results_V4/P/', nb_iterations, version=1)
+#compute_and_save('p', 'Results_V4/P/', nb_iterations, version=1)
 
 end_time = time.process_time_ns()
 
@@ -35,7 +35,7 @@ print(f"Finished computing in {(end_time-start_time)/(10**9):.3f}s")
 
 # Displaying the results for the first version of the algorithm
 
-#display_results('regular','Results_V4_p1/Regular/')
+display_results('regular','Results_Power/Regular/')
 #display_results('density','Results_V4_p1/Density/')
 #display_results('Fat','Results_V4_p1/Fat/')
 #display_results('jump','Results_V4_p1/Jump/')
@@ -49,7 +49,7 @@ print(f"Finished computing in {(end_time-start_time)/(10**9):.3f}s")
 #display_results('Fat','Results_V4/Fat/')
 #display_results('jump','Results_V4/Jump/')
 #display_results('n', 'Results_V4/n/')
-display_results('p', 'Results_V4/P/')
+#display_results('p', 'Results_V4/P/')
 
 # To compare the two version of the processor allocation algorithm
 

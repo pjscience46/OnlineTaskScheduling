@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [Power0Model(),Power1Model(),Power25Model(),Power50Model(),Power75Model()]
+MODEL_LIST = [Power25Model(),Power75Model(),Power50Model(),Power1Model()]
 
-#MODEL_LIST = [Power75Model()]
+#MODEL_LIST = [Roofline()]
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
     """Generate a task based on the boundaries written in numerics"""
     w = uniform(w_bounds[0], w_bounds[1])
@@ -325,7 +325,7 @@ def display_results(variation_parameter, result_directory):
 
         # Graphic parameters for the display
       
-        print(new_list,"Mean paper",mean_Paper,"Mean Time",mean_Time)
+        #print(new_list,"Mean paper",mean_Paper,"Mean Time",mean_Time)
         plt.plot(new_list, mean_Paper, label='Paper Time')
         plt.plot(new_list, mean_Time, label='Min Time')
         # plt.boxplot([Paper[0],Min_time[0]])
