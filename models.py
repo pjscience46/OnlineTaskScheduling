@@ -79,7 +79,7 @@ class RooflineModel(Model):
         return w / min(nb_proc, p)
 
     def p_max(self, task: Task, p: int) -> int:
-        return min(ceil(task.get_p()), p)
+        return min(ceil(task.get_p()), p) #max degree of parallelism, no.of proc
 
 
 class Power25Model(Model):

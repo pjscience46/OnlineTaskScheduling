@@ -395,24 +395,26 @@ def display_results_boxplot(version1, version2, saving_directory):
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
     parameters = ["Density", "Fat", "Jump", "n", "p"]
     for name in name_list:
-        Paper_V1 = []
-        Paper_V2 = []
-        Min_Time = []
-        f = open("Results_" + version1 + "/P/" + name + "/all.csv", 'r', newline='')
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0] == "1500":
-                Paper_V1 += [float(line[1]) / float(line[3])]
-        f.close()
-        f = open("Results_" + version2 + "/P/" + name + "/all.csv", 'r', newline='')
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0] == "1500":
-                Paper_V2 += [float(line[1]) / float(line[3])]
-                Min_Time += [float(line[2]) / float(line[3])]
-        f.close()
-        plt.boxplot([Paper_V1, Paper_V2, Min_Time])
-        plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
-        plt.ylabel('Normalized Makespan')
-        plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
-        plt.show()
+            Paper_V1 = []
+            Paper_V2 = []
+            Min_Time = []
+            f = open("Results_" + version1 + "/" + "Jump" +"/"+ name + "/all.csv", 'r', newline='')
+            reader = csv.reader(f)
+            for line in reader:
+                if line[0] ==  "100" or line[0] ==  "1500" or line[0] == "0.1" or line[0] == "10" or line[0] ==  "500":
+                    Paper_V1 += [float(line[1]) / float(line[3])]
+            f.close()
+            f = open("Results_" + version2 + "/"+ "Jump" +"/"+ name + "/all.csv", 'r', newline='')
+            reader = csv.reader(f)
+            for line in reader:
+                if line[0] ==  "100" or line[0] ==  "1500" or line[0] == "0.1" or line[0] == "10" or  line[0] ==  "500":
+                    Paper_V2 += [float(line[1]) / float(line[3])]
+                    Min_Time += [float(line[2]) / float(line[3])]
+            f.close()
+            plt.boxplot([Paper_V1, Paper_V2, Min_Time])
+            plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
+            plt.ylabel('Normalized Makespan')
+            plt.savefig(saving_directory + "/" + name + "Jump" + ".png")
+            plt.show()
+
+        

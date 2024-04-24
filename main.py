@@ -13,7 +13,7 @@ start_time = time.process_time_ns()
 
 # Computations for the first version of the processor allocation algorithm (minimizing alpha)
 
-compute_and_save('regular','Results_V4_test/Regular/',nb_iterations,version=0)
+#compute_and_save('regular','Results_V4_test/Regular/',nb_iterations,version=0)
 #compute_and_save('density','Results_V4_p1/Density/',nb_iterations,version=0)
 #compute_and_save('Fat','Results_V4_p1/Fat/',nb_iterations,version=0)
 #compute_and_save('jump','Results_V4_p1/Jump/',nb_iterations,version=0)
@@ -35,7 +35,7 @@ print(f"Finished computing in {(end_time-start_time)/(10**9):.3f}s")
 
 # Displaying the results for the first version of the algorithm
 
-display_results('regular','Results_Power/Regular/')
+#display_results('regular','Results_Power/Regular/')
 #display_results('density','Results_V4_p1/Density/')
 #display_results('Fat','Results_V4_p1/Fat/')
 #display_results('jump','Results_V4_p1/Jump/')
@@ -62,4 +62,4 @@ display_results('regular','Results_Power/Regular/')
 
 # To compare the two version of the processor allocation algorithm with standard parameters
 
-#display_results_boxplot("V4", "V4_p1", "Merging_V4_and_V4_p1")
+display_results_boxplot("V4", "V4_p1", "Merging_V4_and_V4_p1")
