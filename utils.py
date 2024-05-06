@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [Power25Model(),Power75Model(),Power50Model(),Power1Model()]
+MODEL_LIST = [RooflineModel()]
 
 #MODEL_LIST = [Roofline()]
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
@@ -124,14 +124,17 @@ def compute_and_save(variation_parameter, result_directory, instances_nb, versio
     # alpha_paper = [(sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2, 4 / 3, 2, 1]
     P = 1500
     n = 500
-
-    # Variations
-    p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    # p_list= [1500]
     # n_list = [1000]
-    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
-       # parameter_list = [0.1]
-    jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
+    # parameter_list = [0.5]
+    # jump = [1]
+    # Variations
+    # p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    
+    #parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
+    
+    #jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
     # for j in range(len(name_list)):
     start_time = time.process_time_ns()
@@ -395,26 +398,26 @@ def display_results_boxplot(version1, version2, saving_directory):
     name_list = ["Amdahl", "Communication", "General", "Roofline"]
     parameters = ["Density", "Fat", "Jump", "n", "p"]
     for name in name_list:
-            Paper_V1 = []
-            Paper_V2 = []
-            Min_Time = []
-            f = open("Results_" + version1 + "/" + "Jump" +"/"+ name + "/all.csv", 'r', newline='')
-            reader = csv.reader(f)
-            for line in reader:
-                if line[0] ==  "100" or line[0] ==  "1500" or line[0] == "0.1" or line[0] == "10" or line[0] ==  "500":
-                    Paper_V1 += [float(line[1]) / float(line[3])]
-            f.close()
-            f = open("Results_" + version2 + "/"+ "Jump" +"/"+ name + "/all.csv", 'r', newline='')
-            reader = csv.reader(f)
-            for line in reader:
-                if line[0] ==  "100" or line[0] ==  "1500" or line[0] == "0.1" or line[0] == "10" or  line[0] ==  "500":
-                    Paper_V2 += [float(line[1]) / float(line[3])]
-                    Min_Time += [float(line[2]) / float(line[3])]
-            f.close()
-            plt.boxplot([Paper_V1, Paper_V2, Min_Time])
-            plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
-            plt.ylabel('Normalized Makespan')
-            plt.savefig(saving_directory + "/" + name + "Jump" + ".png")
-            plt.show()
+        Paper_V1 = []
+        Paper_V2 = []
+        Min_Time = []
+        f = open("Results_" + version1 + "/P/" + name + "/all.csv", 'r', newline='')
+        reader = csv.reader(f)
+        for line in reader:
+            if line[0] == "1500":
+                Paper_V1 += [float(line[1]) / float(line[3])]
+        f.close()
+        f = open("Results_" + version2 + "/P/" + name + "/all.csv", 'r', newline='')
+        reader = csv.reader(f)
+        for line in reader:
+            if line[0] == "1500":
+                Paper_V2 += [float(line[1]) / float(line[3])]
+                Min_Time += [float(line[2]) / float(line[3])]
+        f.close()
+        plt.boxplot([Paper_V1, Paper_V2, Min_Time])
+        plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
+        plt.ylabel('Normalized Makespan')
+        plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
+        plt.show()
 
         

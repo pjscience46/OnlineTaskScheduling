@@ -115,6 +115,7 @@ class Task:
         """
         if self.get_p() == 0:
             raise ValueError("p must be different from 0")
+        
         if nb_processors < 1:
             raise ValueError("The number of processors must be superior to 1")
 
@@ -148,21 +149,35 @@ class Task:
         p_max = self.get_p_max(P, speedup_model)
         t_min = self.get_execution_time(p_max, speedup_model)
         a_min = self.get_minimum_area(1, speedup_model)#execution_time * p = a
-
+        
         if version == 0:
             Alpha_min = inf
             final_nb_processors = -1
-
+            
             for i in range(1, p_max + 1):
-                
-                Alpha = self.get_area(i, speedup_model) / a_min[0]
+                Alpha = self.get_area(i, speedup_model) / a_min
                 Beta = self.get_execution_time(i, speedup_model) / t_min
 
                 if Beta < (1 - 2 * mu_tild) / (mu_tild * (1 - mu_tild)):
                     if Alpha < Alpha_min:
                         Alpha_min = Alpha
                         final_nb_processors = i
-
+        #UR = ceil(mu_tild * P)   
+        # if version == 0:
+        #     Alpha_min = inf
+        #     final_nb_processors = -1
+        #     UR = ceil(mu_tild * P)
+            # for i in range(1, UR):
+                    
+            #         Alpha = self.get_area(i, speedup_model) / a_min[0]
+            #         Beta = self.get_execution_time(i, speedup_model) / t_min
+                    
+            #         if Beta   > 1 :
+                        
+            #             if Alpha < Alpha_min:
+            #                 Alpha_min = Alpha
+            #                 final_nb_processors = i
+                                                 
         elif version == 1:
             Beta_min = inf
             final_nb_processors = -1
@@ -180,10 +195,10 @@ class Task:
                 final_nb_processors = self.get_p()
 
         # Step 2 : Allocation Adjustment
-        if final_nb_processors > ceil(mu_tild * P):
-            self.set_allocation(ceil(mu_tild * P))
-        else:
-            self.set_allocation(final_nb_processors)
+        # if final_nb_processors > ceil(mu_tild * P):
+        #     self.set_allocation(ceil(mu_tild * P))
+        # else:
+        self.set_allocation(final_nb_processors)
 
     def get_minimum_execution_time(self, P, speedup_model: Model):
         """Return the minimum execution time"""
