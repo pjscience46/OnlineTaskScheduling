@@ -13,7 +13,7 @@ import csv
 from math import *
 from datetime import datetime
 from models import *
-
+from sortedcontainers import SortedList
 import logging
 
 
@@ -48,7 +48,7 @@ class Processors:
     # Methods
     ############################################################
 
-    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, save_in_logs=False, adjacency=[],
+    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, Beta1,save_in_logs=False, adjacency=[],
                                     P_tild=P, mu_tild=mu, speedup_model: Model = GeneralModel(), version=0):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
@@ -78,18 +78,19 @@ class Processors:
         #     writer.writerow(['Time', 'Waiting Queue', 'Processors Queue', 'Number of available processors'])
 
         for task in nodes:  # Insert all tasks without parents in the waiting queue
-            #If a task has no parents, it means it is ready to be processed.
             if not task_graph.get_parents(nodes.index(task), adjacency):
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P_tild, mu_tild, alpha, speedup_model, version)
+                    task.allocate_processor_algo(P_tild, mu_tild, alpha,Beta1, speedup_model, version)
                 elif allocation_function == 2:
                     task.allocate_processor_Min_time(P_tild, mu_tild, speedup_model)
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
-                task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                waiting_queue.add(task)
-                task.set_status(Status.PROCESSING)
-
+                allocation = task.get_allocation()
+                if allocation is not None:
+                    task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
+                    waiting_queue.add(task)
+                    task.set_status(Status.PROCESSING)
+                
         while waiting_queue or process_list:
             # Cleaning of the processors
 
@@ -110,19 +111,20 @@ class Processors:
                         if available:
                             nodes[child].set_status(Status.AVAILABLE)
                             available_tasks.add(nodes[child])
-# For each child task, it checks if the child is currently in a blocked state (meaning it's waiting for its dependencies to be fulfilled). If the child is blocked, it checks if all of its parents have been processed. If all parents are processed,
-                            # it sets the child's status to Status.AVAILABLE and adds it to the available_tasks set.
+
             # Processor allocation
             for task in available_tasks:
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P_tild, mu_tild, alpha, speedup_model, version)
+                    task.allocate_processor_algo(P_tild, mu_tild, alpha,Beta1, speedup_model, version)
                 elif allocation_function == 2:
                     task.allocate_processor_Min_time(P_tild, mu_tild, speedup_model)
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
-                task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                waiting_queue.add(task)
-                task.set_status(Status.PROCESSING)
+                allocation1 = task.get_allocation()
+                if allocation1 is not None:
+                    task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
+                    waiting_queue.add(task)
+                    task.set_status(Status.PROCESSING)
 
             # # Writing the status in the log
             # if save_in_logs:

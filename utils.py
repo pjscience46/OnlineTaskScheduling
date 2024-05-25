@@ -106,318 +106,84 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save(variation_parameter, result_directory, instances_nb, version):
-    """
-
-    :param variation_parameter: Can be : 'Fat', 'density', 'regular', 'jump', 'p', 'n'
-    :param result_directory: A path to a directory containing 4 empty directories named 'Amdahl', 'communication',
-                            'General', 'Roofline'.
-    :param instances_nb: The number of different tasks graphs you want to run for each set of parameters. Must be picked
-                         in the range [1,30]
-    :return: Save the results in the corresponding directory depending on the speedup model
-    """
-
+def compute_and_save(variation_parameter, result_directory,instances_nb,mu,B,version, P,n,writer):
+  
     # Fixed parameters
     model_list = MODEL_LIST
-    # name_list = ['Amdahl', 'Communication', 'General', 'Roofline']
-    # mu_paper = [(1 - sqrt(8 * sqrt(2) - 11)) / 2, (23 - sqrt(313)) / 18, (33 - sqrt(738)) / 27, (3 - sqrt(5)) / 2]
-    # alpha_paper = [(sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2, 4 / 3, 2, 1]
-    P = 1500
-    n = 500
-    # p_list= [1500]
-    # n_list = [1000]
+    #n_list = [100]
     # parameter_list = [0.5]
-    # jump = [1]
+    jump = [1]
     # Variations
-    # p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    #p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
     
-    #parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
+    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
     
     #jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
 
     # for j in range(len(name_list)):
     start_time = time.process_time_ns()
     num = 1
-    for idx, model in enumerate(model_list):
-        # Opening the result file
-        f = open(result_directory + str(model.name) +
-                 "/all.csv", 'w', newline='')
-        writer = csv.writer(f)
-        writer.writerow([variation_parameter, 'Paper', 'Min Time', 'Time opt'])
+    # f = open(result_directory + "Roofline" +
+    #              "/all.csv", 'w', newline='')
+    # writer = csv.writer(f)
+    # writer.writerow(['P',variation_parameter, 'Paper', 'Min Time', 'Time opt','Comment'])
 
-        for i in range(1, instances_nb + 1):
-            for k in range(len(parameter_list)):
-                pc = num / (instances_nb * len(parameter_list) * len(MODEL_LIST))
-                eta = ((time.process_time_ns() - start_time) / 1e9) * ((1 - pc) / pc)
-                print(f"[{pc * 100:.2f} %]"
-                      f" {model.name} model ({idx + 1}/{len(MODEL_LIST)}),"
-                      f" instance {i:2d}/{instances_nb},"
-                      f" parameter {k + 1:2d}/{len(parameter_list)}"
-                      f" ETA: {int(eta)}s")
-                num += 1
-                if variation_parameter == 'Fat' or variation_parameter == 'density' or \
-                        variation_parameter == 'regular':
-                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
-                                  str(parameter_list[k]) + "/" + str(i) + ".csv"
-                    node_file = "TASKS/n=500/" + str(i) + ".csv"
-                elif variation_parameter == 'jump':
-                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
-                                  str(jump[k]) + "/" + str(i) + ".csv"
-                    node_file = "TASKS/n=500/" + str(i) + ".csv"
+    model = MODEL_LIST[0]
 
-                elif variation_parameter == 'n':
-                    daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
-                                  str(n_list[k]) + "/" + str(i) + ".csv"
-                    node_file = "TASKS/n=" + str(n_list[k]) + "/" + str(i) + ".csv"
-                else:
-                    daggen_file = "DAGGEN/density_variation/density=0.5/" + str(i) + ".csv"
-                    node_file = "TASKS/n=500/" + str(i) + ".csv"
+    for i in range(1, instances_nb + 1):
+    
+        #for k in range(len(n_list)):
+            # pc = num / (instances_nb * len(n_list) * len(MODEL_LIST))
+            # eta = ((time.process_time_ns() - start_time) / 1e9) * ((1 - pc) / pc)
+            # # print(f"[{pc * 100:.2f} %]"
+            # #         f" {model.name} model ,"
+            # #         f" instance {i:2d}/{instances_nb},"
+            # #         f" parameter {k + 1:2d}/{len(n_list)}"
+            # #         f" ETA: {int(eta)}s")
+            # num += 1
+            
 
-                nodes = load_nodes_from_csv(node_file) #w,p,c,d
-                edges = extract_dependencies_from_csv(daggen_file)
+            daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
+                            str(n) + "/" + str(i) + ".csv"
+            node_file = "TASKS/n=" + str(n) + "/" + str(i) + ".csv"
 
-                mu_tild = model.get_mu() #constant value depends up on model
-                alpha_tild = model.get_alpha() #constant value depends up on model
+            nodes = load_nodes_from_csv(node_file) #w,p,c,d
+            edges = extract_dependencies_from_csv(daggen_file)
 
-                if variation_parameter == 'p':
-                    p_tild = p_list[k]
-                else:
-                    p_tild = P
+            mu_tild = mu #constant value depends up on model
+            Beta1 = B
+            alpha_tild = model.get_alpha() #constant value depends up on model
+            p_tild = P
 
-                task_graph = Graph(nodes, edges) #generate task graphs
-                processors = Processors(p_tild)
+            task_graph = Graph(nodes, edges) #generate task graphs
+            processors = Processors(p_tild)
 
-                if variation_parameter == 'n':
-                    logging.debug("\nmodel : " + model.name,
-                                  variation_parameter + " = " + str(n_list[k]) + ", file :" + str(i))
-                elif variation_parameter == 'p':
-                    logging.debug("model : " + model.name,
-                                  variation_parameter + " = " + str(p_list[k]) + ", file :" + str(i))
-                elif variation_parameter == 'jump':
-                    logging.debug("model : " + model.name,
-                                  variation_parameter + " = " + str(jump[k]) + ", file :" + str(i))
-                else:
-                    logging.debug("model : " + model.name,
-                                  variation_parameter + " = " + str(parameter_list[k]) + ", file :" + str(i))
-                logging.debug("Computing adjacency matrix...")
-                adjacency = task_graph.get_adjacency()
+            if variation_parameter == 'n':
+                logging.debug("\nmodel : " + model.name,
+                                variation_parameter + " = " + str(n) + ", file :" + str(i))
+            
+            logging.debug("Computing adjacency matrix...")
+            adjacency = task_graph.get_adjacency()
 
-                speedup_model = model
-               #opt time is max (Amin/p , cmin)
-                time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
-                # print("start paper")
-                time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,
-                                                                     adjacency=adjacency, mu_tild=mu_tild
-                                                                     , speedup_model=speedup_model, P_tild=p_tild
-                                                                     , version=version)
-                # print("start min")
-                time_algo_2 = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,
-                                                                     adjacency=adjacency, mu_tild=mu_tild
-                                                                     , speedup_model=speedup_model, P_tild=p_tild
-                                                                     , version=version)
-                # print("end")
-                if variation_parameter == "Fat" or variation_parameter == "density" or variation_parameter == "regular":
-                    writer.writerow([str(parameter_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                elif variation_parameter == "jump":
-                    writer.writerow([str(jump[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                elif variation_parameter == "n":
-                    writer.writerow([str(n_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-                else:
-                    writer.writerow([str(p_list[k]), str(time_algo_1), str(time_algo_2), str(time_opt)])
-        f.close()
+            speedup_model = model
+            #opt time is max (Amin/p , cmin)
+            time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
+            # print("start paper")
+            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,Beta1=Beta1,
+                                                                    adjacency=adjacency, mu_tild=mu_tild
+                                                                    , speedup_model=speedup_model, P_tild=p_tild
+                                                                   ,version=version)
+            # print("start min")
+            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,Beta1=Beta1,
+                                                                    adjacency=adjacency, mu_tild=mu_tild
+                                                                    , speedup_model=speedup_model, P_tild=p_tild
+                                                                   ,version=version)
+            mast = (time_algo_1/time_opt)
+            writer.writerow([str(P),str(n), str(time_algo_1), str(min_time), str(time_opt),str(mast)])
+    
 
 def normalize_list(data_list, mean_value):
     if mean_value == 0:
         return data_list  # Avoid division by zero, return original data if mean is zero
     return [(abs(x - mean_value)) / abs(mean_value) for x in data_list]
-
-def display_results(variation_parameter, result_directory):
-    model_list = MODEL_LIST
-    # name_list = ["Amdahl", "Communication", "General", "Roofline"]
-    p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-    # n_list = [100, 200, 300]
-    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-    # parameter_list = [0.1, 0.5, 1]
-    jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    var_par_val = []
-    for model in model_list:
-        Paper = [[] for i in range(10)]
-        Min_time = [[] for i in range(10)]
-        f = open(result_directory + model.name + "/all.csv", newline='')
-        reader = csv.reader(f)
-        for row in reader:
-            if row[0] != variation_parameter:
-                
-                if (row[0] == "0.1") or (row[0] == "100") or (row[0] == "500" and variation_parameter == "p") \
-                        or (row[0] == "1" and variation_parameter == "jump"):
-                    index = 0
-                if (row[0] == "0.2") or (row[0] == "2") or (row[0] == "200") or (row[0] == "1000"):
-                    index = 1
-                if (row[0] == "0.3") or (row[0] == "3") or (row[0] == "300") or (row[0] == "1500"):
-                    index = 2
-                if (row[0] == "0.4") or (row[0] == "4") or (row[0] == "400") or (row[0] == "2000"):
-                    index = 3
-                if (row[0] == "0.5") or (row[0] == "5") or (row[0] == "500" and variation_parameter == "n") \
-                        or (row[0] == "2500"):
-                    index = 4
-                if (row[0] == "0.6") or (row[0] == "6") or (row[0] == "600") or (row[0] == "3000"):
-                    index = 5
-                if (row[0] == "0.7") or (row[0] == "7") or (row[0] == "700") or (row[0] == "3500"):
-                    index = 6
-                if (row[0] == "0.8") or (row[0] == "8") or (row[0] == "800") or (row[0] == "4000"):
-                    index = 7
-                if (row[0] == "0.9") or (row[0] == "9") or (row[0] == "900") or (row[0] == "4500"):
-                    index = 8
-                if (row[0] == "1" and (variation_parameter == "Fat" or variation_parameter == "density"
-                                       or variation_parameter == "regular")) or \
-                        (row[0] == "10" and variation_parameter == "jump") or \
-                        (row[0] == "1000" and variation_parameter == 'n') \
-                        or (row[0] == "5000"):
-                    index = 9
-
-                Paper[index] += [float(row[1]) / float(row[3])]
-                Min_time[index] += [float(row[2]) / float(row[3])]
-        
-        f.close()
-        f = open(result_directory + model.name + "/mean.csv", 'w', newline='')
-        writer = csv.writer(f)
-        mean_Paper = []
-        mean_Time = []
-        if variation_parameter == "density" or variation_parameter == "Fat" or variation_parameter == "regular":
-            new_list = parameter_list
-        elif variation_parameter == "jump":
-            new_list = jump_list
-        elif variation_parameter == "n":
-            new_list = n_list
-        else:
-            new_list = p_list
-        for k in new_list:
-            if k == new_list[0]:
-                index = 0
-            if k == new_list[1]:
-                index = 1
-            if k == new_list[2]:
-                index = 2
-            if k == new_list[3]:
-                index = 3
-            if k == new_list[4]:
-                index = 4
-            if k == new_list[5]:
-                index = 5
-            if k == new_list[6]:
-                index = 6
-            if k == new_list[7]:
-                index = 7
-            if k == new_list[8]:
-                index = 8
-            if k == new_list[9]:
-                index = 9
-
-            writer.writerow([k, mean(Paper[index]), mean(Min_time[index])])
-            mean_Paper += [mean(Paper[index])]
-            mean_Time += [mean(Min_time[index])]
-
-      
-
-            
-            
-            
-        f.close()
-
-        # Graphic parameters for the display
-      
-        #print(new_list,"Mean paper",mean_Paper,"Mean Time",mean_Time)
-        plt.plot(new_list, mean_Paper, label='Paper Time')
-        plt.plot(new_list, mean_Time, label='Min Time')
-        # plt.boxplot([Paper[0],Min_time[0]])
-        plt.xlabel(variation_parameter)
-        plt.legend()
-        plt.ylabel("Normalized Makespan(Mean)")
-        plt.title(model.name)
-        plt.savefig(result_directory + variation_parameter + "_" + model.name)
-        plt.show()
-
-
-def display_multiple_results(version1, version2, variation_parameter, saving_directory):
-    name_1 = "Paper " + version1
-    name_2 = "Paper " + version2
-
-    name_list = ["Amdahl", "Communication", "General", "Roofline"]
-
-    for name in name_list:
-        file_1 = "Results_" + version1 + "/" + variation_parameter + "/" + name + "/"
-        file_2 = "Results_" + version2 + "/" + variation_parameter + "/" + name + "/"
-        p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-        n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-        parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-        jump_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-        if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular":
-            new_list = parameter_list
-        elif variation_parameter == "Jump":
-            new_list = jump_list
-        elif variation_parameter == "n":
-            new_list = n_list
-        else:
-            new_list = p_list
-
-        f = open(file_1 + "/mean.csv", 'r', newline='')
-        reader = csv.reader(f)
-        mean_Paper_file_1 = []
-        if version1 == "V1":
-            if variation_parameter == "Density" or variation_parameter == "Fat" or variation_parameter == "Regular" \
-                    or variation_parameter == "Jump":
-                next(reader)
-        for line in reader:
-            mean_Paper_file_1 += [float(line[1])]
-        f.close()
-        f = open(file_2 + "/mean.csv", 'r', newline='')
-        reader = csv.reader(f)
-        mean_Paper_file_2 = []
-        mean_Time = []
-        for line in reader:
-            mean_Paper_file_2 += [float(line[1])]
-            mean_Time += [float(line[2])]
-
-        # Display parameters
-        ###############################################################################################################
-        plt.plot(new_list, mean_Paper_file_1, label=name_1)
-        plt.plot(new_list, mean_Paper_file_2, label=name_2)
-        plt.plot(new_list, mean_Time, label='Min Time')
-        plt.xlabel(variation_parameter)
-        plt.legend()
-        plt.title(variation_parameter + " , " + name)
-        plt.ylabel("Normalized Makespan")
-        plt.savefig(saving_directory + "/" + variation_parameter + "/" + name + ".png")
-        plt.show()
-
-
-def display_results_boxplot(version1, version2, saving_directory):
-    name_list = ["Amdahl", "Communication", "General", "Roofline"]
-    parameters = ["Density", "Fat", "Jump", "n", "p"]
-    for name in name_list:
-        Paper_V1 = []
-        Paper_V2 = []
-        Min_Time = []
-        f = open("Results_" + version1 + "/P/" + name + "/all.csv", 'r', newline='')
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0] == "1500":
-                Paper_V1 += [float(line[1]) / float(line[3])]
-        f.close()
-        f = open("Results_" + version2 + "/P/" + name + "/all.csv", 'r', newline='')
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0] == "1500":
-                Paper_V2 += [float(line[1]) / float(line[3])]
-                Min_Time += [float(line[2]) / float(line[3])]
-        f.close()
-        plt.boxplot([Paper_V1, Paper_V2, Min_Time])
-        plt.xticks([1, 2, 3], ['Paper_' + version1, 'Paper_' + version2, 'Min Time'])
-        plt.ylabel('Normalized Makespan')
-        plt.savefig(saving_directory + "/" + name + "_Default_parameters.png")
-        plt.show()
-
-        
