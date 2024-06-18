@@ -13,10 +13,11 @@ import itertools
 import random
 
 nb_iterations = 10
-mu_values = np.arange(0.70, 0.79, 0.05)
-beta_values = np.arange(1, 5, 0.5)
-#mu_values = [0.9]
-#beta_values = [5]
+mu_values = np.arange(0.1, 0.9, 0.05)
+beta_values = np.arange(1, 5, 0.05),
+'-'
+# mu_values = [0.9]
+# beta_values = [5]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -31,7 +32,8 @@ def compute_and_save_wrapper(args):
         print(f"Error computing for mu={args[3]}, B={args[4]}, P={args[6]}: {e}")
 
 start_time = time.process_time_ns()
-result_directory = "Results_mast/n/Roofline"
+model_name = input("Enter the Model Name: ")
+result_directory = "Results_mtsa/n/" + model_name 
 os.makedirs(result_directory, exist_ok=True)
 num = 0
 
@@ -56,13 +58,13 @@ for mu in mu_values:
 
         with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mast'])
+            writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mtsa'])
 
             # Prepare arguments for compute_and_save_wrapper
             # for i in random_combinations:
             #     proc = i[0]
             #     n_tasks = i[1]
-            args_list = [('n', 'Results_mast/n/', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
+            args_list = [('n', 'Results_mtsa/n/', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
 
             # Use ThreadPoolExecutor for multithreading
             with ThreadPoolExecutor() as executor:

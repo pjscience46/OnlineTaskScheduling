@@ -9,8 +9,8 @@ class AmdahlModel(Model):
     def get_alpha(self) -> float:
         return (sqrt(2) + 1 + sqrt(2 * sqrt(2) - 1)) / 2 #paper2
 
-    def get_mu(self) -> float:
-        return (1 - sqrt(8 * sqrt(2) - 11)) / 2 #paper2
+    # def get_mu(self) -> float:
+    #     return (1 - sqrt(8 * sqrt(2) - 11)) / 2 #paper2
 
     def time(self, task: Task, nb_proc: int) -> float:
         return task.get_w() * ((1 - task.get_d()) / nb_proc + task.get_d())
@@ -25,8 +25,8 @@ class CommunicationModel(Model):
     def get_alpha(self) -> float:
         return 4 / 3   #from paper1
 
-    def get_mu(self) -> float:
-        return (23 - sqrt(313)) / 18  #paper2
+    # def get_mu(self) -> float:
+    #     return (23 - sqrt(313)) / 18  #paper2
 
     def time(self, task: Task, nb_proc: int) -> float:
         w, c = task.get_w(), task.get_c()
@@ -48,8 +48,8 @@ class GeneralModel(Model):
     def get_alpha(self) -> float:
         return 2
 
-    def get_mu(self) -> float:
-        return (33 - sqrt(738)) / 27
+    # def get_mu(self) -> float:
+    #     return (33 - sqrt(738)) / 27
 
     def time(self, task: Task, nb_proc: int) -> float:
         w, d, p, c = task.get_w(), task.get_d(), task.get_p(), task.get_c()

@@ -170,12 +170,12 @@ class Task:
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
             for i in range(1, upper_range + 1):
-                Alpha = self.get_area(i, speedup_model) / a_min
+                AR = self.get_area(i, speedup_model) / a_min
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
-                if TR > 1 and TR <= Beta1:
-                    if Alpha < Alpha_min:
-                        Alpha_min = Alpha
+                if AR >=1 and AR <= Beta1:
+                    if TR < Alpha_min:
+                        Alpha_min = TR
                         final_nb_processors = i                         
         
         self.set_allocation(final_nb_processors)
