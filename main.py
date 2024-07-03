@@ -13,9 +13,8 @@ import itertools
 import random
 
 nb_iterations = 10
-mu_values = np.arange(0.1, 0.9, 0.05)
-beta_values = np.arange(1, 5, 0.05),
-'-'
+mu_values = np.arange(0.4, 0.9, 0.05)
+beta_values = np.arange(1, 5.1, 0.05)
 # mu_values = [0.9]
 # beta_values = [5]
 
