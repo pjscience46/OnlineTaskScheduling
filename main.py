@@ -13,11 +13,10 @@ import itertools
 import random
 
 nb_iterations = 10
-mu_values = np.arange(0.1, 0.9, 0.05)
-beta_values = np.arange(1, 5, 0.05),
-'-'
-# mu_values = [0.9]
-# beta_values = [5]
+mu_values = np.arange(0.2, 0.91, 0.05)
+beta_values = np.arange(0, 1.01, 0.01)
+# mu_values = [0.5]
+# beta_values = [0.5]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -33,7 +32,7 @@ def compute_and_save_wrapper(args):
 
 start_time = time.process_time_ns()
 model_name = input("Enter the Model Name: ")
-result_directory = "Results_mtsa/n/" + model_name 
+result_directory = "Results_mtpa/n/" + model_name 
 os.makedirs(result_directory, exist_ok=True)
 num = 0
 
@@ -58,7 +57,7 @@ for mu in mu_values:
 
         with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mtsa'])
+            writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mtpa'])
 
             # Prepare arguments for compute_and_save_wrapper
             # for i in random_combinations:

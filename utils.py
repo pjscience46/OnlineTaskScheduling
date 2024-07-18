@@ -179,8 +179,8 @@ def compute_and_save(variation_parameter, result_directory,instances_nb,mu,B,ver
                                                                     adjacency=adjacency, mu_tild=mu_tild
                                                                     , speedup_model=speedup_model, P_tild=p_tild
                                                                    ,version=version)
-            mtsa = (time_algo_1/time_opt)
-            writer.writerow([str(P),str(n), str(time_algo_1), str(min_time), str(time_opt),str(mtsa)])
+            mtpa = (time_algo_1/time_opt)
+            writer.writerow([str(P),str(n), str(time_algo_1), str(min_time), str(time_opt),str(mtpa)])
     
 
 def normalize_list(data_list, mean_value):

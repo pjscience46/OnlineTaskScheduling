@@ -173,9 +173,10 @@ class Task:
                 AR = self.get_area(i, speedup_model) / a_min
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
-                if AR >=1 and AR <= Beta1:
-                    if TR < Alpha_min:
-                        Alpha_min = TR
+                if Beta1 >=0 and Beta1 <= 1 :
+                    Gamma_min = ((Beta1*AR) + ((1-Beta1)*TR))
+                    if Gamma_min < Alpha_min:
+                        Alpha_min = Gamma_min
                         final_nb_processors = i                         
         
         self.set_allocation(final_nb_processors)
