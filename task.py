@@ -88,9 +88,12 @@ class Task:
         self._status = value
 
     def set_allocation(self, value):
-        if value >= 1:
-           self._allocation = value
-               
+
+        if value < 1:
+
+            raise ValueError("The number of allocated processors must be superior to 1")
+
+        self._allocation = value
 
     def set_needed_time(self, value):
         self._needed_time = value
@@ -169,7 +172,7 @@ class Task:
             Alpha_min = inf
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
-            for i in range(1, upper_range + 1):
+            for i in range(1, p_max + 1):   
                 AR = self.get_area(i, speedup_model) / a_min
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
@@ -178,7 +181,13 @@ class Task:
                         Alpha_min = AR
                         final_nb_processors = i                         
         
-        self.set_allocation(final_nb_processors)
+        if final_nb_processors > ceil(mu_tild * P):
+
+            self.set_allocation(ceil(mu_tild * P))
+
+        else:
+
+            self.set_allocation(final_nb_processors)
         
         
         
