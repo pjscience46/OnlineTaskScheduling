@@ -86,10 +86,10 @@ class Processors:
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
                 allocation = task.get_allocation()
-                if allocation is not None:
-                    task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                    waiting_queue.add(task)
-                    task.set_status(Status.PROCESSING)
+                
+                task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
+                waiting_queue.add(task)
+                task.set_status(Status.PROCESSING)
                 
         while waiting_queue or process_list:
             # Cleaning of the processors
@@ -121,10 +121,10 @@ class Processors:
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
                 allocation1 = task.get_allocation()
-                if allocation1 is not None:
-                    task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                    waiting_queue.add(task)
-                    task.set_status(Status.PROCESSING)
+                
+                task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
+                waiting_queue.add(task)
+                task.set_status(Status.PROCESSING)
 
             # # Writing the status in the log
             # if save_in_logs:
