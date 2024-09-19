@@ -12,11 +12,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import itertools
 import random
 
-nb_iterations = 10
-mu_values = np.arange(0.65, 0.71, 0.05)
-beta_values = np.arange(3.55, 5, 0.05)
-# mu_values = [0.20]
-# beta_values = [1.80]
+nb_iterations = 1
+# mu_values = np.arange(0.65, 0.71, 0.05)
+# beta_values = np.arange(3.55, 5, 0.05)
+mu_values = [0.3]
+beta_values = [2.55]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -42,16 +42,18 @@ for mu in mu_values:
         create_empty_csv(mu, B, result_directory, file_name)
         file_path = os.path.join(result_directory, file_name)
 
-        p_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000]
-        n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        # p_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000]
+        # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        p_list = [4500]
+        n_list = [200]
         all_combinations = list(itertools.product(p_list, n_list))
 
         # Check if there are at least 100 unique combinations available
-        if len(all_combinations) < 100:
+        if len(all_combinations) < 1:
             print(f"Only {len(all_combinations)} unique combinations are possible.")
         else:
             # Randomly sample 100 unique combinations
-            random_combinations = random.sample(all_combinations, 101)
+            random_combinations = random.sample(all_combinations, 1)
             
         version = 0
 
