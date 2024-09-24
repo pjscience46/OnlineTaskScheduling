@@ -8,7 +8,7 @@ import os
 
 # Define the folder containing CSV files
 
-folder_path = r'C:\Users\pjsci\schedule\OnlineTaskScheduling\Results_mast\n\General'
+folder_path = r'C:\Thesis\updated_algo\Algo1\OnlineTaskScheduling\Results_mast\n\Updated_results\Heat_Maps\Amdahl'
 
  
 
@@ -158,7 +158,7 @@ for file_name in os.listdir(folder_path):
 
 # Define the output file path
 
-output_file_path = r'C:\Users\pjsci\schedule\OnlineTaskScheduling\Results_mast\Heat_Maps\General\Generate_Avg_Max.csv'
+output_file_path = r'C:\Thesis\updated_algo\Algo1\OnlineTaskScheduling\Results_mast\n\Updated_results\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
 
 # Write the DataFrame to a new CSV file
 

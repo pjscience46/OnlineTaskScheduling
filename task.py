@@ -166,14 +166,14 @@ class Task:
 
         p_max = self.get_p_max(P, speedup_model)
         t_min = self.get_execution_time(p_max, speedup_model)
-        a_min = self.get_execution_time(1, speedup_model)
+        a_min = self.get_minimum_area(1, speedup_model)
 
         if version == 0:
             Alpha_min = inf
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):   
-                AR = self.get_area(i, speedup_model) / a_min
+                AR = self.get_area(i, speedup_model) / a_min[0]
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
                 if TR >=1 and TR <= Beta1:

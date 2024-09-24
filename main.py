@@ -13,10 +13,10 @@ import itertools
 import random
 
 nb_iterations = 1
-# mu_values = np.arange(0.65, 0.71, 0.05)
-# beta_values = np.arange(3.55, 5, 0.05)
-mu_values = [0.3]
-beta_values = [2.55]
+# mu_values = np.arange(0.1, 0.91, 0.1)
+beta_values = np.arange(1, 4.6, 0.5)
+mu_values = [0.9]
+# beta_values = [2.55]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -32,7 +32,7 @@ def compute_and_save_wrapper(args):
 
 start_time = time.process_time_ns()
 model_name = input("Enter the Model Name: ")
-result_directory = "Results_mast/n/" + model_name 
+result_directory = "Results_mast/n/Updated_results/Heat_Maps" + model_name 
 os.makedirs(result_directory, exist_ok=True)
 num = 0
 
@@ -42,18 +42,18 @@ for mu in mu_values:
         create_empty_csv(mu, B, result_directory, file_name)
         file_path = os.path.join(result_directory, file_name)
 
-        # p_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000]
-        # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-        p_list = [4500]
-        n_list = [200]
+        p_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000]
+        n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        # p_list = [4500]
+        # n_list = [200]
         all_combinations = list(itertools.product(p_list, n_list))
 
         # Check if there are at least 100 unique combinations available
-        if len(all_combinations) < 1:
+        if len(all_combinations) < 100:
             print(f"Only {len(all_combinations)} unique combinations are possible.")
         else:
             # Randomly sample 100 unique combinations
-            random_combinations = random.sample(all_combinations, 1)
+            random_combinations = random.sample(all_combinations, 101)
             
         version = 0
 
@@ -65,7 +65,7 @@ for mu in mu_values:
             # for i in random_combinations:
             #     proc = i[0]
             #     n_tasks = i[1]
-            args_list = [('n', 'Results_mast/n/', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
+            args_list = [('n', 'Results_mast/n/Updated_results/Heat_Maps', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
 
             # Use ThreadPoolExecutor for multithreading
             with ThreadPoolExecutor() as executor:

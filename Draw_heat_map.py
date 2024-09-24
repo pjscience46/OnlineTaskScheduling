@@ -1,11 +1,19 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
 # Define the path to the summary CSV file
-summary_file_path = r'C:\Users\pjsci\schedule\OnlineTaskScheduling\Results_mast\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
+summary_file_path = r'C:\Thesis\updated_algo\Algo1\OnlineTaskScheduling\Results_mast\n\Updated_results\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
+
+# Define the directory to save the heat maps
+save_directory = r'C:\Thesis\updated_algo\Algo1\OnlineTaskScheduling\Results_mast\n\Updated_results\Heat_Maps\Amdahl'
+
+# Ensure the save directory exists
+os.makedirs(save_directory, exist_ok=True)
 
 # Load the summary data into a DataFrame
+
 df = pd.read_csv(summary_file_path)
 
 # Check if the required columns are present
@@ -24,7 +32,10 @@ plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
 plt.tight_layout()
-plt.savefig('heatmap_average.png')
+
+# Save the average heatmap
+average_heatmap_path = os.path.join(save_directory, 'heatmap_average.png')
+plt.savefig(average_heatmap_path)
 plt.show()
 
 # Pivot the data for max values
@@ -39,5 +50,8 @@ plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
 plt.tight_layout()
-plt.savefig('heatmap_max.png')
+
+# Save the max heatmap
+max_heatmap_path = os.path.join(save_directory, 'heatmap_max.png')
+plt.savefig(max_heatmap_path)
 plt.show()
