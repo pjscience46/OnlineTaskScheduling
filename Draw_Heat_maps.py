@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 
 # Define the path to the summary CSV file
 
-summary_file_path = r'C:\Users\pjsci\schedule\Algorithm2\OnlineTaskScheduling\Results_mtsa\n\Heat_Maps\Roofline\Generate_Avg_Max.csv'
+#summary_file_path = r'C:\Users\pjsci\schedule\Algorithm2\OnlineTaskScheduling\Results_mtsa1\n\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
 
-
+summary_file_path = r'C:\Thesis\updated_algo\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Amdahl\Generate_Avg_Max.csv'
 
 
 # Load the summary data into a DataFrame
@@ -42,7 +42,7 @@ pivot_avg = df.pivot(index='mu', columns='beta', values='average')
 
 plt.figure(figsize=(12, 8))
 
-sns.heatmap(pivot_avg, annot=False, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_avg, annot=True, cmap='viridis', cbar=True)  # annot=False to hide numbers
 
 plt.title('Heat Map of Average Values')
 
@@ -74,7 +74,7 @@ pivot_max = df.pivot(index='mu', columns='beta', values='max')
 
 plt.figure(figsize=(12, 8))
 
-sns.heatmap(pivot_max, annot=False, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_max, annot=True, cmap='viridis', cbar=True)  # annot=False to hide numbers
 
 plt.title('Heat Map of Max Values')
 

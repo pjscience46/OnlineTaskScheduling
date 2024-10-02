@@ -12,11 +12,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import itertools
 import random
 
-nb_iterations = 10
-mu_values = np.arange(0.85, 0.86, 0.05)
-beta_values = np.arange(1.85, 5.1, 0.05)
-# mu_values = [0.9]
-# beta_values = [5]
+nb_iterations = 1
+# mu_values = np.arange(0.1, 0.91, 0.1)
+# beta_values = np.arange(1, 5.1, 0.5)
+mu_values = [0.7]
+beta_values = [3.0]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -32,7 +32,7 @@ def compute_and_save_wrapper(args):
 
 start_time = time.process_time_ns()
 model_name = input("Enter the Model Name: ")
-result_directory = "Results_mtsa/n/" + model_name 
+result_directory = "Results_mtsa1/n/" + model_name 
 os.makedirs(result_directory, exist_ok=True)
 num = 0
 
@@ -51,7 +51,7 @@ for mu in mu_values:
             print(f"Only {len(all_combinations)} unique combinations are possible.")
         else:
             # Randomly sample 100 unique combinations
-            random_combinations = random.sample(all_combinations, 101)
+            random_combinations = random.sample(all_combinations, 100)
             
         version = 0
 
@@ -63,7 +63,7 @@ for mu in mu_values:
             # for i in random_combinations:
             #     proc = i[0]
             #     n_tasks = i[1]
-            args_list = [('n', 'Results_mtsa/n/', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
+            args_list = [('n', 'Results_mtsa1/n/', nb_iterations, mu, B, version, i[0], i[1],writer)for i in random_combinations ]
 
             # Use ThreadPoolExecutor for multithreading
             with ThreadPoolExecutor() as executor:

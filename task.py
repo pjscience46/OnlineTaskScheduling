@@ -145,33 +145,18 @@ class Task:
         d = self.get_d()
         c = self.get_c()
 
-        # p_max = self.get_p_max(P, speedup_model)
-        # t_min = self.get_minimum_execution_time(p_max, speedup_model)
-        # a_min = self.get_minimum_area(1, speedup_model)#execution_time * p = a
-       
-        
-        # Alpha_min = inf
-        # final_nb_processors = -1
-        # Upper_range = ceil(mu_tild * P)
-        # for i in range(1, p_max  + 1):
-        #     Alpha = self.get_area(i, speedup_model) / a_min[0]
-        #     Beta = self.get_execution_time(i, speedup_model) / t_min[0]
-
-        #     if Beta < (1 - 2 * mu_tild) / (mu_tild * (1 - mu_tild)):
-        #         if Alpha < Alpha_min:
-        #             Alpha_min = Alpha
-        #             final_nb_processors = i 
-
         p_max = self.get_p_max(P, speedup_model)
         t_min = self.get_execution_time(p_max, speedup_model)
-        a_min = self.get_execution_time(1, speedup_model)
+        "get_minimum_execution_time - here the logic is that the time is compared to infinity.Time is always less than infinity and so "
+        "it returns same value as get_execution_time"
+        a_min = self.get_minimum_area(1, speedup_model)
 
         if version == 0:
             Alpha_min = inf
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):
-                AR = self.get_area(i, speedup_model) / a_min
+                AR = self.get_area(i, speedup_model) / a_min[0]
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
                 if AR >=1 and AR <= Beta1:
@@ -183,8 +168,6 @@ class Task:
             self.set_allocation(ceil(mu_tild * P))
         else:
             self.set_allocation(final_nb_processors)
-        
-        
         
 
     def get_minimum_execution_time(self, P, speedup_model: Model):
