@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [RooflineModel()]
+MODEL_LIST = [RooflineModel(),AmdahlModel(),AmdahlModel(),CommunicationModel()]
 
 #MODEL_LIST = [Roofline()]
 def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
@@ -106,48 +106,31 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save(variation_parameter, result_directory,instances_nb,mu,B,version, P,n,writer):
+def compute_and_save(variation_parameter, result_directory,model_name,instances_nb,mu,B,version, P,n,writer):
   
     # Fixed parameters
     model_list = MODEL_LIST
-    #n_list = [100]
-    # parameter_list = [0.5]
     jump = [1]
-    # Variations
-    #p_list = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
-    n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-    
     parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
-    
-    #jump = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Used to variate jump
-
-    # for j in range(len(name_list)):
     start_time = time.process_time_ns()
     num = 1
-    # f = open(result_directory + "Roofline" +
-    #              "/all.csv", 'w', newline='')
-    # writer = csv.writer(f)
-    # writer.writerow(['P',variation_parameter, 'Paper', 'Min Time', 'Time opt','Comment'])
+    model = {}
 
-    model = MODEL_LIST[0]
+    if(model_name == 'General'):
+        model = GeneralModel()
+    elif(model_name == 'Roofline'):
+        model = RooflineModel()
+    elif(model_name == 'Amdahl'):
+        model = AmdahlModel()
+    elif(model_name == 'Communication'):
+        model = CommunicationModel()
 
     for i in range(1, instances_nb + 1):
-    
-        #for k in range(len(n_list)):
-            # pc = num / (instances_nb * len(n_list) * len(MODEL_LIST))
-            # eta = ((time.process_time_ns() - start_time) / 1e9) * ((1 - pc) / pc)
-            # # print(f"[{pc * 100:.2f} %]"
-            # #         f" {model.name} model ,"
-            # #         f" instance {i:2d}/{instances_nb},"
-            # #         f" parameter {k + 1:2d}/{len(n_list)}"
-            # #         f" ETA: {int(eta)}s")
-            # num += 1
-            
 
             daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
                             str(n) + "/" + str(i) + ".csv"
-            node_file = "TASKS/n=" + str(n) + "/" + str(i) + ".csv"
-
+        
+            node_file = "Tasks/n=" + str(n) + "/" + str(i) + ".csv"
             nodes = load_nodes_from_csv(node_file) #w,p,c,d
             edges = extract_dependencies_from_csv(daggen_file)
 

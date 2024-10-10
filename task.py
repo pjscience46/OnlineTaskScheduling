@@ -127,16 +127,38 @@ class Task:
     def get_p_max(self, P, speedup_model: Model):
         """"Allocating more than p_max processors to the task will no longer decrease its execution time"""
         return speedup_model.p_max(self, P)
+    def count_digits(variable):
+        return sum(1 for char in str(variable) if char.isdigit())
+    def restrict_digi_count(w_str,count):
+        w_str = str(w_str) 
+        # Split the string into integer and decimal parts
+        if '.' in w_str:
+            integer_part, decimal_part = w_str.split('.')
+        else:
+            integer_part, decimal_part = w_str, ''
+
+        # Count total digits (ignoring the decimal point)
+        total_digits = len(integer_part) + len(decimal_part)
+
+        # Restrict to 10 significant digits
+        if total_digits > count:
+            if len(integer_part) >= count:
+                # If the integer part has 10 or more digits, keep only the first 10
+                w_str = integer_part[:count]
+            else:
+                # Otherwise, keep the integer part and trim the decimal part
+                digits_needed = count - len(integer_part)
+                w_str = integer_part + decimal_part[:digits_needed]
+
+        # Convert back to a float or int as needed
+        w = float(w_str) if '.' in w_str else int(w_str)
+
+        return w
 
     def allocate_processor_algo(self, P, mu_tild, alpha,Beta1, speedup_model: Model,version):
         """
         Return the number of processors needed to compute a given task. It's the implementation of the algorithm 2
         from the paper.
-
-        - version = 0 : thm.e first version of the algorithm.
-        - version = 1 : the second version of the algorith
-
-
         """
 
         # Step 1 : Initial Allocation
@@ -156,13 +178,20 @@ class Task:
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):
-                AR = self.get_area(i, speedup_model) / a_min[0]
+                get_area = self.get_area(i, speedup_model)
+                dig_count1 = Task.count_digits(w) 
+                dig_count2 = Task.count_digits(get_area)   
+                task_area = Task.restrict_digi_count(get_area,dig_count1)
+                AR = task_area / a_min[0]
                 TR = self.get_execution_time(i, speedup_model) / t_min
                 
                 if AR >=1 and AR <= Beta1:
                     if TR < Alpha_min:
                         Alpha_min = TR
-                        final_nb_processors = i                         
+                        final_nb_processors = i   
+
+            if speedup_model.name == "Roofline":
+                final_nb_processors = self.get_p()                      
         
         if final_nb_processors > ceil(mu_tild * P):
             self.set_allocation(ceil(mu_tild * P))

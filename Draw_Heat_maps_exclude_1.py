@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import os
 
 # Define the path to the summary CSV file
-summary_file_path = r'C:\Thesis\updated_algo\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Communication\Generate_Avg_Max.csv'
+summary_file_path = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Amdahl\Generate_Avg_Max.csv'
 
 # Define the directory to save the heat maps
-save_directory = r'C:\Thesis\updated_algo\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Heat_Maps\Communication'
+save_directory = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Heat_Maps\Amdahl'
 
 # Ensure the save directory exists
 os.makedirs(save_directory, exist_ok=True)
@@ -19,15 +19,19 @@ df = pd.read_csv(summary_file_path)
 # Check if the required columns are present
 if not all(col in df.columns for col in ['mu', 'beta', 'average', 'max']):
     raise ValueError("The summary file is missing required columns.")
-
+df_filtered = df[df['beta'] != 1]
 # Pivot the data for average values
-pivot_avg = df.pivot(index='mu', columns='beta', values='average')
+pivot_avg = df_filtered.pivot(index='mu', columns='beta', values='average')
+min_value_avg = df_filtered['average'].min()
+max_value_avg = df_filtered['average'].max()
 
+min_value_max = df_filtered['max'].min()
+max_value_max = df_filtered['max'].max()
 # Plot the heat map for average values without annotations
 plt.figure(figsize=(12, 8))
-sns.heatmap(pivot_avg, annot=False, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_avg, annot=True, fmt="g",cmap='viridis', cbar=True,vmin = min_value_avg )  # annot=False to hide numbers
 plt.title('Heat Map of Average Values')
-plt.xlabel('Beta')
+plt.xlabel('Alpha')
 plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
@@ -39,13 +43,13 @@ plt.savefig(average_heatmap_path)
 plt.show()
 
 # Pivot the data for max values
-pivot_max = df.pivot(index='mu', columns='beta', values='max')
+pivot_max = df_filtered.pivot(index='mu', columns='beta', values='max')
 
 # Plot the heat map for max values without annotations
 plt.figure(figsize=(12, 8))
-sns.heatmap(pivot_max, annot=False, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_max, annot=True, fmt="g" ,cmap='viridis', cbar=True,vmin = min_value_max)  # annot=False to hide numbers
 plt.title('Heat Map of Max Values')
-plt.xlabel('Beta')
+plt.xlabel('Alpha')
 plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
