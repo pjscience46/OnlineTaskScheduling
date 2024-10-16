@@ -15,8 +15,8 @@ import random
 nb_iterations = 2
 # mu_values = np.arange(0.1, 0.91, 0.1)
 # beta_values = np.arange(1, 5.1, 0.5)
-mu_values = [0.6]
-beta_values = [5.5]
+mu_values = [0.7]
+beta_values = [1.5]
 
 def create_empty_csv(mu, B, directory, file_name):
     file_path = os.path.join(directory, file_name)
@@ -32,7 +32,7 @@ def compute_and_save_wrapper(args):
 
 start_time = time.process_time_ns()
 model_name = input("Enter the Model Name: ")
-result_directory = "Results_mtsa1/n/" + model_name 
+result_directory = "Results_mtsa/n/" + model_name 
 os.makedirs(result_directory, exist_ok=True)
 num = 0
 
@@ -44,8 +44,8 @@ for mu in mu_values:
 
         # p_list = [ 500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
         # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-        p_list = [2000]
-        n_list = [100]
+        p_list = [100]
+        n_list = [400]
         all_combinations = list(itertools.product(p_list, n_list))
 
         # # Check if there are at least 100 unique combinations available
@@ -60,7 +60,7 @@ for mu in mu_values:
         with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mtsa'])
-            args_list = [('n', 'Results_mtsa1/n/',model_name, nb_iterations, mu, B, version, i[0], i[1],writer)for i in all_combinations ]
+            args_list = [('n', 'Results_mtsa/n/',model_name, nb_iterations, mu, B, version, i[0], i[1],writer)for i in all_combinations ]
             with ThreadPoolExecutor() as executor:
                 futures = [executor.submit(compute_and_save_wrapper, args) for args in args_list]
                 for future in as_completed(futures):
