@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import os
 
 # Define the path to the summary CSV file
-summary_file_path = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Amdahl\Generate_Avg_Max.csv'
+summary_file_path = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Roofline\Generate_Avg_Max.csv'
 
 # Define the directory to save the heat maps
-save_directory = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Heat_Maps\Amdahl'
+save_directory = r'C:\Thesis\Test_Prog\Algo2\OnlineTaskScheduling\Results_mtsa1\n\Heat_Maps_exclude_Alpha1\Roofline'
 
 # Ensure the save directory exists
 os.makedirs(save_directory, exist_ok=True)
