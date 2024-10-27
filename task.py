@@ -158,16 +158,8 @@ class Task:
 
         return w
 
-    def allocate_processor_algo(self, P, mu_tild, alpha,Beta1, speedup_model: Model,version):
-        """
-        Return the number of processors needed to compute a given task. It's the implementation of the algorithm 2
-        from the paper.
-
-        - version = 0 : thm.e first version of the algorithm.
-        - version = 1 : the second version of the algorith
-
-
-        """
+    def allocate_processor_algo(self, P, mu_tild, alpha,Gama, speedup_model: Model,version):
+        
 
         # Step 1 : Initial Allocation
         w = self.get_w()
@@ -180,20 +172,19 @@ class Task:
         a_min = self.get_minimum_area(1, speedup_model)
 
         if version == 0:
-            Alpha_min = inf
+            min_value = float('inf')
+            
             final_nb_processors = -1
             upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):   
                 get_area = self.get_area(i, speedup_model)
-                dig_count1 = Task.count_digits(w) 
-                dig_count2 = Task.count_digits(get_area)   
-                task_area = Task.restrict_digi_count(get_area,dig_count1)
-                AR = task_area / a_min[0]
-                TR = self.get_execution_time(i, speedup_model) / t_min
-                if TR >=1 and TR <= Beta1:
-                    if AR < Alpha_min:
-                        Alpha_min = AR
-                        final_nb_processors = i                         
+                
+                AR = (get_area / a_min[0]) * Gama
+                TR = (self.get_execution_time(i, speedup_model) / t_min) * (1 - Gama)
+                total_value = AR + TR 
+                if total_value < min_value:
+                    min_value = total_value
+                    final_nb_processors = i                      
         
         if final_nb_processors > ceil(mu_tild * P):
 

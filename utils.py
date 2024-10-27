@@ -135,7 +135,7 @@ def compute_and_save(variation_parameter, result_directory,model_name,instances_
             edges = extract_dependencies_from_csv(daggen_file)
 
             mu_tild = mu #constant value depends up on model
-            Beta1 = B
+            Gama = B
             alpha_tild = model.get_alpha() #constant value depends up on model
             p_tild = P
 
@@ -153,12 +153,12 @@ def compute_and_save(variation_parameter, result_directory,model_name,instances_
             #opt time is max (Amin/p , cmin)
             time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
             # print("start paper")
-            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,Beta1=Beta1,
+            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,Gama=Gama,
                                                                     adjacency=adjacency, mu_tild=mu_tild
                                                                     , speedup_model=speedup_model, P_tild=p_tild
                                                                    ,version=version)
             # print("start min")
-            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,Beta1=Beta1,
+            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,Gama=Gama,
                                                                     adjacency=adjacency, mu_tild=mu_tild
                                                                     , speedup_model=speedup_model, P_tild=p_tild
                                                                    ,version=version)
