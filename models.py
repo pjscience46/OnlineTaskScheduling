@@ -13,7 +13,7 @@ class AmdahlModel(Model):
     #     return (1 - sqrt(8 * sqrt(2) - 11)) / 2 #paper2
 
     def time(self, task: Task, nb_proc: int) -> float:
-        return task.get_w() * ((1 - task.get_d()) / nb_proc + task.get_d())
+        return task.get_w() * ((1/nb_proc) + task.get_d())
 
     def p_max(self, task: Task, p: int) -> int:
         return p
@@ -30,7 +30,7 @@ class CommunicationModel(Model):
 
     def time(self, task: Task, nb_proc: int) -> float:
         w, c = task.get_w(), task.get_c()
-        return w / nb_proc + c * (nb_proc - 1)
+        return w * ((1/ nb_proc) + (c * (nb_proc - 1)))
 
     def p_max(self, task: Task, p: int) -> int:
         s = sqrt(task.get_w() / task.get_c())
@@ -53,7 +53,7 @@ class GeneralModel(Model):
 
     def time(self, task: Task, nb_proc: int) -> float:
         w, d, p, c = task.get_w(), task.get_d(), task.get_p(), task.get_c()
-        return w * ((1 - d) / min(nb_proc, p) + d) + c * (nb_proc - 1)
+        return w * ((1  / min(nb_proc, p)) + d + (c * (nb_proc - 1)))
 
     def p_max(self, task: Task, p: int) -> int:
         s = sqrt(task.get_w() / task.get_c())

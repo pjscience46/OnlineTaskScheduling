@@ -17,22 +17,20 @@ from model import *
 MODEL_LIST = [RooflineModel(),AmdahlModel(),AmdahlModel(),CommunicationModel()]
 
 #MODEL_LIST = [Roofline()]
-def generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
+def generate_task(w_bounds, p_bounds, d_prime_bounds, c_prime_bounds):
     """Generate a task based on the boundaries written in numerics"""
     w = uniform(w_bounds[0], w_bounds[1])
     p = randint(p_bounds[0], p_bounds[1])
-    d = uniform(alpha_d_bounds[0], alpha_d_bounds[1]) / \
-        10 ** (randint(r_d_bounds[0], r_d_bounds[1]))
-    c = uniform(alpha_c_bounds[0], alpha_c_bounds[1]) * \
-        2 ** (randint(r_c_bounds[0], r_c_bounds[1]))
-    return Task(w, p, d, c)
+    d_prime = uniform(dprime_bounds[0], dprime_bounds[1])
+    c_prime = uniform(cprime_bounds[0], cprime_bounds[1])
+    return Task(w, p, d_prime, c_prime)
 
 
-def generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds):
+def generate_n_tasks(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds):
     """Generate a list of n tasks based on the boundaries written in numerics"""
     output = []
     for i in range(n):
-        output += [generate_task(w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)]
+        output += [generate_task(w_bounds, p_bounds, d_prime_bounds, c_prime_bounds)]
     return output
 
 
@@ -66,9 +64,8 @@ def extract_dependencies_from_csv(file, utf_code="utf-16"):
     return edges
 
 
-def generate_nodes_edges(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds,
-                         dependency_file):
-    nodes = generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
+def generate_nodes_edges(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds, dependency_file):
+    nodes = generate_n_tasks(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds)
     edges = extract_dependencies_from_csv(dependency_file)
     for edge in edges:  # We need to pass from numbers to task objects
         edge[0] = nodes[edge[0]]
@@ -76,9 +73,9 @@ def generate_nodes_edges(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alph
     return [nodes, edges]
 
 
-def save_nodes_in_csv(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds, file):
+def save_nodes_in_csv(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds, file):
     """Saves a set of nodes and their parameters in a csv file"""
-    nodes = generate_n_tasks(n, w_bounds, p_bounds, alpha_d_bounds, r_d_bounds, alpha_c_bounds, r_c_bounds)
+    nodes = generate_n_tasks(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds)
     f = open(file, 'w', newline='')
     writer = csv.writer(f)
     writer.writerow(['w', 'p', 'd', 'c'])

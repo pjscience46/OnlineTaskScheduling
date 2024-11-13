@@ -19,13 +19,17 @@ df = pd.read_csv(summary_file_path)
 # Check if the required columns are present
 if not all(col in df.columns for col in ['mu', 'beta', 'average', 'max']):
     raise ValueError("The summary file is missing required columns.")
-
+df_filtered = df
 # Pivot the data for average values
-pivot_avg = df.pivot(index='mu', columns='beta', values='average')
+pivot_avg = df_filtered.pivot(index='mu', columns='beta', values='average')
+min_value_avg = df_filtered['average'].min()
+max_value_avg = df_filtered['average'].max()
 
+min_value_max = df_filtered['max'].min()
+max_value_max = df_filtered['max'].max()
 # Plot the heat map for average values without annotations
 plt.figure(figsize=(12, 8))
-sns.heatmap(pivot_avg, annot=True, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_avg, annot=True, fmt="g",cmap='viridis', cbar=True,vmin = min_value_avg )  # annot=False to hide numbers
 plt.title('Heat Map of Average Values')
 plt.xlabel('Gama')
 plt.ylabel('Mu')
@@ -39,11 +43,11 @@ plt.savefig(average_heatmap_path)
 plt.show()
 
 # Pivot the data for max values
-pivot_max = df.pivot(index='mu', columns='beta', values='max')
+pivot_max = df_filtered.pivot(index='mu', columns='beta', values='max')
 
 # Plot the heat map for max values without annotations
 plt.figure(figsize=(12, 8))
-sns.heatmap(pivot_max, annot=True, cmap='viridis', cbar=True)  # annot=False to hide numbers
+sns.heatmap(pivot_max, annot=True, fmt="g" ,cmap='viridis', cbar=True,vmin = min_value_max)  # annot=False to hide numbers
 plt.title('Heat Map of Max Values')
 plt.xlabel('Gama')
 plt.ylabel('Mu')

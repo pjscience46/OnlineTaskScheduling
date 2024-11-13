@@ -3,7 +3,7 @@ import re
 import os
 
 # Define the folder containing CSV files
-folder_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mtpa\n\General'
+folder_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mtpa\n\Roofline'
 
 # Initialize an empty DataFrame to collect results
 results_df = pd.DataFrame(columns=['mu', 'beta', 'average', 'max'])
@@ -78,7 +78,7 @@ for file_name in os.listdir(folder_path):
         process_file(file_path)
 
 # Define the output file path
-output_file_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mtpa\Heat_Maps\General\Generate_Avg_Max.csv'
+output_file_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mtpa\Heat_Maps\Roofline\Generate_Avg_Max.csv'
 # Write the DataFrame to a new CSV file
 results_df.to_csv(output_file_path, index=False)
 

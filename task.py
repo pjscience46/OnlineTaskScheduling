@@ -124,6 +124,8 @@ class Task:
 
     def get_area(self, number_of_processors, speedup_model: Model):
         """Return the area of a task depending on the number of processor allocated and the speedup model"""
+        if number_of_processors == 19:
+            time_t = self.get_execution_time(number_of_processors, speedup_model)
         return self.get_execution_time(number_of_processors, speedup_model) * number_of_processors
 
     def get_p_max(self, P, speedup_model: Model):
@@ -170,11 +172,36 @@ class Task:
         p_max = self.get_p_max(P, speedup_model)
         t_min = self.get_execution_time(p_max, speedup_model)
         a_min = self.get_minimum_area(1, speedup_model)
-
+        final_nb_processors = -1
         if version == 0:
+            Alpha_min = inf
+            final_nb_processors = -1
+            upper_range = ceil(mu_tild * P)
+            for i in range(1, p_max + 1):   
+                get_area = self.get_area(i, speedup_model)
+                AR = get_area / a_min[0]
+                TR = self.get_execution_time(i, speedup_model) / t_min
+                if TR >=1 and TR <= Gama:
+                    if AR < Alpha_min:
+                        Alpha_min = AR
+                        final_nb_processors = i 
+        elif version == 1:
+            Alpha_min = inf
+            final_nb_processors = -1
+            upper_range = ceil(mu_tild * P)
+            for i in range(1, p_max + 1):
+                get_area = self.get_area(i, speedup_model)
+                AR = get_area / a_min[0]
+                TR = self.get_execution_time(i, speedup_model) / t_min
+                
+                if AR >=1 and AR <= Gama:
+                    if TR < Alpha_min:
+                        Alpha_min = TR
+                        final_nb_processors = i                
+        elif version == 2:
             min_value = float('inf')
             
-            final_nb_processors = -1
+            
             upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):   
                 get_area = self.get_area(i, speedup_model)
@@ -184,14 +211,12 @@ class Task:
                 total_value = AR + TR 
                 if total_value < min_value:
                     min_value = total_value
-                    final_nb_processors = i                      
-        
+                    final_nb_processors = i  
+
+                                
         if final_nb_processors > ceil(mu_tild * P):
-
             self.set_allocation(ceil(mu_tild * P))
-
         else:
-
             self.set_allocation(final_nb_processors)
         
         
