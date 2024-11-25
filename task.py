@@ -1,11 +1,3 @@
-################################
-# Verrecchia Thomas            #
-# Summer - 2022                #
-# Internship Kansas University #
-################################
-
-# A class implementing the concept of a Task. A Task has certain parameters (w,p,d,c) and can be assigned with the
-# number of processors that will be used to complete this task.
 
 from math import *
 from model import Model
@@ -131,36 +123,9 @@ class Task:
     def get_p_max(self, P, speedup_model: Model):
         """"Allocating more than p_max processors to the task will no longer decrease its execution time"""
         return speedup_model.p_max(self, P)
-    
-    def count_digits(variable):
-        return sum(1 for char in str(variable) if char.isdigit())
-    def restrict_digi_count(w_str,count):
-        w_str = str(w_str) 
-        # Split the string into integer and decimal parts
-        if '.' in w_str:
-            integer_part, decimal_part = w_str.split('.')
-        else:
-            integer_part, decimal_part = w_str, ''
+ 
 
-        # Count total digits (ignoring the decimal point)
-        total_digits = len(integer_part) + len(decimal_part)
-
-        # Restrict to 10 significant digits
-        if total_digits > count:
-            if len(integer_part) >= count:
-                # If the integer part has 10 or more digits, keep only the first 10
-                w_str = integer_part[:count]
-            else:
-                # Otherwise, keep the integer part and trim the decimal part
-                digits_needed = count - len(integer_part)
-                w_str = integer_part + decimal_part[:digits_needed]
-
-        # Convert back to a float or int as needed
-        w = float(w_str) if '.' in w_str else int(w_str)
-
-        return w
-
-    def allocate_processor_algo(self, P, mu_tild, alpha,Gama, speedup_model: Model,version):
+    def allocate_processor_algo(self, P_num, mu, alpha,beta,gamma, speedup_model: Model,version):
         
 
         # Step 1 : Initial Allocation
@@ -168,59 +133,47 @@ class Task:
         p = self.get_p()
         d = self.get_d()
         c = self.get_c()
-
-        p_max = self.get_p_max(P, speedup_model)
-        t_min = self.get_execution_time(p_max, speedup_model)
+        #p_num - number of avilable processors
+        p_max = self.get_p_max(P_num, speedup_model)
+        t_min = self.get_minimum_execution_time(p_max, speedup_model)
         a_min = self.get_minimum_area(1, speedup_model)
         final_nb_processors = -1
         if version == 0:
-            Alpha_min = inf
-            final_nb_processors = -1
-            upper_range = ceil(mu_tild * P)
+            beta_min = inf
             for i in range(1, p_max + 1):   
-                get_area = self.get_area(i, speedup_model)
-                AR = get_area / a_min[0]
-                TR = self.get_execution_time(i, speedup_model) / t_min
-                if TR >=1 and TR <= Gama:
-                    if AR < Alpha_min:
-                        Alpha_min = AR
+                AR = self.get_area(i, speedup_model) / a_min[0]  #ratio of area of task to minimum area
+                TR = self.get_execution_time(i, speedup_model) / t_min[0] #ratio of time taken by task to minimum time
+                if TR >=1 and TR <= beta:
+                    if AR < beta_min:
+                        beta_min = AR
                         final_nb_processors = i 
+
         elif version == 1:
             Alpha_min = inf
-            final_nb_processors = -1
-            upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):
-                get_area = self.get_area(i, speedup_model)
-                AR = get_area / a_min[0]
-                TR = self.get_execution_time(i, speedup_model) / t_min
-                
-                if AR >=1 and AR <= Gama:
+                AR = self.get_area(i, speedup_model)/ a_min[0]
+                TR = self.get_execution_time(i, speedup_model) / t_min[0]
+                if AR >=1 and AR <= alpha:
                     if TR < Alpha_min:
                         Alpha_min = TR
-                        final_nb_processors = i                
+                        final_nb_processors = i  
+
         elif version == 2:
             min_value = float('inf')
-            
-            
-            upper_range = ceil(mu_tild * P)
             for i in range(1, p_max + 1):   
-                get_area = self.get_area(i, speedup_model)
-                
-                AR = (get_area / a_min[0]) * Gama
-                TR = (self.get_execution_time(i, speedup_model) / t_min) * (1 - Gama)
-                total_value = AR + TR 
+                AR = self.get_area(i, speedup_model) / a_min[0]
+                TR = self.get_execution_time(i, speedup_model) / t_min[0]
+                total_value = ((AR )* gamma ) + ((TR )* (1 - gamma))
                 if total_value < min_value:
                     min_value = total_value
                     final_nb_processors = i  
 
                                 
-        if final_nb_processors > ceil(mu_tild * P):
-            self.set_allocation(ceil(mu_tild * P))
+        if final_nb_processors > ceil(mu * P_num):
+            self.set_allocation(ceil(mu * P_num))
         else:
             self.set_allocation(final_nb_processors)
-        
-        
-        
+            
 
     def get_minimum_execution_time(self, P, speedup_model: Model):
         """Return the minimum execution time"""

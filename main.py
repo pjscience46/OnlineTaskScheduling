@@ -15,57 +15,80 @@ import random
 nb_iterations = 1
 # mu_values = np.arange(0.6, 0.91, 0.1)
 # Gama_values = np.arange(0, 1.05, 0.1)
-mu_values = [0.3]
-Gama_values = [1.5]
-version = int(input("Enter algorithm version number : "))
+mu_values = [0.2]
+paramter_values = [1.5]
+
+version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:
-    parameter = 'Beta'
+    parameter = 'beta'
+    folder = "Results_mast/"
 elif version == 1:
-    parameter = 'Alpha'
+    parameter = 'alpha'
+    folder = "Results_mtsa/"
 elif version == 2:
-    parameter = 'Gama'
+    parameter = 'gamma'
+    folder = "Results_mtpa/"
+
+model_num = int(input("Enter the Model Number [0-Roofline , 1-Amdahl, 2-Communication , 3-General]: "))
+if model_num == 0:
+    model_name = "Roofline"
+elif model_num == 1:
+    model_name = 'Amdahl'
+elif model_num == 2:
+    model_name = 'Communication'
+elif model_num == 3:
+    model_name = 'General'
+
+result_directory = folder + model_name 
+os.makedirs(result_directory, exist_ok=True)  #checks and create dir if needed ,exist_ok=True will not raise an error if the directory already exists
+
 def create_empty_csv(mu, G, directory, file_name):
     file_path = os.path.join(directory, file_name)
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w') as file: #open the file , w-write pemission
         pass
 
 def compute_and_save_wrapper(args):
     try:
+        # Extracting version and parameters
+        version = args[8]  
+        alpha, beta, gamma = args[5], args[6], args[7]  
+        
+        # Choose the parameter based on version
+        if version == 0:  # Use beta
+            parameter_value = beta
+        elif version == 1:  # Use alpha
+            parameter_value = alpha
+        elif version == 2:  # Use gamma
+            parameter_value = gamma
+        else:
+            raise ValueError(f"Unsupported version: {version}")
+
+        # Call the actual function
         compute_and_save(*args)
-        print(f"Completed computing for mu={args[4]}, {parameter} ={args[5]}, P={args[7]} , n={args[8]}")
+        print(f"Completed computing for mu={args[4]}, {parameter}={parameter_value}, P={args[9]}, n={args[10]}")
     except Exception as e:
-        print(f"Error computing for mu={args[4]}, {parameter}={args[5]}, P={args[7]},n={args[8]}: {e}")
+        print(f"Error computing for mu={args[4]}, {parameter}={parameter_value}, P={args[9]}, n={args[10]}: {e}")
 
-start_time = time.process_time_ns()
-
-model_name = input("Enter the Model Name: ")
-if version == 0:
-    folder = "Results_mast/n/"
-elif version == 1:
-    folder = "Results_mtsa/n/"
-elif version == 2:
-    folder = "Results_mtpa/n/"
-result_directory = folder + model_name 
-os.makedirs(result_directory, exist_ok=True)
-
-num = 0
 
 for mu in mu_values:
-    for G in Gama_values:
+    for p in paramter_values:
         
-        if version == 0:
-            file_name = f"mu_{mu:.2f}_Beta_{G:.2f}.csv"
+        if version == 0:         #Creates a new file for each iteration
+            file_name = f"mu_{mu:.2f}_beta_{p:.2f}.csv"
+            alpha, beta, gamma = [None , p,None]
         elif version ==1 :
-            file_name = f"mu_{mu:.2f}_Alpha_{G:.2f}.csv"
+            file_name = f"mu_{mu:.2f}_alpha_{p:.2f}.csv"
+            alpha, beta , gamma = [p, None , None]
         elif version == 2:
-            file_name = f"mu_{mu:.2f}_Gama_{G:.2f}.csv"
+            file_name = f"mu_{mu:.2f}_gamma_{p:.2f}.csv"
+            alpha , beta , gamma = [None , None , p]
 
-        create_empty_csv(mu, G, result_directory, file_name)
+        create_empty_csv(mu, p, result_directory, file_name)
         file_path = os.path.join(result_directory, file_name)
 
-        # p_list = [ 500,1000,1500,2000,1002500,3000,3500,4000,4500,5000]
-        # n_list = [, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-        p_list = [500]
+        # p_list = [128,256,512,1024,2048,4096,8192]
+        # n_list = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+        p_list = [1000]
         n_list = [100]
         all_combinations = list(itertools.product(p_list, n_list))
 
@@ -81,13 +104,11 @@ for mu in mu_values:
         with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(['P', 'n', 'Paper', 'Min Time', 'Time opt', 'mast'])
-            args_list = [('n', folder ,model_name, nb_iterations, mu, G, version, i[0], i[1],writer)for i in all_combinations ]
-            with ThreadPoolExecutor() as executor:
+            args_list = [('n', folder ,model_name, nb_iterations, mu, alpha, beta, gamma, version, i[0], i[1],writer)for i in all_combinations ]
+            with ThreadPoolExecutor() as executor: # multithreading implementation
                 futures = [executor.submit(compute_and_save_wrapper, args) for args in args_list]
                 for future in as_completed(futures):
-                    pass  # you can handle completed tasks here if needed
+                    pass  
 
             f.close()
 
-end_time = time.process_time_ns()
-print(f"Finished computing in {(end_time - start_time) / (10**9):.3f}s")

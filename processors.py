@@ -1,10 +1,3 @@
-################################
-# Verrecchia Thomas            #
-# Summer - 2022                #
-# Internship Kansas University #
-################################
-
-# This class implement our set of processors
 
 from numerics import *
 from graph import *
@@ -48,8 +41,8 @@ class Processors:
     # Methods
     ############################################################
 
-    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, Gama,save_in_logs=False, adjacency=[],
-                                    P_tild=P, mu_tild=mu, speedup_model: Model = GeneralModel(), version=0):
+    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, beta,gamma,save_in_logs=False, adjacency=[],
+                                    P=P, mu=mu, speedup_model: Model = GeneralModel(), version=0):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
         It's the implementation of the algorithm 1 from the paper. Concerning the allocation_function :
@@ -58,33 +51,18 @@ class Processors:
         3 : allocate_processor_Min_area
         """
 
-        logging.debug("  ---- Starting ----")
-        logging.debug("Number of processors :", self.get_nb_processors())
-        if allocation_function == 1:
-            logging.debug("Allocation algorithm : Paper")
-        elif allocation_function == 2:
-            logging.debug("Allocation algorithm : Min Time")
-        elif allocation_function == 3:
-            logging.debug("Allocation algorithm : Min Area")
-
         waiting_queue = set()  # Initialize a waiting queue Q
         process_list = []  # List of the task being processed
         nodes = task_graph.get_nodes()
 
-        # if save_in_logs:
-        #     name = "logs/" + datetime.now().strftime("%m_%d_%Y-%H.%M.%S") + ".csv"
-        #     log = open(name, 'w', newline='')
-        #     writer = csv.writer(log)
-        #     writer.writerow(['Time', 'Waiting Queue', 'Processors Queue', 'Number of available processors'])
-
         for task in nodes:  # Insert all tasks without parents in the waiting queue
             if not task_graph.get_parents(nodes.index(task), adjacency):
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P_tild, mu_tild, alpha,Gama, speedup_model, version)
+                    task.allocate_processor_algo(P, mu, alpha,beta,gamma, speedup_model, version)
                 elif allocation_function == 2:
-                    task.allocate_processor_Min_time(P_tild, mu_tild, speedup_model)
+                    task.allocate_processor_Min_time(P, mu, speedup_model)
                 elif allocation_function == 3:
-                    task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
+                    task.allocate_processor_Min_area(P, mu, speedup_model)
                 allocation = task.get_allocation()
                 
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
@@ -93,7 +71,6 @@ class Processors:
             
         while waiting_queue or process_list:
             # Cleaning of the processors
-
             available_tasks = set()
             if process_list:
                 task = min(process_list)
@@ -115,27 +92,19 @@ class Processors:
             # Processor allocation
             for task in available_tasks:
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P_tild, mu_tild, alpha,Gama, speedup_model, version)
+                    task.allocate_processor_algo(P, mu, alpha,beta,gamma, speedup_model, version)
                 elif allocation_function == 2:
-                    task.allocate_processor_Min_time(P_tild, mu_tild, speedup_model)
+                    task.allocate_processor_Min_time(P, mu, speedup_model)
                 elif allocation_function == 3:
-                    task.allocate_processor_Min_area(P_tild, mu_tild, speedup_model)
+                    task.allocate_processor_Min_area(P, mu, speedup_model)
                 allocation1 = task.get_allocation()
                 
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
                 waiting_queue.add(task)
                 task.set_status(Status.PROCESSING)
 
-            # # Writing the status in the log
-            # if save_in_logs:
-            #     line = [self.get_time(), [nodes.index(task) for task in waiting_queue],
-            #             [nodes.index(task) for task in process_list],
-            #             self.get_available_processors()]
-            #     writer.writerow(line)
-
             # List Scheduling
             to_remove = set()
-
             for task in waiting_queue:
                 if self.get_available_processors() >= task.get_allocation():
                     process_list.append(task)
@@ -149,9 +118,6 @@ class Processors:
             if process_list:
                 next_task = min(process_list)
                 self.time = next_task.get_needed_time() + next_task.get_starting_time()
-
-        # if save_in_logs:
-        #     log.close()
 
         # Resetting the status and the clock of the processors
         task_graph.init_status()

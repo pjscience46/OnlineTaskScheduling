@@ -103,16 +103,9 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save(variation_parameter, result_directory,model_name,instances_nb,mu,B,version, P,n,writer):
+def compute_and_save(variation_parameter, result_directory,model_name,instances_nb,mu,alpha,beta,gamma,version, P,n,writer):
   
-    # Fixed parameters
-    model_list = MODEL_LIST
-    jump = [1]
-    parameter_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]  # Used to variate Fat, density and regular
-    start_time = time.process_time_ns()
-    num = 1
     model = {}
-
     if(model_name == 'General'):
         model = GeneralModel()
     elif(model_name == 'Roofline'):
@@ -130,40 +123,23 @@ def compute_and_save(variation_parameter, result_directory,model_name,instances_
             node_file = "Tasks/n=" + str(n) + "/" + str(i) + ".csv"
             nodes = load_nodes_from_csv(node_file) #w,p,c,d
             edges = extract_dependencies_from_csv(daggen_file)
-
-            mu_tild = mu #constant value depends up on model
-            Gama = B
-            alpha_tild = model.get_alpha() #constant value depends up on model
-            p_tild = P
-
             task_graph = Graph(nodes, edges) #generate task graphs
-            processors = Processors(p_tild)
-
-            if variation_parameter == 'n':
-                logging.debug("\nmodel : " + model.name,
-                                variation_parameter + " = " + str(n) + ", file :" + str(i))
-            
-            logging.debug("Computing adjacency matrix...")
+            processors = Processors(P)
             adjacency = task_graph.get_adjacency()
 
-            speedup_model = model
             #opt time is max (Amin/p , cmin)
-            time_opt = task_graph.get_T_opt(p_tild, adjacency, speedup_model=speedup_model)
-            # print("start paper")
-            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha_tild,Gama=Gama,
-                                                                    adjacency=adjacency, mu_tild=mu_tild
-                                                                    , speedup_model=speedup_model, P_tild=p_tild
+            time_opt = task_graph.get_T_opt(P, adjacency, speedup_model=model)
+            # three Algorithms
+            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
+                                                                    adjacency=adjacency, mu=mu
+                                                                    , speedup_model=model, P=P
                                                                    ,version=version)
-            # print("start min")
-            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha_tild,Gama=Gama,
-                                                                    adjacency=adjacency, mu_tild=mu_tild
-                                                                    , speedup_model=speedup_model, P_tild=p_tild
+            # Minimum time algorithm
+            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha,beta=beta,gamma=gamma,
+                                                                    adjacency=adjacency, mu=mu
+                                                                    , speedup_model=model, P=P
                                                                    ,version=version)
             mtsa = (time_algo_1/time_opt)
             writer.writerow([str(P),str(n), str(time_algo_1), str(min_time), str(time_opt),str(mtsa)])
     
 
-def normalize_list(data_list, mean_value):
-    if mean_value == 0:
-        return data_list  # Avoid division by zero, return original data if mean is zero
-    return [(abs(x - mean_value)) / abs(mean_value) for x in data_list]
