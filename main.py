@@ -1,4 +1,4 @@
-# main
+
 import os
 import time
 from processors import *
@@ -16,7 +16,7 @@ nb_iterations = 1
 # mu_values = np.arange(0.6, 0.91, 0.1)
 # Gama_values = np.arange(0, 1.05, 0.1)
 mu_values = [0.2]
-paramter_values = [1.5]
+paramter_values = [3.5]
 
 version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:

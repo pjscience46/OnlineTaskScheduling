@@ -34,7 +34,7 @@ def generate_n_tasks(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds):
     return output
 
 
-def extract_dependencies_from_csv(file, utf_code="utf-16"):
+def extract_dependencies_from_csv(file, utf_code="utf-8"):
     """
     This function extract dependencies from a DAGGEN Output under a csv format.
 
@@ -116,20 +116,17 @@ def compute_and_save(variation_parameter, result_directory,model_name,instances_
         model = CommunicationModel()
 
     for i in range(1, instances_nb + 1):
-
-            daggen_file = "DAGGEN/" + variation_parameter + "_variation/" + variation_parameter + "=" + \
-                            str(n) + "/" + str(i) + ".csv"
-        
+    
+            daggen_file = "GRAPHS/" + 'n'+ "=" +str(n) + "/" + "daggen_output_"+ str(i) + ".csv"
             node_file = "Tasks/n=" + str(n) + "/" + str(i) + ".csv"
-            nodes = load_nodes_from_csv(node_file) #w,p,c,d
+            nodes = load_nodes_from_csv(node_file) #w,p,c,d list
             edges = extract_dependencies_from_csv(daggen_file)
-            task_graph = Graph(nodes, edges) #generate task graphs
-            processors = Processors(P)
+            task_graph = Graph(nodes, edges) #generate task graphs       
             adjacency = task_graph.get_adjacency()
-
             #opt time is max (Amin/p , cmin)
             time_opt = task_graph.get_T_opt(P, adjacency, speedup_model=model)
             # three Algorithms
+            processors = Processors(P)
             time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
                                                                     adjacency=adjacency, mu=mu
                                                                     , speedup_model=model, P=P
