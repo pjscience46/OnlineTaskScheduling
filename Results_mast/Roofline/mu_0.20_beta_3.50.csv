@@ -1,2 +1,1 @@
-P,n,Paper,Min Time,Time opt,mast
-1000,100,10960.981437959721,4735.816052892263,3091.5749726410554,3.5454360754499277
+P,n,File_number,regular,fat,jump,density,Paper,Time opt,Makespan,Model

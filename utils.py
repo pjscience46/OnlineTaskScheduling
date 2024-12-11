@@ -1,8 +1,6 @@
 
 import time
-
-# A bunch of useful function to generate task graph and manipulate csv files.
-
+import pandas as pd
 from task import *
 from random import *
 import csv
@@ -103,7 +101,7 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save(variation_parameter, result_directory,model_name,instances_nb,mu,alpha,beta,gamma,version, P,n,writer):
+def compute_and_save( result_directory,model_name,instances_nb,mu,alpha,beta,gamma,version,writer):
   
     model = {}
     if(model_name == 'General'):
@@ -115,28 +113,44 @@ def compute_and_save(variation_parameter, result_directory,model_name,instances_
     elif(model_name == 'Communication'):
         model = CommunicationModel()
 
-    for i in range(1, instances_nb + 1):
-    
-            daggen_file = "GRAPHS/" + 'n'+ "=" +str(n) + "/" + "daggen_output_"+ str(i) + ".csv"
-            node_file = "Tasks/n=" + str(n) + "/" + str(i) + ".csv"
-            nodes = load_nodes_from_csv(node_file) #w,p,c,d list
-            edges = extract_dependencies_from_csv(daggen_file)
-            task_graph = Graph(nodes, edges) #generate task graphs       
-            adjacency = task_graph.get_adjacency()
-            #opt time is max (Amin/p , cmin)
-            time_opt = task_graph.get_T_opt(P, adjacency, speedup_model=model)
-            # three Algorithms
-            processors = Processors(P)
-            time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
-                                                                    adjacency=adjacency, mu=mu
-                                                                    , speedup_model=model, P=P
-                                                                   ,version=version)
-            # Minimum time algorithm
-            min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha,beta=beta,gamma=gamma,
-                                                                    adjacency=adjacency, mu=mu
-                                                                    , speedup_model=model, P=P
-                                                                   ,version=version)
-            mtsa = (time_algo_1/time_opt)
-            writer.writerow([str(P),str(n), str(time_algo_1), str(min_time), str(time_opt),str(mtsa)])
-    
+    # Load combinations.csv into a DataFrame
+    combinations_df = pd.read_csv('combinations.csv')
+    # Loop through each row in the DataFrame
+    for index, row in combinations_df.iterrows():
+        row_number = int(row['Row'])
+        P = int(row['P'])
+        n = int(row['n'])
+        i = int(row['File_Number'])
+        regular = row['Regular']
+        fat = row['Fat']
+        jump = row['Jump']
+        density = row['Density']
+        
+        daggen_file = "GRAPHS/" + 'n'+ "=" +str(n) + "/" + "daggen_output_"+ str(i) + ".csv"
+        node_file = "Tasks/n=" + str(n) + "/" + str(i) + ".csv"
+        nodes = load_nodes_from_csv(node_file) #w,p,c,d list
+        edges = extract_dependencies_from_csv(daggen_file)
+        task_graph = Graph(nodes, edges) #generate task graphs       
+        adjacency = task_graph.get_adjacency()
+        #opt time is max (Amin/p , cmin)
+        time_opt = task_graph.get_T_opt(P, adjacency, speedup_model=model)
+        # three Algorithms
+        processors = Processors(P)
+        time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
+                                                                adjacency=adjacency, mu=mu
+                                                                , speedup_model=model, P=P
+                                                                ,version=version)
+        # Minimum time algorithm
+        min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha,beta=beta,gamma=gamma,
+                                                                adjacency=adjacency, mu=mu
+                                                                , speedup_model=model, P=P
+                                                                ,version=version)
+        makespan = (time_algo_1/time_opt)
+        writer.writerow([str(row_number),str(P),str(n),str(i),str(regular),str(fat),str(jump),str(density), str(time_algo_1), str(time_opt),str(makespan),str(model_name)])
+        if alpha is not None:
+            print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} model:{model_name} P:{P} n:{n} ")
+        elif beta is not None:
+            print (f"Completed computation for {row_number} (mu,beta):{mu,beta} model:{model_name} P:{P} n:{n} ")
+        elif gamma is not None:
+            print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} model:{model_name} P:{P} n:{n} ")
 

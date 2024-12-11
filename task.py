@@ -139,13 +139,13 @@ class Task:
         a_min = self.get_minimum_area(1, speedup_model)
         final_nb_processors = -1
         if version == 0:
-            beta_min = inf
+            Beta_min = inf
             for i in range(1, p_max + 1):   
                 AR = self.get_area(i, speedup_model) / a_min[0]  #ratio of area of task to minimum area
                 TR = self.get_execution_time(i, speedup_model) / t_min[0] #ratio of time taken by task to minimum time
                 if TR >=1 and TR <= beta:
-                    if AR < beta_min:
-                        beta_min = AR
+                    if AR < Beta_min:
+                        Beta_min = AR
                         final_nb_processors = i 
 
         elif version == 1:
