@@ -12,11 +12,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import itertools
 import random
 
-nb_iterations = 1
-# mu_values = list(map(float, np.arange(0.1, 0.25, 0.1)))
-# paramter_values = np.arange(2, 1.05, 0.1)
-mu_values = [0.6]
-paramter_values = [3]
+mu_values = list(map(float, np.arange(0.1, 0.25, 0.1)))
+paramter_values = list(map(float, np.arange(1, 2, 0.5)))
 
 version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:
@@ -64,8 +61,8 @@ for mu in mu_values:
         file_path = os.path.join(result_directory, file_name)
         with open(file_path, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['P', 'n','File_number' ,'regular','fat','jump','density','Paper', 'Time opt', 'Makespan','Model'])
-            args_list = [( folder ,model_name, nb_iterations, mu, alpha, beta, gamma, version,writer) ]
+            writer.writerow(['P', 'n' ,'Algorithm Time', 'Optimal Time', 'Makespan Ratio'])
+            args_list = [( folder ,model_name, mu, alpha, beta, gamma, version,writer) ]
             with ThreadPoolExecutor() as executor: # multithreading implementation
                 futures = [executor.submit(compute_and_save, *args) for args in args_list]
                 for future in as_completed(futures):
