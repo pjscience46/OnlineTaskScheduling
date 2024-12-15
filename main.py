@@ -12,8 +12,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import itertools
 import random
 
-mu_values = list(map(float, np.arange(0.1, 0.25, 0.1)))
-paramter_values = list(map(float, np.arange(1, 2, 0.5)))
+mu_values = list(map(float, np.arange(0.1, 0.2, 0.1)))
+paramter_values = list(map(float, np.arange(1, 1.2, 0.5)))
 
 version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:
