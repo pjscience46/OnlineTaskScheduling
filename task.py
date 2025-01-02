@@ -116,8 +116,6 @@ class Task:
 
     def get_area(self, number_of_processors, speedup_model: Model):
         """Return the area of a task depending on the number of processor allocated and the speedup model"""
-        if number_of_processors == 19:
-            time_t = self.get_execution_time(number_of_processors, speedup_model)
         return self.get_execution_time(number_of_processors, speedup_model) * number_of_processors
 
     def get_p_max(self, P, speedup_model: Model):
