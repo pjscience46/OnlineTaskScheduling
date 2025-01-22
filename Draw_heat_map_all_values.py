@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import os
 
 # Define the path to the summary CSV file
-summary_file_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Heat_Maps\General\Generate_Avg_Max.csv'
+summary_file_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
 
 # Define the directory to save the heat maps
-save_directory = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Heat_Maps\General'
+save_directory = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Heat_Maps\Amdahl'
 
 # Ensure the save directory exists
 os.makedirs(save_directory, exist_ok=True)
@@ -31,7 +31,7 @@ max_value_max = df_filtered['max'].max()
 plt.figure(figsize=(12, 8))
 sns.heatmap(pivot_avg, annot=True, fmt="g",cmap='viridis', cbar=True,vmin = min_value_avg )  # annot=False to hide numbers
 plt.title('Heat Map of Average Values')
-plt.xlabel('Gama')
+plt.xlabel('Beta')
 plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
@@ -49,7 +49,7 @@ pivot_max = df_filtered.pivot(index='mu', columns='beta', values='max')
 plt.figure(figsize=(12, 8))
 sns.heatmap(pivot_max, annot=True, fmt="g" ,cmap='viridis', cbar=True,vmin = min_value_max)  # annot=False to hide numbers
 plt.title('Heat Map of Max Values')
-plt.xlabel('Gama')
+plt.xlabel('Beta')
 plt.ylabel('Mu')
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
