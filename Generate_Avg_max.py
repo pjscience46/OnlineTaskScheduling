@@ -3,10 +3,10 @@ import re
 import os
 
 # Define the folder containing CSV files
-folder_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Amdahl'
+folder_path = r'C:\Thesis\Fresh pull\OnlineTaskScheduling\Results_mtpa\Roofline'
 
 # Initialize an empty DataFrame to collect results
-results_df = pd.DataFrame(columns=['mu', 'beta', 'average', 'max'])
+results_df = pd.DataFrame(columns=['mu', 'gamma', 'average', 'max'])
 
 # Function to process a single file
 def process_file(file_path):
@@ -50,7 +50,7 @@ def process_file(file_path):
         filename = os.path.basename(file_path)
 
         # Extract mu and beta values from the filename
-        match = re.match(r'mu_([\d.]+)_beta_([\d.]+)\.csv', filename)
+        match = re.match(r'mu_([\d.]+)_gamma_([\d.]+)\.csv', filename)
         if not match:
             print(f"Error: Filename {filename} does not match the expected format.")
             return
@@ -78,7 +78,7 @@ for file_name in os.listdir(folder_path):
         process_file(file_path)
 
 # Define the output file path
-output_file_path = r'C:\Thesis\Test_Prog\Algo3\OnlineTaskScheduling\Results_mast\Heat_Maps\Amdahl\Generate_Avg_Max.csv'
+output_file_path = r'C:\Thesis\Fresh pull\OnlineTaskScheduling\Results_mtpa\Heat_Maps\Roofline\Generate_Avg_Max.csv'
 # Write the DataFrame to a new CSV file
 results_df.to_csv(output_file_path, index=False)
 
