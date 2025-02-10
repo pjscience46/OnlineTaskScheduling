@@ -12,9 +12,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import itertools
 import random
 
-mu_values = list(map(float, np.arange(0.1, 0.92, 0.1)))
-paramter_values = list(map(float, np.arange(1, 5.2, 0.5)))
-
 version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:
     parameter = 'beta'
@@ -35,6 +32,48 @@ elif model_num == 2:
     model_name = 'Communication'
 elif model_num == 3:
     model_name = 'General'
+
+if version == 0 :
+    if model_num == 0:
+        mu_values = list(map(float, np.arange(0.3, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(1, 1.51, 0.2)))
+    elif model_num == 1:
+        mu_values = list(map(float, np.arange(0.1, 0.31, 0.02)))
+        paramter_values = list(map(float, np.arange(1, 2.01, 0.2)))
+    elif model_num == 2:
+        mu_values = list(map(float, np.arange(0.1, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(1, 1.51, 0.2)))
+    elif model_num == 3:
+        mu_values = list(map(float, np.arange(0.1, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(1, 1.51, 0.2)))
+
+elif version == 1:
+    if model_num == 0:
+        mu_values = list(map(float, np.arange(0.3, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(1, 5.01, 0.2)))
+    elif model_num == 1:
+        mu_values = list(map(float, np.arange(0.1, 0.41, 0.02)))
+        paramter_values = list(map(float, np.arange(2.5, 4.01, 0.2)))
+    elif model_num == 2:
+        mu_values = list(map(float, np.arange(0.1, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(2, 5.01, 0.2)))
+    elif model_num == 3:
+        mu_values = list(map(float, np.arange(0.1, 0.21, 0.02)))
+        paramter_values = list(map(float, np.arange(2, 3.01, 0.2)))
+
+elif version == 2:
+    if model_num == 0:
+        mu_values = list(map(float, np.arange(0.3, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(0, 1.01, 0.05)))
+    elif model_num == 1:
+        mu_values = list(map(float, np.arange(0.1, 0.31, 0.02)))
+        paramter_values = list(map(float, np.arange(0, 0.21, 0.05)))
+    elif model_num == 2:
+        mu_values = list(map(float, np.arange(0.1, 0.51, 0.02)))
+        paramter_values = list(map(float, np.arange(0, 0.11, 0.05)))
+    elif model_num == 3:
+        mu_values = list(map(float, np.arange(0.1, 0.21, 0.02)))
+        paramter_values = list(map(float, np.arange(0, 0.21, 0.05)))
 
 result_directory = folder + model_name 
 os.makedirs(result_directory, exist_ok=True)  #checks and create dir if needed ,exist_ok=True will not raise an error if the directory already exists
