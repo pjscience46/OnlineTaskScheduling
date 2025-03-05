@@ -1,54 +1,56 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import pandas as pd
-import os
-# Load data from CSV file
-data = pd.read_csv('C:\Thesis\Fresh pull\OnlineTaskScheduling\Results_mast\Heat_Maps\Amdahl\Generate_Avg_Max.csv')
-save_directory = r'C:\Thesis\Fresh pull\OnlineTaskScheduling\Results_mast\Surface_Plots\Amdahl'
 
-# Ensure the save directory exists
-os.makedirs(save_directory, exist_ok=True)
+# Load data
+data = pd.read_csv(r'C:\Thesis\Fresh pull\Onlineschedulingalgo_assorted_1\Results_mtsa\Heat_Maps\Amdahl\Generate_Avg_Max.csv')
 
-# Extract columns
-mu = data['mu'].values
-beta = data['beta'].values
-average = data['average'].values
-max_val = data['max'].values
+# Sort and pivot data to create a structured grid
+data = data.sort_values(by=['alpha', 'mu'])
+pivot_table = data.pivot(index='mu', columns='alpha', values='max')[::-1]  # Reverse Mu for top-down order
 
-# Create a grid for plotting
-mu_unique = np.unique(mu)
-beta_unique = np.unique(beta)
-mu_grid, beta_grid = np.meshgrid(mu_unique, beta_unique)
+# Extract values for plotting
+mu_vals = pivot_table.index.values  # Exact mu values from data
+alpha_vals = np.sort(pivot_table.columns.values)  # Sorted alpha values
+max_vals = pivot_table.values  # Values for max
 
-# Reshape data to fit the grid
-average_grid = average.reshape(len(beta_unique), len(mu_unique))
-max_grid = max_val.reshape(len(beta_unique), len(mu_unique))
+# Create meshgrid
+alpha_grid, mu_grid = np.meshgrid(alpha_vals, mu_vals)
 
-# Plotting for Average
-fig1 = plt.figure(figsize=(7, 6))
-ax1 = fig1.add_subplot(111, projection='3d')
-surf1 = ax1.plot_surface(mu_grid, beta_grid, average_grid, cmap='viridis', edgecolor='k',vmin=average.min(), vmax=average.max())
-ax1.set_title('Surface Plot for Average')
-ax1.set_xlabel('Mu')
-ax1.set_ylabel('beta')
-ax1.set_zlabel('Average')
-fig1.colorbar(surf1, ax=ax1, shrink=0.5, aspect=10)
-average_surfaceplot_path = os.path.join(save_directory, 'Surface_Plot_average.png')
-plt.savefig(average_surfaceplot_path)
-plt.tight_layout()
-plt.show()
+# Create the surface plot
+fig = plt.figure(figsize=(12, 7))
+ax = fig.add_subplot(111, projection='3d')
 
-# Plotting for Max
-fig2 = plt.figure(figsize=(7, 6))
-ax2 = fig2.add_subplot(111, projection='3d')
-surf2 = ax2.plot_surface(mu_grid, beta_grid, max_grid, cmap='plasma', edgecolor='k',vmin=max_val.min(), vmax=max_val.max())
-ax2.set_title('Surface Plot for Max')
-ax2.set_xlabel('Mu')
-ax2.set_ylabel('beta')
-ax2.set_zlabel('Max')
-fig2.colorbar(surf2, ax=ax2, shrink=0.5, aspect=10)
-max_surfaceplot_path = os.path.join(save_directory, 'Surface_Plot_max.png')
-plt.savefig(max_surfaceplot_path)
-plt.tight_layout()
+# Plot surface with no normalization (cmap 'inferno' has yellow in the higher range)
+surf = ax.plot_surface(alpha_grid, mu_grid, max_vals, cmap='inferno', edgecolor='k')
+
+# Plot peak point (highest value)
+max_index = np.unravel_index(np.argmax(max_vals, axis=None), max_vals.shape)
+max_alpha, max_mu, max_z = alpha_grid[max_index], mu_grid[max_index], max_vals[max_index]
+ax.scatter(max_alpha, max_mu, max_z, color='red', s=100, label=f'Max: {max_z}')
+
+# Set exact axis labels and limits
+ax.set_xlabel('alpha')
+ax.set_ylabel('mu')
+ax.set_zlabel('Max')
+ax.set_title('Surface Plot of Max ')
+
+# Use exact mu values without approximation
+ax.set_xlim(alpha_vals[0], alpha_vals[-1])  # Set limits based on data
+ax.set_ylim(mu_vals[0], mu_vals[-1])  # Use exact mu values
+
+# Manually set the ticks for the mu axis to be exactly the mu values
+ax.set_yticks(mu_vals)
+
+# Adjust view angle
+ax.view_init(elev=35, azim=140)
+
+# Add color bar without normalization
+cbar = fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+cbar.set_label('Max')
+
+# Add legend
+ax.legend()
+
 plt.show()
