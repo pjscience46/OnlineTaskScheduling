@@ -6,7 +6,7 @@ import os
 folder_path = r'C:\Thesis\Fresh pull\Onlineschedulingalgo_assorted_1\Results_mtpa\Roofline'
 
 # Initialize an empty DataFrame to collect results
-results_df = pd.DataFrame(columns=['mu', 'gamma', 'average', 'max'])
+results_df = pd.DataFrame(columns=['mu', 'alpha', 'average', 'max'])
 
 # Function to process a single file
 def process_file(file_path):
