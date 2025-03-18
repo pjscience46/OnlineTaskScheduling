@@ -5,40 +5,40 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 # Load data
-data = pd.read_csv(r'C:\Thesis\Fresh pull\Onlineschedulingalgo_assorted_1\Results_mtsa\Heat_Maps\Amdahl\Generate_Avg_Max.csv')
+data = pd.read_csv(r'C:\Thesis\Fresh pull\Onlineschedulingalgo_assorted_1\Results_mtpa\Heat_Maps\Roofline\Generate_Avg_Max.csv')
 
 # Sort and pivot data to create a structured grid
-data = data.sort_values(by=['alpha', 'mu'])
-pivot_table = data.pivot(index='mu', columns='alpha', values='max')[::-1]  # Reverse Mu for top-down order
+data = data.sort_values(by=['gamma', 'mu'])
+pivot_table = data.pivot(index='mu', columns='gamma', values='max')[::-1]  # Reverse Mu for top-down order
 
 # Extract values for plotting
 mu_vals = pivot_table.index.values  # Exact mu values from data
-alpha_vals = np.sort(pivot_table.columns.values)  # Sorted alpha values
+gamma_vals = np.sort(pivot_table.columns.values)  # Sorted gamma values
 max_vals = pivot_table.values  # Values for max
 
 # Create meshgrid
-alpha_grid, mu_grid = np.meshgrid(alpha_vals, mu_vals)
+gamma_grid, mu_grid = np.meshgrid(gamma_vals, mu_vals)
 
 # Create the surface plot
 fig = plt.figure(figsize=(12, 7))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot surface with no normalization (cmap 'inferno' has yellow in the higher range)
-surf = ax.plot_surface(alpha_grid, mu_grid, max_vals, cmap='inferno', edgecolor='k')
+surf = ax.plot_surface(gamma_grid, mu_grid, max_vals, cmap='inferno', edgecolor='k')
 
 # Plot peak point (highest value)
 max_index = np.unravel_index(np.argmax(max_vals, axis=None), max_vals.shape)
-max_alpha, max_mu, max_z = alpha_grid[max_index], mu_grid[max_index], max_vals[max_index]
-ax.scatter(max_alpha, max_mu, max_z, color='red', s=100, label=f'Max: {max_z}')
+max_gamma, max_mu, max_z = gamma_grid[max_index], mu_grid[max_index], max_vals[max_index]
+ax.scatter(max_gamma, max_mu, max_z, color='red', s=100, label=f'Max: {max_z}')
 
 # Set exact axis labels and limits
-ax.set_xlabel('alpha')
-ax.set_ylabel('mu')
+ax.set_xlabel(r'$\gamma$', fontsize=14)
+ax.set_ylabel(r'$\mu$', fontsize=14)
 ax.set_zlabel('Max')
-ax.set_title('Surface Plot of Max ')
+
 
 # Use exact mu values without approximation
-ax.set_xlim(alpha_vals[0], alpha_vals[-1])  # Set limits based on data
+ax.set_xlim(gamma_vals[0], gamma_vals[-1])  # Set limits based on data
 ax.set_ylim(mu_vals[0], mu_vals[-1])  # Use exact mu values
 
 # Manually set the ticks for the mu axis to be exactly the mu values
