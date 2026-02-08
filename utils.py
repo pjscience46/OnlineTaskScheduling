@@ -117,6 +117,7 @@ def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,wr
     combinations_df = pd.read_csv('combinations.csv')
     # Loop through each row in the DataFrame
     row_number = 0
+    max_makespan_ratio = float("-inf")
     for index, row in combinations_df.iterrows():     
         P = int(row['P'])
         n = int(row['n'])
@@ -142,6 +143,8 @@ def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,wr
                                                                 ,version=version)
         makespan_ratio = (time_algo_1/time_opt)
         writer.writerow([str(P),str(n), str(time_algo_1), str(time_opt),str(makespan_ratio)])
+        if makespan_ratio > max_makespan_ratio:
+            max_makespan_ratio = makespan_ratio
         row_number = row_number+1
         if alpha is not None:
             print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} model:{model_name} P:{P} n:{n} ")
@@ -149,4 +152,5 @@ def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,wr
             print (f"Completed computation for {row_number} (mu,beta):{mu,beta} model:{model_name} P:{P} n:{n} ")
         elif gamma is not None:
             print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} model:{model_name} P:{P} n:{n} ")
-
+    print(max_makespan_ratio)
+    return max_makespan_ratio
