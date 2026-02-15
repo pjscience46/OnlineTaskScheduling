@@ -65,17 +65,17 @@ if version == 0:
 
 elif version == 1:
     if model_num == 0:
-        mu_values = list(map(float, np.arange(0.3, 0.51, 0.02)))
-        paramter_values = list(map(float, np.arange(1, 5.01, 0.2)))
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
     elif model_num == 1:
-        mu_values = list(map(float, np.arange(0.1, 0.41, 0.02)))
-        paramter_values = list(map(float, np.arange(2.5, 4.01, 0.2)))
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
     elif model_num == 2:
-        mu_values = list(map(float, np.arange(0.1, 0.51, 0.02)))
-        paramter_values = list(map(float, np.arange(2, 5.01, 0.2)))
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
     elif model_num == 3:
-        mu_values = list(map(float, np.arange(0.1, 0.21, 0.02)))
-        paramter_values = list(map(float, np.arange(2, 3.01, 0.2)))
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
 
 elif version == 2:
     if model_num == 0:
@@ -115,7 +115,12 @@ KAPPA = 1.0
 SAT_PATIENCE = 8
 MIN_IMPROVEMENT = 0.0
 
-OUTPUT_DIR = "BO_MAST"
+main_folder = "Priority_Length"
+sub_folder = "BO_MAST"
+
+# Full path
+OUTPUT_DIR = os.path.join(main_folder, sub_folder)
+
 
 
 if model_num == 1:

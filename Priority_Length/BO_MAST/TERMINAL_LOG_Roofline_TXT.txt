@@ -1,0 +1,7 @@
+=== START Bayesian-like search (NO repeats) ===
+Grid size: 81 total combos
+Initial random evals: 6, Max evals: 40, kappa=1.0
+
+Completed computation for 1 (mu,beta):(0.4, 3.5) model:Roofline P:4096 n:600 
+Completed computation for 2 (mu,beta):(0.4, 3.5) model:Roofline P:256 n:400 
+Completed computation for 3 (mu,beta):(0.4, 3.5) model:Roofline P:8192 n:800 

@@ -126,8 +126,8 @@ class Processors:
             while True:  # keep scheduling tasks at the same 'now' until nothing else can fit
                 candidates = list(waiting_queue)  # convert unordered set -> list so we can sort by priority
 
-                candidates.sort(key=lambda t: t.get_allocation(), reverse=True)  # highest processor demand first
-                #candidates.sort(key=lambda t: t.get_needed_time(), reverse=True) 
+                #candidates.sort(key=lambda t: t.get_allocation(), reverse=True)  # highest processor demand first
+                candidates.sort(key=lambda t: t.get_needed_time(), reverse=True) 
                 # candidates.sort(key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True)  
 
                 chosen = None  # will hold the best-priority task that fits the currently available processors
