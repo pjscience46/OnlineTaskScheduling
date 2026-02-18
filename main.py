@@ -14,16 +14,11 @@ import csv
 import sys
 import itertools
 from typing import Optional, Tuple, Dict, Any, List
-
-# ✅ IMPORTANT FIX: avoid name collision with "random" from other imports
 import random as pyrandom
-
 from dataclasses import dataclass
 from typing import List, Tuple, Optional, Dict, Any
 
-# -------------------------------
-# Optional: make results reproducible
-# -------------------------------
+
 RANDOM_SEED = 123
 pyrandom.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
@@ -113,7 +108,7 @@ N_INITIAL = 6
 MAX_EVALS = 40
 KAPPA = 1.0
 SAT_PATIENCE = 8
-MIN_IMPROVEMENT = 0.0
+MIN_IMPROVEMENT = 0.0 # Minimum improvement to reset saturation counter (set to 0 for any improvement)
 
 main_folder = "Priority_Length"
 sub_folder = "BO_MTSA"
@@ -181,6 +176,8 @@ def build_index(values: List[float]) -> Dict[float, int]:
 def manhattan_grid_distance(a: Tuple[float, float], b: Tuple[float, float],
                             idx1: Dict[float, int], idx2: Dict[float, int]) -> int:
     return abs(idx1[a[0]] - idx1[b[0]]) + abs(idx2[a[1]] - idx2[b[1]])
+#If two candidates look equally good,choose the one closer to current best on grid.
+
 
 def to_X(pairs: List[Tuple[float, float]]) -> np.ndarray:
     return np.array([[p1, p2] for (p1, p2) in pairs], dtype=float)
@@ -191,6 +188,8 @@ def fit_surrogate(X: np.ndarray, y: np.ndarray):
 
     kernel = ConstantKernel(1.0, (1e-3, 1e3)) * Matern(length_scale=[0.1, 0.1], nu=2.5) + WhiteKernel(1e-6)
     gp = GaussianProcessRegressor(kernel=kernel, normalize_y=True, n_restarts_optimizer=2, random_state=0)
+    #GaussianProcessRegressor is a powerful surrogate model for Bayesian Optimization, providing both predictions and uncertainty estimates. 
+    # The chosen kernel combines a Matern kernel (for smoothness) with a WhiteKernel (for noise). Normalizing the target values can help with optimization performance. Multiple restarts of the optimizer can help find better hyperparameters for the kernel.
     gp.fit(X, y)
     return gp
 
@@ -203,7 +202,9 @@ def propose_next(
 ) -> Tuple[float, float]:
     Xcand = to_X(unevaluated)
     mu, sigma = gp.predict(Xcand, return_std=True)
-    lcb = mu - kappa * sigma
+    #mu is the predicted ratio value and sigma is uncertainty at those points. These are used to compute the acquisition function, which guides the search for the next evaluation point.
+    lcb = mu - kappa * sigma 
+    # Lower Confidence Bound acquisition function: balances exploration (high sigma) and exploitation (low mu). The kappa parameter controls this balance. A higher kappa encourages exploring uncertain regions, while a lower kappa focuses on areas predicted to have low values.
 
     best_idx = None
     best_lcb = float("inf")
@@ -261,7 +262,7 @@ def evaluate_one_combination_return_value(p1: float, p2: float) -> float:
 def main():
     ensure_dir(OUTPUT_DIR)
 
-    tee = TeeStdout(TERMINAL_LOG_TXT)
+    tee = TeeStdout(TERMINAL_LOG_TXT) # Teestandard output to both terminal and file
     old_stdout = sys.stdout
     sys.stdout = tee
 
@@ -271,28 +272,32 @@ def main():
 
         all_pairs = list(itertools.product(p1_values, p2_values))
 
-        # ✅ IMPORTANT FIX: use pyrandom, not random
-        pyrandom.shuffle(all_pairs)
+       
+        pyrandom.shuffle(all_pairs) # Randomize order to avoid bias in initial evaluations
 
-        idx1 = build_index(p1_values)
+        idx1 = build_index(p1_values) 
         idx2 = build_index(p2_values)
 
         fields = ["eval_id", "P1", "P2", "value", "global_best_value", "global_best_P1", "global_best_P2"]
         write_csv_header_if_missing(COMBO_RESULTS_CSV, fields)
 
         evaluated = set()
-        X_obs: List[Tuple[float, float]] = []
-        y_obs: List[float] = []
+        X_obs: List[Tuple[float, float]] = [] # List of evaluated (P1, P2) pairs
+        y_obs: List[float] = [] # Corresponding list of observed values (makespan ratios)
 
         global_best_val = float("inf")
         global_best_pair: Optional[Tuple[float, float]] = None
 
-        no_improve = 0
+        no_improve = 0 # Counter for consecutive evaluations without improvement (for saturation stopping)
         eval_id = 0
 
         print("=== START Bayesian-like search (NO repeats) ===")
         print(f"Grid size: {len(all_pairs)} total combos")
-        print(f"Initial random evals: {N_INITIAL}, Max evals: {MAX_EVALS}, kappa={KAPPA}\n")
+        print(f"Initial random evals: {N_INITIAL}, Max evals: {MAX_EVALS}, kappa={KAPPA}\n") 
+        #kappa is the exploration-exploitation parameter for the acquisition function
+        # Larger kappa encourages trying uncertain/unexplored parameter regions, while smaller kappa focuses on
+        # the currently best-predicted values (more greedy search).
+
 
         # Initial random evaluations
         initial = []
