@@ -18,11 +18,11 @@ def plot_bo_search_pattern_black_points_red_best(
     padding_frac: float = 0.05,
     show_background_surrogate: bool = True,
     # ---- contour styling ----
-    contour_alpha: float = 0.50,
+    contour_alpha: float = 0.50,  #line transparency and thickness
     contour_lw: float = 1.4,
     # ---- NEW: focus contour density near best (low) region ----
     low_q_start: float = 0.01,      # start quantile (very low values)
-    low_q_end: float = 0.35,        # end quantile (still low-ish)
+    low_q_end: float = 0.2,        # end quantile (still low-ish)
     n_low_levels: int = 22,         # number of levels in low region (more = more rings)
     n_mid_levels: int = 6,          # a few extra levels outside low region (optional)
     save_path: str = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Bayesian_Maps\Graphs\Priority_Length\MAST"
@@ -149,7 +149,7 @@ def plot_bo_search_pattern_black_points_red_best(
 
 
 if __name__ == "__main__":
-    CSV_PATH = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_Amdahl.csv"
+    CSV_PATH = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_Roofline.csv"
 
     plot_bo_search_pattern_black_points_red_best(
         csv_path=CSV_PATH,
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         contour_alpha=0.55,
         contour_lw=1.4,
         low_q_start=0.01,
-        low_q_end=0.35,
-        n_low_levels=20,
-        n_mid_levels=6,
+        low_q_end= 0.2,
+        n_low_levels=25,
+        n_mid_levels=4,
     )
