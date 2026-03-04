@@ -19,20 +19,18 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional, Dict, Any
 
 
-RANDOM_SEED = 123
-pyrandom.seed(RANDOM_SEED)
-np.random.seed(RANDOM_SEED)
+
 
 version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
 if version == 0:
     parameter = 'beta'
-    folder = "Results_mast/"
+    folder = "Priority_Length/BO_MAST/Results_mast/"     #change
 elif version == 1:
     parameter = 'alpha'
-    folder = "Results_mtsa/"
+    folder = "Priority_Length/BO_MTSA/Results_mtsa/"
 elif version == 2:
     parameter = 'gamma'
-    folder = "Results_mtpa/"
+    folder = "Priority_Length/BO_MTPA/Results_mtpa/"
 
 model_num = int(input("Enter the Model Number [0-Roofline , 1-Amdahl, 2-Communication , 3-General]: "))
 if model_num == 0:
@@ -45,46 +43,46 @@ elif model_num == 3:
     model_name = 'General'
 
 if version == 0:
-    if model_num == 0:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+    if model_num == 0:  
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 1:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 2:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 3:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
 
 elif version == 1:
     if model_num == 0:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 1:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 2:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
     elif model_num == 3:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.5
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 1.0, 5.0, 0.2
 
 elif version == 2:
     if model_num == 0:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.1
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.05
     elif model_num == 1:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.1
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.05
     elif model_num == 2:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.1
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.05
     elif model_num == 3:
-        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.1
-        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.1
+        P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
+        P2_MIN, P2_MAX, P2_STEP = 0.0, 1.0, 0.05
 
 result_directory = folder + model_name
 os.makedirs(result_directory, exist_ok=True)
@@ -104,14 +102,14 @@ try:
 except Exception:
     SKLEARN_OK = False
 
-N_INITIAL = 6
-MAX_EVALS = 40
+N_INITIAL = 20
+MAX_EVALS = 100
 KAPPA = 1.0
-SAT_PATIENCE = 8
+SAT_PATIENCE = 10
 MIN_IMPROVEMENT = 0.0 # Minimum improvement to reset saturation counter (set to 0 for any improvement)
 
-main_folder = "Priority_Length"
-sub_folder = "BO_MTSA"
+main_folder = "Priority_Length"  #change
+sub_folder = "BO_MAST"           #change
 
 # Full path
 OUTPUT_DIR = os.path.join(main_folder, sub_folder)
@@ -338,7 +336,7 @@ def main():
         if global_best_pair is None:
             print("No evaluations were run. Exiting.")
             return
-
+        no_improve = 0
         # Surrogate loop
         while eval_id < MAX_EVALS:
             if no_improve >= SAT_PATIENCE:

@@ -119,37 +119,62 @@ class Processors:
             #     next_task = min(process_list)
             #     self.time = next_task.get_needed_time() + next_task.get_starting_time()
 ##-----------------------------------------------------------------------------------------------------------
+                       # Priority List Scheduling (High allocation first + Backfilling)
+
+                          # Sort waiting queue by processor allocation (descending)
+            #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_allocation(), reverse=True)
+            sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_needed_time(), reverse=True)
+            
+
+            to_remove = set()
+
+            for task in sorted_tasks:
+                # If the task fits in currently available processors
+                if self.get_available_processors() >= task.get_allocation():
+                    process_list.append(task)
+                    to_remove.add(task)
+                    task.set_starting_time(self.get_time())
+                    self.available_processors -= task.get_allocation()
+
+            # Remove scheduled tasks from waiting queue
+            for task in to_remove:
+                waiting_queue.remove(task)
+
+            # Increment time to next finishing task
+            if process_list:
+                next_task = min(process_list)
+                self.time = next_task.get_needed_time() + next_task.get_starting_time()
 
 ##---------------------------------Proc Allocation--------------------------------------------------------
-            now = self.get_time()  # current simulation time
+            # now = self.get_time()  # current simulation time
 
-            while True:  # keep scheduling tasks at the same 'now' until nothing else can fit
-                candidates = list(waiting_queue)  # convert unordered set -> list so we can sort by priority
+            # while True:  # keep scheduling tasks at the same 'now' until nothing else can fit
+            #     candidates = list(waiting_queue)  # convert unordered set -> list so we can sort by priority
 
-                candidates.sort(key=lambda t: t.get_allocation(), reverse=True)  # highest processor demand first
-                #candidates.sort(key=lambda t: t.get_needed_time(), reverse=True) 
-                # candidates.sort(key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True)  
+            #     candidates.sort(key=lambda t: t.get_allocation(), reverse=True)  # highest processor demand first
+            #     #candidates.sort(key=lambda t: t.get_needed_time(), reverse=True) 
+            #     # candidates.sort(key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True)  
 
-                chosen = None  # will hold the best-priority task that fits the currently available processors
+            #     chosen = None  # will hold the best-priority task that fits the currently available processors
 
-                for task in candidates:  # scan tasks in priority order (max procs first)
-                    if self.get_available_processors() >= task.get_allocation():  # check if this task can start now
-                        chosen = task  # pick this task (highest priority among those that fit)
-                        break  # stop scanning because we found the best available fit
+            #     for task in candidates:  # scan tasks in priority order (max procs first)
+            #         if self.get_available_processors() >= task.get_allocation():  # check if this task can start now
+            #             chosen = task  # pick this task (highest priority among those that fit)
+            #             break  # stop scanning because we found the best available fit
 
-                if chosen is None:  # if no waiting task fits with current free processors
-                    break  # stop scheduling at this time instant (must advance time to free processors)
+            #     if chosen is None:  # if no waiting task fits with current free processors
+            #         break  # stop scheduling at this time instant (must advance time to free processors)
 
-                process_list.append(chosen)  # move chosen task into the running list
-                waiting_queue.remove(chosen)  # remove it from waiting queue so it isn't scheduled again
-                chosen.set_starting_time(now)  # record the task start time as current time
-                self.available_processors -= chosen.get_allocation()  # consume processors required by this task
+            #     process_list.append(chosen)  # move chosen task into the running list
+            #     waiting_queue.remove(chosen)  # remove it from waiting queue so it isn't scheduled again
+            #     chosen.set_starting_time(now)  # record the task start time as current time
+            #     self.available_processors -= chosen.get_allocation()  # consume processors required by this task
 
-            if process_list:  # if any tasks are running
-                self.time = min(  # advance time to the earliest finishing running task (non-preemptive)
-                    t.get_starting_time() + t.get_needed_time()  # finish time = start + duration
-                    for t in process_list  # check all running tasks
-                )
+            # if process_list:  # if any tasks are running
+            #     self.time = min(  # advance time to the earliest finishing running task (non-preemptive)
+            #         t.get_starting_time() + t.get_needed_time()  # finish time = start + duration
+            #         for t in process_list  # check all running tasks
+            #     )
 
 ##-----------------------------------------------------------------------------------------------------
 
