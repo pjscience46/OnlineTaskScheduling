@@ -66,7 +66,7 @@ import numpy as np
 
 # # -------------------- MAIN FOLDER --------------------
 
-main_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\TASKS"
+main_folder = r"C:\Thesis\Paper1\Extension_Fair_algo\EXT_Fair_algo\OnlineTaskScheduling\TASKS"
 
 print("Main folder exists:", os.path.exists(main_folder))
 print("Absolute path:", os.path.abspath(main_folder))
