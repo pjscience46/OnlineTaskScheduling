@@ -4,9 +4,6 @@
 # Internship Kansas University #
 ################################
 
-# This class implement the well known concept of graph, in our case the nodes are tasks (see clas Task) and the graph is
-# a directed acyclic graph (DAG)
-
 from task import Task
 import numpy as np
 import logging
@@ -16,9 +13,8 @@ from task import Status
 class Graph:
 
     def __init__(self, nodes=None, edges=None):
-        self._nodes = nodes  # a list of task [ task1, task2 ... ]
-        self._edges = edges  # a list of edge [[ task1, task2],[task3, task4],...]  where task1 is parent
-        # to task2 ...
+        self._nodes = nodes
+        self._edges = edges
 
     # Getters and Setters
     ############################################################
@@ -45,7 +41,7 @@ class Graph:
         self.set_nodes(nodes)
 
     def add_edge(self, edge):
-        """Edges must contain only [int,int] objects refering to a certain task in the nodes list"""
+        """Edges must contain only [int,int] objects referring to a certain task in the nodes list"""
         edges = self.get_edges()
         edges += [edge]
         self.set_edges(edges)
@@ -61,8 +57,7 @@ class Graph:
         return adjacency
 
     def get_children(self, task, adjacency=None):
-        """Return a list of the children of a certain task. The argument 'task' take an int value corresponding
-        to the index of the task in the nodes list"""
+        """Return a list of the children of a certain task."""
         children = []
         nodes = self.get_nodes()
         if adjacency is None:
@@ -74,8 +69,7 @@ class Graph:
         return children
 
     def get_parents(self, task, adjacency=None):
-        """Return a list of the parents of a certain task. The argument 'task' take an int value corresponding
-        to the index of the task in the nodes list"""
+        """Return a list of the parents of a certain task."""
         parents = []
         nodes = self.get_nodes()
         if adjacency is None:
@@ -86,7 +80,7 @@ class Graph:
         return parents
 
     def get_A_min(self, P, speedup_model):
-        """A_min is the sum of all the minimum area of each tasks"""
+        """A_min is the sum of all the minimum area of each task"""
         A_min = 0
         for task in self.get_nodes():
             A_min += task.get_minimum_area(P, speedup_model)[0]
@@ -102,25 +96,31 @@ class Graph:
 
         free_nodes = []
         free_nodes_set = set()
-        # Selecting the tasks without parents as starting points
+
         for index_task in range(len(nodes)):
             if not self.get_parents(index_task, adjacency):
                 free_nodes += [index_task]
                 free_nodes_set.add(index_task)
+
         logging.debug("Calculating Optimal time...")
 
         idx = 0
         while idx < len(free_nodes):
             index_task = free_nodes[idx]
             idx += 1
+
             weight = nodes[index_task].get_minimum_execution_time(P, speedup_model)[0]
+
             p_weight = 0
             for index_parent in self.get_parents(index_task, adjacency):
                 if p_weight < weights[index_parent]:
                     p_weight = weights[index_parent]
+
             weight += p_weight
+
             if weight > maximum_weight:
                 maximum_weight = weight
+
             weights[index_task] = weight
 
             for children in self.get_children(index_task, adjacency):
@@ -132,8 +132,11 @@ class Graph:
 
     def get_T_opt(self, P, adjacency, speedup_model):
         """Return the inferior bound for T optimal for a given graph"""
-        output = max(self.get_A_min(P, speedup_model) / P, self.get_C_min(P, adjacency, speedup_model))
-        logging.debug("Optimal execution time :", output)
+        output = max(
+            self.get_A_min(P, speedup_model) / P,
+            self.get_C_min(P, adjacency, speedup_model)
+        )
+        logging.debug("Optimal execution time : %s", output)
         return output
 
     def init_status(self):

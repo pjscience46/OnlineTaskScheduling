@@ -87,31 +87,40 @@ def save_nodes_in_csv(n, w_bounds, p_bounds, d_prime_bounds, c_prime_bounds, fil
 
 
 def load_nodes_from_csv(file):
-    """Loads a set of nodes from a csv file"""
+    """Loads a set of nodes from a csv file with columns: w,p,d,c,speedup_model"""
     f = open(file, 'r', newline='')
     reader = csv.reader(f)
     nodes = []
+
+    model_map = {
+        0: RooflineModel(),
+        1: CommunicationModel(),
+        2: AmdahlModel(),
+        3: GeneralModel()
+    }
+
     for row in reader:
         if row[0] != 'w':
             w = float(row[0])
             p_tild = float(row[1])
             d = float(row[2])
             c = float(row[3])
-            nodes += [Task(w, p_tild, d, c)]
+            speedup_model_num = int(row[4])
+
+            if speedup_model_num not in model_map:
+                raise ValueError(f"Invalid speedup_model value {speedup_model_num} in file {file}")
+
+            task_model = model_map[speedup_model_num]
+
+            nodes += [Task(w, p_tild, d, c, speedup_model=task_model)]
+
+    f.close()
     return nodes
 
 
 def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,writer):
   
-    model = {}
-    if(model_name == 'General'):
-        model = GeneralModel()
-    elif(model_name == 'Roofline'):
-        model = RooflineModel()
-    elif(model_name == 'Amdahl'):
-        model = AmdahlModel()
-    elif(model_name == 'Communication'):
-        model = CommunicationModel()
+    model = "task_specific"
 
     # Load combinations.csv into a DataFrame
     combinations_df = pd.read_csv('combinations.csv')
