@@ -1,3 +1,4 @@
+# use this file====
 # import pandas as pd
 # import numpy as np
 # import matplotlib.pyplot as plt
@@ -162,8 +163,17 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5):
 
     # Create bins with intermediate values inside the given range
     min_power, max_power = min(power_edges), max(power_edges)
-    bins = np.arange(min_power, max_power + step, step)  # includes intermediate powers
-    bins = 10.0 ** bins  # convert to actual bin values
+    # bins = np.arange(min_power, max_power + step, step)  # includes intermediate powers
+    # bins = 10.0 ** bins  # convert to actual bin values
+    n_bins = 30
+
+    bins = np.logspace(
+        np.log10(x.min()),
+        np.log10(x.max()),
+        n_bins
+    )
+
+    
 
     plt.figure()
 

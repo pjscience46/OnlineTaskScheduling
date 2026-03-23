@@ -124,6 +124,7 @@ class Processors:
                           # Sort waiting queue by processor allocation (descending)
             #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_allocation(), reverse=True)
             sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_needed_time(), reverse=True)
+            #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True)
             
 
             to_remove = set()

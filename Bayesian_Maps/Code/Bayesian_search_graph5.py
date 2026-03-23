@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, ConstantKernel as C, WhiteKernel
-#=== good so far than bayesian3 and 4==========
+#=== good so far than bayesian3 and 4========== use this one not 3 or 4===
 
 def plot_bo_search_pattern_black_points_red_best(
     csv_path: str,
