@@ -118,9 +118,9 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,writer):
+def compute_and_save( result_directory,priority_num,mu,alpha,beta,gamma,version,writer):
   
-    model = "task_specific"
+    model = None
 
     # Load combinations.csv into a DataFrame
     combinations_df = pd.read_csv('combinations.csv')
@@ -144,22 +144,22 @@ def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,wr
         time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
                                                                 adjacency=adjacency, mu=mu
                                                                 , speedup_model=model, P=P
-                                                                ,version=version)
+                                                                ,version=version, priority_num=priority_num)
         # Minimum time algorithm
         min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha,beta=beta,gamma=gamma,
                                                                 adjacency=adjacency, mu=mu
                                                                 , speedup_model=model, P=P
-                                                                ,version=version)
+                                                                ,version=version, priority_num=priority_num)
         makespan_ratio = (time_algo_1/time_opt)
         writer.writerow([str(P),str(n), str(time_algo_1), str(time_opt),str(makespan_ratio)])
         if makespan_ratio > max_makespan_ratio:
             max_makespan_ratio = makespan_ratio
         row_number = row_number+1
         if alpha is not None:
-            print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} model:{model_name} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} model:{priority_num} P:{P} n:{n} ")
         elif beta is not None:
-            print (f"Completed computation for {row_number} (mu,beta):{mu,beta} model:{model_name} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,beta):{mu,beta} model:{priority_num} P:{P} n:{n} ")
         elif gamma is not None:
-            print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} model:{model_name} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} model:{priority_num} P:{P} n:{n} ")
     print(max_makespan_ratio)
     return max_makespan_ratio
