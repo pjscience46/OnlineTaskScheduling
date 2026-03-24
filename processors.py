@@ -124,15 +124,25 @@ class Processors:
             
             to_remove = set()
 
-            for task in sorted_tasks:
-                adjusted_allocation = min(task.get_allocation(), ceil(mu * P))
+            if version == 3: #Fair scheduling
 
-                if self.get_available_processors() >= adjusted_allocation:
-                    task.set_allocation(adjusted_allocation)
-                    process_list.append(task)
-                    to_remove.add(task)
-                    task.set_starting_time(self.get_time())
-                    self.available_processors -= adjusted_allocation
+                for task in sorted_tasks:
+                    adjusted_allocation = min(task.get_allocation(), ceil(mu * P))
+
+                    if self.get_available_processors() >= adjusted_allocation:
+                        task.set_allocation(adjusted_allocation)
+                        process_list.append(task)
+                        to_remove.add(task)
+                        task.set_starting_time(self.get_time())
+                        self.available_processors -= adjusted_allocation
+
+            else:
+                for task in sorted_tasks:
+                    if self.get_available_processors() >= task.get_allocation():
+                        process_list.append(task)
+                        to_remove.add(task)
+                        task.set_starting_time(self.get_time())
+                        self.available_processors -= task.get_allocation()
 
             # Remove scheduled tasks from waiting queue
             for task in to_remove:
