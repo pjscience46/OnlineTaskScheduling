@@ -101,7 +101,7 @@ def load_nodes_from_csv(file):
     return nodes
 
 
-def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,writer):
+def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,writer,priority_num):
   
     model = {}
     if(model_name == 'General'):
@@ -135,12 +135,12 @@ def compute_and_save( result_directory,model_name,mu,alpha,beta,gamma,version,wr
         time_algo_1 = processors.online_scheduling_algorithm(task_graph, 1, alpha=alpha,beta=beta,gamma=gamma,
                                                                 adjacency=adjacency, mu=mu
                                                                 , speedup_model=model, P=P
-                                                                ,version=version)
+                                                                ,version=version,priority_num=priority_num)
         # Minimum time algorithm
         min_time = processors.online_scheduling_algorithm(task_graph, 2, alpha=alpha,beta=beta,gamma=gamma,
                                                                 adjacency=adjacency, mu=mu
                                                                 , speedup_model=model, P=P
-                                                                ,version=version)
+                                                                ,version=version,priority_num=priority_num)
         makespan_ratio = (time_algo_1/time_opt)
         writer.writerow([str(P),str(n), str(time_algo_1), str(time_opt),str(makespan_ratio)])
         if makespan_ratio > max_makespan_ratio:

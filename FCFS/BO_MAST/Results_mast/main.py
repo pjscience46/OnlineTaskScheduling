@@ -56,6 +56,19 @@ elif model_num == 2:
 elif model_num == 3:
     model_name = 'General'
 
+priority_num = int(input("Enter the Priority Number [0-FCFS, 1-Allocation, 2-Length, 3-Area]: "))
+
+if priority_num == 0:
+    priority_name = "FCFS"
+elif priority_num == 1:
+    priority_name = "Allocation"
+elif priority_num == 2:
+    priority_name = "Length"
+elif priority_num == 3:
+    priority_name = "Area"
+else:
+    raise ValueError("Invalid priority number")
+
 if version == 0:
     if model_num == 0:  
         P1_MIN, P1_MAX, P1_STEP = 0.1, 0.90, 0.02
@@ -123,7 +136,7 @@ SAT_PATIENCE = 10
 MIN_IMPROVEMENT = 0.0 # Minimum improvement to reset saturation counter (set to 0 for any improvement)
 
 main_folder = "FCFS"  #change
-sub_folder = "BO_MAST"           #change
+sub_folder = "BO_MTSA"           #change
 
 # Full path
 OUTPUT_DIR = os.path.join(main_folder, sub_folder)
@@ -259,7 +272,7 @@ def evaluate_one_combination_return_value(p1: float, p2: float) -> float:
         writer = csv.writer(f)
         writer.writerow(['P', 'n', 'Algorithm Time', 'Optimal Time', 'Makespan Ratio'])
 
-        args_list = [(folder, model_name, mu, alpha, beta, gamma, version, writer)]
+        args_list = [(folder, model_name, mu, alpha, beta, gamma, version, writer, priority_num)]
 
         with ThreadPoolExecutor() as executor:
             futures = [executor.submit(compute_and_save, *args) for args in args_list]
