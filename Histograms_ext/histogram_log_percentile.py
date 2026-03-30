@@ -165,7 +165,7 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5):
     min_power, max_power = min(power_edges), max(power_edges)
     # bins = np.arange(min_power, max_power + step, step)  # includes intermediate powers
     # bins = 10.0 ** bins  # convert to actual bin values
-    n_bins = 30
+    n_bins = 32
 
     bins = np.logspace(
         np.log10(x.min()),
@@ -178,9 +178,18 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5):
     plt.figure()
 
     # weights → convert counts to percentage
-    weights = np.ones_like(x) * 100.0 / total
+    #weights = np.ones_like(x) * 100.0 / total
+    weights = np.ones_like(x) / total
 
-    plt.hist(x, bins=bins, weights=weights)
+    #plt.hist(x, bins=bins, weights=weights)
+    plt.hist(
+    x,
+    bins=bins,
+    weights=weights,
+    edgecolor="black",
+    linewidth=1.2,
+    rwidth=0.95
+)
 
     # Log scale (important)
     plt.xscale("log")
@@ -190,9 +199,18 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5):
     ticks = np.arange(min_power, max_power + step, step)
     plt.xticks(10.0 ** ticks, [f"$10^{{{p}}}$" for p in ticks])
 
-    plt.xlabel(column_name)
-    plt.ylabel("Percentage (%)")
-    plt.title(f"Histogram of {column_name} ")
+    if column_name == "w":
+        plt.xlabel(r"$w$ (total parallelizable work)", fontsize=14)
+    elif column_name == "d":
+        plt.xlabel(r"$d^\prime$ (sequential fraction)", fontsize=14)
+    elif column_name == "c":
+        plt.xlabel(r"$c^\prime$ (communication overhead)", fontsize=14)
+    
+    plt.xticks(fontsize=14)
+    plt.yticks(fontsize=14)
+
+    plt.ylabel("Frequency", fontsize=14)
+   # plt.title(f"Histogram of {column_name} ")
 
     plt.show()
 
@@ -217,15 +235,26 @@ bins = np.linspace(1, 1024, 33)  # 33 edges -> 32 bins
 plt.figure()
 
 # Convert counts → percentage
-weights = np.ones_like(p) * 100.0 / total
+#weights = np.ones_like(p) * 100.0 / total
+weights = np.ones_like(p) / total
 
-plt.hist(p, bins=bins, weights=weights)
 
-plt.title("Histogram of p")
-plt.xlabel("p")
-plt.ylabel("Percentage (%)")
+#plt.hist(p, bins=bins, weights=weights)
+plt.hist(
+    p,
+    bins=bins,
+    weights=weights,
+    edgecolor="black",
+    linewidth=1.2,
+    rwidth=0.95
+)
 
-plt.xticks([1, 256, 512, 768, 1024])
+#plt.title("Histogram of p")
+plt.xlabel(r'$\bar{p}(maximum degree of parallelism)$', fontsize=14)
+plt.ylabel("Frequency", fontsize=14)
+
+plt.xticks([1, 256, 512, 768, 1024], fontsize=14)
+plt.yticks(fontsize=14)
 plt.margins(x=0.05)
 
 plt.show()
