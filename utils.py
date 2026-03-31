@@ -172,6 +172,6 @@ def compute_and_save( result_directory,priority_num,mu,alpha,beta,gamma,version,
         elif gamma is not None:
             print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} Algo:{priority_name} P:{P} n:{n} ")
         else:
-            print (f"Completed computation for {row_number} {mu} Algo:{priority_name} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number}  (mu:{mu}) Algo:{priority_name} P:{P} n:{n} ")
     print(max_makespan_ratio)
     return max_makespan_ratio
