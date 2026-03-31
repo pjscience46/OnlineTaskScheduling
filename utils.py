@@ -155,11 +155,23 @@ def compute_and_save( result_directory,priority_num,mu,alpha,beta,gamma,version,
         if makespan_ratio > max_makespan_ratio:
             max_makespan_ratio = makespan_ratio
         row_number = row_number+1
+
+        if priority_num == 0:
+                priority_name = "FCFS"
+        elif priority_num == 1:
+                priority_name = 'Allocation'
+        elif priority_num == 2:
+                priority_name = 'Length'
+        elif priority_num == 3:
+                priority_name = 'Area'
+                
         if alpha is not None:
-            print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} model:{priority_num} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,alpha):{mu,alpha} Algo:{priority_name} P:{P} n:{n} ")
         elif beta is not None:
-            print (f"Completed computation for {row_number} (mu,beta):{mu,beta} model:{priority_num} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,beta):{mu,beta} Algo:{priority_name} P:{P} n:{n} ")
         elif gamma is not None:
-            print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} model:{priority_num} P:{P} n:{n} ")
+            print (f"Completed computation for {row_number} (mu,gamma):{mu,gamma} Algo:{priority_name} P:{P} n:{n} ")
+        else:
+            print (f"Completed computation for {row_number} {mu} Algo:{priority_name} P:{P} n:{n} ")
     print(max_makespan_ratio)
     return max_makespan_ratio

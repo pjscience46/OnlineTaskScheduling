@@ -83,7 +83,7 @@ try:
 except Exception:
     SKLEARN_OK = False
 
-N_INITIAL = 5 #change
+N_INITIAL = 20 #change
 MAX_EVALS = 100
 KAPPA = 1.0
 SAT_PATIENCE = 10

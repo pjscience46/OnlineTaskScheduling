@@ -102,12 +102,7 @@ class Processors:
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
                 waiting_queue.add(task)
                 task.set_status(Status.PROCESSING)
-
-#####------------------- Fair Scheduling ----------------------------------- --------------------------------------------------------
-            #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_allocation(), reverse=True)   #sorted by allocation
-            #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_needed_time(), reverse=True)  #sorted by length
-            #sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True) #sorted by area
-            
+   
             if priority_num == 0:
                 priority_name = "FCFS"
                 sorted_tasks = list(waiting_queue)

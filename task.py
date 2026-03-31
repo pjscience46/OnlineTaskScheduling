@@ -192,8 +192,8 @@ class Task:
                 self.set_allocation(final_nb_processors) 
 
         elif version == 3:
-            R_min = inf
-           
+            R_min = inf   
+            final_nb_processors = 1
             for i in range(1, p_max + 1):
                 AR = self.get_area(i, speedup_model) / a_min[0]
                 TR = self.get_execution_time(i, speedup_model) / t_min[0]
@@ -201,7 +201,7 @@ class Task:
 
                 if R_j < R_min:
                     R_min = R_j
-                    final_nb_processors = i
+                    final_nb_processors = i    #not storing global r as we are not using it to calculate adjusted allocation
             self.set_allocation(final_nb_processors)
 
    
