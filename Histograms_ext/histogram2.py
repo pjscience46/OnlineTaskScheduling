@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 main_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\TASKS"
 
 # Read one file
-#all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
-all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
+all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
+#all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
 
 # If you want all CSVs from all n=* folders, use this instead:
 # all_files = glob.glob(os.path.join(main_folder, "n=*","*.csv"))
@@ -18,7 +18,7 @@ df_list = [pd.read_csv(file) for file in all_files]
 df = pd.concat(df_list, ignore_index=True)
 
 # -------------------- SAVE FOLDER --------------------
-save_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Histograms_ext"
+save_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Histograms"
 os.makedirs(save_folder, exist_ok=True)
 
 # -------------------- FUNCTION FOR w, d, c --------------------
@@ -59,16 +59,16 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5, save_folder=N
 
     if column_name == "w":
         plt.xlabel(r"$w$ (total parallelizable work)", fontsize=14)
-        file_name = "hist_w_frequency.png"
+        file_name = "hist_w_freq.png"
     elif column_name == "d":
         plt.xlabel(r"$d^\prime$ (sequential fraction)", fontsize=14)
-        file_name = "hist_d_frequency.png"
+        file_name = "hist_d_freq.png"
     elif column_name == "c":
         plt.xlabel(r"$c^\prime$ (communication overhead)", fontsize=14)
-        file_name = "hist_c_frequency.png"
+        file_name = "hist_c_freq.png"
     else:
         plt.xlabel(column_name, fontsize=14)
-        file_name = f"hist_{column_name}_freq_alltasks.png"
+        file_name = f"hist_{column_name}_freq.png"
 
     plt.ylabel("frequency", fontsize=14)
     plt.tight_layout()
@@ -114,7 +114,7 @@ plt.margins(x=0.05)
 
 plt.tight_layout()
 
-save_path = os.path.join(save_folder, "hist_p_freq_alltasks.png")
+save_path = os.path.join(save_folder, "hist_p_freq_.png")
 plt.savefig(save_path, dpi=300, bbox_inches="tight")
 
 plt.show()
