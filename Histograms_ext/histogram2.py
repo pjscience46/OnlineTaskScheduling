@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 main_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\TASKS"
 
 # Read one file
-all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
-#all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
+#all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
+all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
 
 # If you want all CSVs from all n=* folders, use this instead:
 # all_files = glob.glob(os.path.join(main_folder, "n=*","*.csv"))
@@ -68,7 +68,7 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5, save_folder=N
         file_name = "hist_c_frequency.png"
     else:
         plt.xlabel(column_name, fontsize=14)
-        file_name = f"hist_{column_name}_frequency.png"
+        file_name = f"hist_{column_name}_freq_alltasks.png"
 
     plt.ylabel("frequency", fontsize=14)
     plt.tight_layout()
@@ -114,7 +114,7 @@ plt.margins(x=0.05)
 
 plt.tight_layout()
 
-save_path = os.path.join(save_folder, "hist_p_frequency.png")
+save_path = os.path.join(save_folder, "hist_p_freq_alltasks.png")
 plt.savefig(save_path, dpi=300, bbox_inches="tight")
 
 plt.show()
