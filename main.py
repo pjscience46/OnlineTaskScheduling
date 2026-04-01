@@ -39,12 +39,15 @@ version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : ")
 if version == 0:
     parameter = 'beta'
     folder = "FCFS/BO_MAST/Results_mast/"     #change
+    sub_folder = "BO_MAST" #change
 elif version == 1:
     parameter = 'alpha'
     folder = "FCFS/BO_MTSA/Results_mtsa/"
+    sub_folder = "BO_MTSA"
 elif version == 2:
     parameter = 'gamma'
     folder = "FCFS/BO_MTPA/Results_mtpa/"
+    sub_folder = "BO_MTPA"
 
 model_num = int(input("Enter the Model Number [0-Roofline , 1-Amdahl, 2-Communication , 3-General]: "))
 if model_num == 0:
@@ -135,8 +138,8 @@ KAPPA = 1.0
 SAT_PATIENCE = 10
 MIN_IMPROVEMENT = 0.0 # Minimum improvement to reset saturation counter (set to 0 for any improvement)
 
-main_folder = "FCFS"  #change
-sub_folder = "BO_MTSA"           #change
+main_folder = priority_name #change
+          #change
 
 # Full path
 OUTPUT_DIR = os.path.join(main_folder, sub_folder)
