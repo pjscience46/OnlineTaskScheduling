@@ -1,4 +1,3 @@
-
 from numerics import *
 from graph import *
 from task import Status
@@ -41,7 +40,7 @@ class Processors:
     # Methods
     ############################################################
 
-    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, beta,gamma,save_in_logs=False, adjacency=[],
+    def online_scheduling_algorithm(self, task_graph, allocation_function, alpha, beta, gamma, save_in_logs=False, adjacency=[],
                                     P=P, mu=mu, speedup_model: Model = GeneralModel(), version=0, priority_num=0):
         """"
         Given a task graph, this function calculate the time needed to complete every task of the task graph.
@@ -51,27 +50,27 @@ class Processors:
         3 : allocate_processor_Min_area
         """
 
-        waiting_queue = set()  # Initialize a waiting queue Q
+        waiting_queue = []  # Initialize a waiting queue Q
         process_list = []  # List of the task being processed
         nodes = task_graph.get_nodes()
 
         for task in nodes:  # Insert all tasks without parents in the waiting queue
             if not task_graph.get_parents(nodes.index(task), adjacency):
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P, mu, alpha,beta,gamma, speedup_model, version)
+                    task.allocate_processor_algo(P, mu, alpha, beta, gamma, speedup_model, version)
                 elif allocation_function == 2:
                     task.allocate_processor_Min_time(P, mu, speedup_model)
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P, mu, speedup_model)
                 allocation = task.get_allocation()
-                
+
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                waiting_queue.add(task)
+                waiting_queue.append(task)
                 task.set_status(Status.PROCESSING)
-            
+
         while waiting_queue or process_list:
             # Cleaning of the processors
-            available_tasks = set()
+            available_tasks = []
             if process_list:
                 task = min(process_list)
                 process_list.remove(task)
@@ -87,23 +86,24 @@ class Processors:
                                 break
                         if available:
                             nodes[child].set_status(Status.AVAILABLE)
-                            available_tasks.add(nodes[child])
+                            available_tasks.append(nodes[child])
 
             # Processor allocation
             for task in available_tasks:
                 if allocation_function == 1:
-                    task.allocate_processor_algo(P, mu, alpha,beta,gamma, speedup_model, version)
+                    task.allocate_processor_algo(P, mu, alpha, beta, gamma, speedup_model, version)
                 elif allocation_function == 2:
                     task.allocate_processor_Min_time(P, mu, speedup_model)
                 elif allocation_function == 3:
                     task.allocate_processor_Min_area(P, mu, speedup_model)
                 allocation1 = task.get_allocation()
-                
+
                 task.set_needed_time(task.get_execution_time(task.get_allocation(), speedup_model))
-                waiting_queue.add(task)
+                waiting_queue.append(task)
                 task.set_status(Status.PROCESSING)
-##-------------------------------FCFS, Allocation, Length, Area--------------------------------------------------------
-            
+
+            ##-------------------------------FCFS, Allocation, Length, Area--------------------------------------------------------
+
             if priority_num == 0:
                 priority_name = "FCFS"
                 sorted_tasks = list(waiting_queue)
@@ -116,15 +116,14 @@ class Processors:
             elif priority_num == 3:
                 priority_name = "Area"
                 sorted_tasks = sorted(waiting_queue, key=lambda t: t.get_area(t.get_allocation(), speedup_model), reverse=True)
-            
 
-            to_remove = set()
+            to_remove = []
 
             for task in sorted_tasks:
                 # If the task fits in currently available processors
                 if self.get_available_processors() >= task.get_allocation():
                     process_list.append(task)
-                    to_remove.add(task)
+                    to_remove.append(task)
                     task.set_starting_time(self.get_time())
                     self.available_processors -= task.get_allocation()
 
@@ -136,7 +135,6 @@ class Processors:
             if process_list:
                 next_task = min(process_list)
                 self.time = next_task.get_needed_time() + next_task.get_starting_time()
-
 
         # Resetting the status and the clock of the processors
         task_graph.init_status()
