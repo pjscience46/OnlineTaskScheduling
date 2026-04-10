@@ -33,32 +33,6 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional, Dict, Any
 
 
-
-
-version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
-if version == 0:
-    parameter = 'beta'
-    folder = "FCFS/BO_MAST/Results_mast/"     #change
-    sub_folder = "BO_MAST" #change
-elif version == 1:
-    parameter = 'alpha'
-    folder = "FCFS/BO_MTSA/Results_mtsa/"
-    sub_folder = "BO_MTSA"
-elif version == 2:
-    parameter = 'gamma'
-    folder = "FCFS/BO_MTPA/Results_mtpa/"
-    sub_folder = "BO_MTPA"
-
-model_num = int(input("Enter the Model Number [0-Roofline , 1-Amdahl, 2-Communication , 3-General]: "))
-if model_num == 0:
-    model_name = "Roofline"
-elif model_num == 1:
-    model_name = 'Amdahl'
-elif model_num == 2:
-    model_name = 'Communication'
-elif model_num == 3:
-    model_name = 'General'
-
 priority_num = int(input("Enter the Priority Number [0-FCFS, 1-Allocation, 2-Length, 3-Area]: "))
 
 if priority_num == 0:
@@ -71,6 +45,32 @@ elif priority_num == 3:
     priority_name = "Area"
 else:
     raise ValueError("Invalid priority number")
+
+version = int(input("Enter algorithm version number[0-MAST, 1-MTSA, 2-MTPA] : "))
+if version == 0:
+    parameter = 'beta'
+    folder = f"{priority_name}/BO_MAST/Results_mast/"     #change
+    sub_folder = "BO_MAST" #change
+elif version == 1:
+    parameter = 'alpha'
+    folder = f"{priority_name}/BO_MTSA/Results_mtsa/"
+    sub_folder = "BO_MTSA"
+elif version == 2:
+    parameter = 'gamma'
+    folder = f"{priority_name}/BO_MTPA/Results_mtpa/"
+    sub_folder = "BO_MTPA"
+
+model_num = int(input("Enter the Model Number [0-Roofline , 1-Amdahl, 2-Communication , 3-General]: "))
+if model_num == 0:
+    model_name = "Roofline"
+elif model_num == 1:
+    model_name = 'Amdahl'
+elif model_num == 2:
+    model_name = 'Communication'
+elif model_num == 3:
+    model_name = 'General'
+
+
 
 if version == 0:
     if model_num == 0:  
