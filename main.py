@@ -303,30 +303,39 @@ def main():
         p1_values = frange_inclusive(P1_MIN, P1_MAX, P1_STEP)
         idx1 = build_index(p1_values)
 
-        # =========================================================
-        # FAIR: 1-parameter search
-        # =========================================================
+        # =====================================================
+        # CASE 1: FAIR ALGORITHM
+        # Fair has only one parameter: mu
+        # =====================================================
         if version == 3:
             all_points = list(p1_values)
             pyrandom.shuffle(all_points)
 
-            fields = ["eval_id", "P1", "value", "global_best_value", "global_best_P1"]
+            fields = [
+                "eval_id",
+                "P1",
+                "value",
+                "global_best_value",
+                "global_best_P1"
+            ]
+
             write_csv_header_if_missing(COMBO_RESULTS_CSV, fields)
 
             evaluated = set()
-            X_obs: List[float] = []
-            y_obs: List[float] = []
+            X_obs = []
+            y_obs = []
 
             global_best_val = float("inf")
-            global_best_p1: Optional[float] = None
+            global_best_p1 = None
 
             no_improve = 0
             eval_id = 0
 
-            print("=== START Bayesian-like search for FAIR (1D, NO repeats) ===")
-            print(f"Grid size: {len(all_points)} total combos")
+            print("=== START Bayesian search for FAIR: 1D search ===")
+            print(f"Grid size: {len(all_points)}")
             print(f"Initial random evals: {N_INITIAL}, Max evals: {MAX_EVALS}, kappa={KAPPA}\n")
 
+            # Initial random evaluations
             initial = []
             for p1 in all_points:
                 if len(initial) >= min(N_INITIAL, len(all_points)):
@@ -357,29 +366,35 @@ def main():
                     "global_best_P1": global_best_p1
                 })
 
-                print(f"[init {eval_id}/{min(N_INITIAL, len(all_points))}] {p1} -> {val:.6g} | best={global_best_val:.6g} @ {global_best_p1}")
+                print(
+                    f"[init {eval_id}] mu={p1} -> {val:.6g} "
+                    f"| best={global_best_val:.6g} @ mu={global_best_p1}"
+                )
 
                 if eval_id >= MAX_EVALS:
                     break
 
             if global_best_p1 is None:
-                print("No evaluations were run. Exiting.")
+                print("No evaluations were run.")
                 return
 
             no_improve = 0
 
+            # Bayesian loop for Fair
             while eval_id < min(MAX_EVALS, len(all_points)):
                 if no_improve >= SAT_PATIENCE:
-                    print(f"\nStopping: no improvement for {SAT_PATIENCE} steps (saturation).")
+                    print(f"\nStopping: no improvement for {SAT_PATIENCE} steps.")
                     break
 
                 X = to_X_1d(X_obs)
                 y = np.array(y_obs, dtype=float)
+
                 gp = fit_surrogate(X, y)
 
                 unevaluated = [p1 for p1 in all_points if p1 not in evaluated]
+
                 if not unevaluated:
-                    print("\nNo more unseen combinations left.")
+                    print("\nNo more unseen values left.")
                     break
 
                 next_p1 = propose_next_1d(
@@ -414,19 +429,23 @@ def main():
                     "global_best_P1": global_best_p1
                 })
 
-                print(f"\n[step {eval_id}] proposed={next_p1} -> {val:.6g}")
-                print(f"         best={global_best_val:.6g} @ {global_best_p1} | improved={improved} | no_improve={no_improve}/{SAT_PATIENCE}")
+                print(f"\n[step {eval_id}] proposed mu={next_p1} -> {val:.6g}")
+                print(
+                    f"best={global_best_val:.6g} @ mu={global_best_p1} "
+                    f"| improved={improved} | no_improve={no_improve}/{SAT_PATIENCE}"
+                )
 
-            print("\n=== FINAL ===")
-            print(f"Evaluations run: {eval_id}/{min(MAX_EVALS, len(all_points))}")
-            print(f"Best value: {global_best_val}")
-            print(f"Best P1: {global_best_p1}")
+            print("\n=== FINAL FAIR RESULT ===")
+            print(f"Evaluations run: {eval_id}")
+            print(f"Best makespan ratio: {global_best_val}")
+            print(f"Best mu: {global_best_p1}")
             print(f"Saved CSV: {COMBO_RESULTS_CSV}")
             print(f"Saved terminal log: {TERMINAL_LOG_TXT}")
 
-        # =========================================================
-        # MAST / MTSA / MTPA: 2-parameter search
-        # =========================================================
+        # =====================================================
+        # CASE 2: MAST / MTSA / MTPA
+        # These algorithms have two parameters: mu and beta/alpha/gamma
+        # =====================================================
         else:
             p2_values = frange_inclusive(P2_MIN, P2_MAX, P2_STEP)
             idx2 = build_index(p2_values)
@@ -434,23 +453,33 @@ def main():
             all_pairs = list(itertools.product(p1_values, p2_values))
             pyrandom.shuffle(all_pairs)
 
-            fields = ["eval_id", "P1", "P2", "value", "global_best_value", "global_best_P1", "global_best_P2"]
+            fields = [
+                "eval_id",
+                "P1",
+                "P2",
+                "value",
+                "global_best_value",
+                "global_best_P1",
+                "global_best_P2"
+            ]
+
             write_csv_header_if_missing(COMBO_RESULTS_CSV, fields)
 
             evaluated = set()
-            X_obs: List[Tuple[float, float]] = []
-            y_obs: List[float] = []
+            X_obs = []
+            y_obs = []
 
             global_best_val = float("inf")
-            global_best_pair: Optional[Tuple[float, float]] = None
+            global_best_pair = None
 
             no_improve = 0
             eval_id = 0
 
-            print("=== START Bayesian-like search (2D, NO repeats) ===")
-            print(f"Grid size: {len(all_pairs)} total combos")
+            print("=== START Bayesian search: 2D search ===")
+            print(f"Grid size: {len(all_pairs)}")
             print(f"Initial random evals: {N_INITIAL}, Max evals: {MAX_EVALS}, kappa={KAPPA}\n")
 
+            # Initial random evaluations
             initial = []
             for pair in all_pairs:
                 if len(initial) >= min(N_INITIAL, len(all_pairs)):
@@ -460,6 +489,7 @@ def main():
 
             for pair in initial:
                 p1, p2 = pair
+
                 val = evaluate_one_combination_return_value(p1, p2)
 
                 eval_id += 1
@@ -480,31 +510,37 @@ def main():
                     "P2": p2,
                     "value": val,
                     "global_best_value": global_best_val,
-                    "global_best_P1": global_best_pair[0] if global_best_pair else None,
-                    "global_best_P2": global_best_pair[1] if global_best_pair else None,
+                    "global_best_P1": global_best_pair[0],
+                    "global_best_P2": global_best_pair[1],
                 })
 
-                print(f"[init {eval_id}/{min(N_INITIAL, len(all_pairs))}] {pair} -> {val:.6g} | best={global_best_val:.6g} @ {global_best_pair}")
+                print(
+                    f"[init {eval_id}] mu={p1}, {parameter}={p2} -> {val:.6g} "
+                    f"| best={global_best_val:.6g} @ {global_best_pair}"
+                )
 
                 if eval_id >= MAX_EVALS:
                     break
 
             if global_best_pair is None:
-                print("No evaluations were run. Exiting.")
+                print("No evaluations were run.")
                 return
 
             no_improve = 0
 
+            # Bayesian loop for MAST / MTSA / MTPA
             while eval_id < min(MAX_EVALS, len(all_pairs)):
                 if no_improve >= SAT_PATIENCE:
-                    print(f"\nStopping: no improvement for {SAT_PATIENCE} steps (saturation).")
+                    print(f"\nStopping: no improvement for {SAT_PATIENCE} steps.")
                     break
 
                 X = to_X_2d(X_obs)
                 y = np.array(y_obs, dtype=float)
+
                 gp = fit_surrogate(X, y)
 
                 unevaluated = [pair for pair in all_pairs if pair not in evaluated]
+
                 if not unevaluated:
                     print("\nNo more unseen combinations left.")
                     break
@@ -519,6 +555,7 @@ def main():
                 )
 
                 p1, p2 = next_pair
+
                 val = evaluate_one_combination_return_value(p1, p2)
 
                 eval_id += 1
@@ -545,13 +582,17 @@ def main():
                     "global_best_P2": global_best_pair[1],
                 })
 
-                print(f"\n[step {eval_id}] proposed={next_pair} -> {val:.6g}")
-                print(f"         best={global_best_val:.6g} @ {global_best_pair} | improved={improved} | no_improve={no_improve}/{SAT_PATIENCE}")
+                print(f"\n[step {eval_id}] proposed mu={p1}, {parameter}={p2} -> {val:.6g}")
+                print(
+                    f"best={global_best_val:.6g} @ {global_best_pair} "
+                    f"| improved={improved} | no_improve={no_improve}/{SAT_PATIENCE}"
+                )
 
-            print("\n=== FINAL ===")
-            print(f"Evaluations run: {eval_id}/{min(MAX_EVALS, len(all_pairs))}")
-            print(f"Best value: {global_best_val}")
-            print(f"Best (P1, P2): {global_best_pair}")
+            print("\n=== FINAL RESULT ===")
+            print(f"Evaluations run: {eval_id}")
+            print(f"Best makespan ratio: {global_best_val}")
+            print(f"Best mu: {global_best_pair[0]}")
+            print(f"Best {parameter}: {global_best_pair[1]}")
             print(f"Saved CSV: {COMBO_RESULTS_CSV}")
             print(f"Saved terminal log: {TERMINAL_LOG_TXT}")
 
