@@ -4,11 +4,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, ConstantKernel as C, WhiteKernel
 
-
+#Note : this file should be used to generate Bayesina maps. Find for chnag eword to change the code as needed for different algos.
 def plot_bo_search_pattern_black_points_red_best(
     csv_path: str,
     p1_col: str = "P1",
@@ -114,14 +115,48 @@ def plot_bo_search_pattern_black_points_red_best(
     ax.set_facecolor("#f2f2f2")
 
     if show_background_surrogate and MU is not None and levels is not None:
-        ax.contour(
-            P2g, P1g, MU,
-            levels=levels,
-            cmap="RdBu_r",
-            linewidths=contour_lw,
-            alpha=contour_alpha,
-            zorder=1
+        #wihout sidebar code
+    #     ax.contour(
+    # P2g, P1g, MU,
+    # levels=levels,
+    # cmap="RdBu_r",
+    # linewidths=contour_lw,
+    # alpha=contour_alpha,
+    # zorder=1
+# )
+        
+     ##########################################################################   with sidebar code
+        contour = ax.contour(
+        P2g, P1g, MU,
+        levels=levels,
+        cmap="RdBu_r",   # SAME palette (unchanged)
+        linewidths=contour_lw,
+        alpha=contour_alpha,
+        zorder=1
         )
+
+        # ---- ADD COLORBAR (SIDEBAR) ----
+                # ---- CLEAN COLORBAR ONLY ----
+        positive_levels = levels[levels > 0]
+
+        if len(positive_levels) > 0:
+            vmin = positive_levels.min()
+            vmax = positive_levels.max()
+
+            norm = Normalize(vmin=vmin, vmax=vmax)
+            sm = ScalarMappable(norm=norm, cmap="RdBu_r")
+            sm.set_array([])
+
+            cbar = fig.colorbar(sm, ax=ax)
+
+            tick_values = np.linspace(vmin, vmax, 10)
+            cbar.set_ticks(tick_values)
+            cbar.set_ticklabels([f"{v:.3f}" for v in tick_values])
+
+          
+                
+
+     ##############################################################################
 
     # All evaluations: black X
     ax.scatter(
@@ -222,10 +257,10 @@ def plot_bo_search_pattern_black_points_red_best(
         bbox=dict(facecolor="white", edgecolor="none", alpha=0.9, pad=1.2)
     )
 
-
+#change labels as needed 
     ax.set_xlabel(r'$\beta$', fontsize=16)
     #ax.set_xlabel(r'$\alpha$', fontsize=16)
-    #ax.set_xlabel(r'$\gamma$', fontsize=16)
+    # ax.set_xlabel(r'$\gamma$', fontsize=16)
     ax.set_ylabel(r'$\mu$', fontsize=16)
     ax.tick_params(axis='x', labelsize=12)
     ax.tick_params(axis='y', labelsize=12)
@@ -236,11 +271,20 @@ def plot_bo_search_pattern_black_points_red_best(
     # ax.set_xlim(0, 1.0)
     # ax.set_xticks(np.arange(0, 1.01, 0.2)) 
 
+ #change
+ #for alpha and beta
     ax.set_xlim(1.0, 5.0)
     ax.set_xticks(np.arange(1.0, 5.01, 0.5))
-
-    ax.set_ylim(0.1, 0.9)
-    ax.set_yticks(np.arange(0.1, 0.91, 0.1)) 
+#for gamma
+    # ax.set_xlim(0.0, 1.0)
+    # ax.set_xticks(np.arange(0.0, 1.01, 0.2))
+    
+#for mu- same for all
+    ax.set_ylim(0.1, 0.9) 
+    ax.set_yticks(np.arange(0.1, 0.91, 0.1))
+    
+    
+     
 
 
     # Invert Y axis: top to bottom
@@ -266,70 +310,74 @@ if __name__ == "__main__":
     #     n_low_levels=25,
     #     n_mid_levels=4,
     # ) 
-
+#change as needed 
     csv_files = [
-    #     #FCFS
+    # #     #FCFS
     r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Roofline.csv",
     r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_General.csv",
     r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Amdahl.csv",
     r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_comm.csv",
-        #Priority_Length
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MAST\combo_results_comm.csv",
-     #priority_Area
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MAST\combo_results_comm.csv",
-    #priority_Processor
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MAST\combo_results_comm.csv"
+        #Length
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Roofline.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_General.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Amdahl.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_comm.csv",
+     #Area
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Roofline.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_General.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Amdahl.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_comm.csv",
+    #Allocation
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Roofline.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_General.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Amdahl.csv",
+    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_comm.csv"
+    
+    # ,
 
 
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTSA\combo_results_Roofline.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTSA\combo_results_General.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTSA\combo_results_Amdahl.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTSA\combo_results_comm.csv",
-    #     #Priority_Length
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTSA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTSA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTSA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTSA\combo_results_comm.csv",
-    #  #priority_Area
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTSA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTSA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTSA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTSA\combo_results_comm.csv",
-    # #priority_Processor
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTSA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTSA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTSA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTSA\combo_results_comm.csv"
+    #     #Length
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTSA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTSA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTSA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTSA\combo_results_comm.csv",
+    #  #Area
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTSA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTSA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTSA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTSA\combo_results_comm.csv",
+    # #Allocation
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTSA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTSA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTSA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTSA\combo_results_comm.csv"
+    
+    # ,
 
 
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTPA\combo_results_Roofline.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTPA\combo_results_General.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTPA\combo_results_Amdahl.csv",
     # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MTPA\combo_results_comm.csv",
-    #     Priority_Length
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTPA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTPA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTPA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Length\BO_MTPA\combo_results_comm.csv",
-    #  priority_Area
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTPA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTPA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTPA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Area\BO_MTPA\combo_results_comm.csv",
-    # priority_Processor
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTPA\combo_results_Roofline.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTPA\combo_results_General.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTPA\combo_results_Amdahl.csv",
-    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Priority_Processor\BO_MTPA\combo_results_comm.csv"
+    #    # Length
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTPA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTPA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTPA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MTPA\combo_results_comm.csv",
+    #   #Area
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTPA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTPA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTPA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MTPA\combo_results_comm.csv",
+    #  #Allocation
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTPA\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTPA\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTPA\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MTPA\combo_results_comm.csv"
 
 
 ]
