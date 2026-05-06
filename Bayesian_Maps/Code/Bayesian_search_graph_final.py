@@ -313,25 +313,25 @@ if __name__ == "__main__":
 #change as needed 
     csv_files = [
     # #     #FCFS
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_comm.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\FCFS\BO_MAST\combo_results_comm.csv",
         #Length
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_comm.csv",
-     #Area
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_comm.csv",
-    #Allocation
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Roofline.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_General.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Amdahl.csv",
-    r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_comm.csv"
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Length\BO_MAST\combo_results_comm.csv",
+    #  #Area
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Area\BO_MAST\combo_results_comm.csv",
+    # #Allocation
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Roofline.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_General.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_Amdahl.csv",
+    # r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Allocation\BO_MAST\combo_results_comm.csv"
     
     # ,
 
