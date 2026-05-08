@@ -125,6 +125,9 @@ class Processors:
 
                     if self.get_available_processors() >= adjusted_allocation:
                         task.set_allocation(adjusted_allocation)
+                        task.set_needed_time(
+                                task.get_execution_time(task.get_allocation(), speedup_model)
+                                                                )
                         process_list.append(task)
                         to_remove.append(task)
                         task.set_starting_time(self.get_time())

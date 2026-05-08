@@ -19,9 +19,9 @@ from statistics import *
 # -------------------------------
 # Inputs
 # -------------------------------
-version = int(input("Enter algorithm version number [0-MAST, 1-MTSA, 2-MTPA, 3-Fair] : "))
-priority_num = int(input("Enter the Priority Number [0-FCFS, 1-Allocation, 2-Length, 3-Area]: "))
 
+priority_num = int(input("Enter the Priority Number [0-FCFS, 1-Allocation, 2-Length, 3-Area]: "))
+version = int(input("Enter algorithm version number [0-MAST, 1-MTSA, 2-MTPA, 3-Fair] : "))
 if priority_num == 0:
     priority_name = "FCFS"
 elif priority_num == 1:
@@ -38,16 +38,20 @@ else:
 # -------------------------------
 if version == 0:
     parameter = "beta"
-    folder = f"BO_MAST/{priority_name}/Results/"
+    folder = f"{priority_name}/BO_MAST/Results/"
+    sub_folder = f"{priority_name}/BO_MAST"
 elif version == 1:
     parameter = "alpha"
-    folder = f"BO_MTSA/{priority_name}/Results/"
+    folder = f"{priority_name}/BO_MTSA/Results/"
+    sub_folder = f"{priority_name}/BO_MTSA"
 elif version == 2:
     parameter = "gamma"
-    folder = f"BO_MTPA/{priority_name}/Results/"
+    folder = f"{priority_name}/BO_MTPA/Results/"
+    sub_folder = f"{priority_name}/BO_MTPA" 
 elif version == 3:
     parameter = None
-    folder = f"BO_Fair/{priority_name}/Results/"
+    folder = f"{priority_name}/BO_Fair/Results/"
+    sub_folder = f"{priority_name}/BO_Fair"
 else:
     raise ValueError("Invalid version")
 
@@ -89,7 +93,7 @@ KAPPA = 1.0
 SAT_PATIENCE = 10
 MIN_IMPROVEMENT = 0.0
 
-OUTPUT_DIR = folder
+OUTPUT_DIR = sub_folder
 
 if priority_num == 0:
     TERMINAL_LOG_TXT = os.path.join(OUTPUT_DIR, "TERMINAL_LOG_FCFS_TXT.txt")
