@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from logging import log
 from model import *
 
-MODEL_LIST = [RooflineModel(),AmdahlModel(),AmdahlModel(),CommunicationModel()]
+#MODEL_LIST = [RooflineModel(),AmdahlModel(),AmdahlModel(),CommunicationModel()]
 
 #MODEL_LIST = [Roofline()]
 def generate_task(w_bounds, p_bounds, d_prime_bounds, c_prime_bounds):
