@@ -5,11 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # -------------------- LOAD DATA --------------------
-main_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\TASKS"
+main_folder = r"C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\TASKS"
 
 # Read one file
-all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
-#all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
+#all_files = glob.glob(os.path.join(main_folder, "n=1000", "1.csv"))
+all_files = glob.glob(os.path.join(main_folder, "n=*/", "*.csv"))
 
 # If you want all CSVs from all n=* folders, use this instead:
 # all_files = glob.glob(os.path.join(main_folder, "n=*","*.csv"))
@@ -18,7 +18,7 @@ df_list = [pd.read_csv(file) for file in all_files]
 df = pd.concat(df_list, ignore_index=True)
 
 # -------------------- SAVE FOLDER --------------------
-save_folder = r"C:\Users\m779p635\OneDrive - University of Kansas\Extension_Scheduling\OnlineTaskScheduling\Histograms"
+save_folder = r"C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Histograms"
 os.makedirs(save_folder, exist_ok=True)
 
 # -------------------- FUNCTION FOR w, d, c --------------------
@@ -58,19 +58,19 @@ def plot_power_histogram(data, column_name, power_edges, step=0.5, save_folder=N
     plt.yticks(fontsize=14)
 
     if column_name == "w":
-        plt.xlabel(r"$w$ (total parallelizable work)", fontsize=14)
-        file_name = "hist_w_freq.png"
+        plt.xlabel(r"$\mathbf{w}$ (total parallelizable work)", fontsize=16, fontweight="bold", labelpad=8)
+        file_name = "hist_w_freq_paper.png"
     elif column_name == "d":
-        plt.xlabel(r"$d^\prime$ (sequential fraction)", fontsize=14)
-        file_name = "hist_d_freq.png"
+        plt.xlabel(r"$\mathbf{d^\prime}$ (sequential fraction)", fontsize=16, fontweight="bold", labelpad=8)
+        file_name = "hist_d_freq_paper.png"
     elif column_name == "c":
-        plt.xlabel(r"$c^\prime$ (communication overhead)", fontsize=14)
-        file_name = "hist_c_freq.png"
+        plt.xlabel(r"$\mathbf{c^\prime}$ (communication overhead)", fontsize=16, fontweight="bold", labelpad=8)
+        file_name = "hist_c_freq_paper.png"
     else:
-        plt.xlabel(column_name, fontsize=14)
-        file_name = f"hist_{column_name}_freq.png"
+        plt.xlabel(rf"$\mathbf{{{column_name}}}$", fontsize=16, fontweight="bold", labelpad=8)
+        file_name = f"hist_{column_name}_freq_paper.png"
 
-    plt.ylabel("frequency", fontsize=14)
+    plt.ylabel("frequency", fontsize=16, fontweight="bold", labelpad=8)
     plt.tight_layout()
 
     if save_folder is not None:
@@ -105,8 +105,8 @@ plt.hist(
     rwidth=0.95
 )
 
-plt.xlabel(r'$\bar{p}$ (maximum degree of parallelism)', fontsize=14)
-plt.ylabel("frequency", fontsize=14)
+plt.xlabel(r'$\mathbf{\bar{p}}$ (maximum degree of parallelism)', fontsize=16, fontweight="bold", labelpad=8)
+plt.ylabel("frequency", fontsize=16, fontweight="bold", labelpad=8)
 
 plt.xticks([1, 256, 512, 768, 1024], fontsize=14)
 plt.yticks(fontsize=14)
@@ -114,7 +114,7 @@ plt.margins(x=0.05)
 
 plt.tight_layout()
 
-save_path = os.path.join(save_folder, "hist_p_freq_.png")
+save_path = os.path.join(save_folder, "hist_p_freq_paper.png")
 plt.savefig(save_path, dpi=300, bbox_inches="tight")
 
 plt.show()

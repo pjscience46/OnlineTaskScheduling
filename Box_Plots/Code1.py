@@ -376,7 +376,7 @@ for i, model in enumerate(model_order):
         if i == 0:
             ax.set_title(
                 algo,
-                fontsize=18,
+                fontsize=12,
                 fontweight="bold",
                 pad=14
             )
@@ -392,7 +392,7 @@ for i, model in enumerate(model_order):
                 rotation=90,
                 va="center",
                 ha="center",
-                fontsize=16,
+                fontsize=12,
                 fontweight="bold"
             )
 

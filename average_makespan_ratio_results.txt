@@ -1,0 +1,144 @@
+Average Makespan Ratio Results
+====================================================================================================
+
+Model: Amdahl, Algorithm: MAST, Priority: Allocation, Parameters: mu=0.30, beta=1.40, Average Makespan Ratio: 1.667776
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MAST\Results_mast\Amdahl\mu_0.30_beta_1.40.csv
+
+Model: Amdahl, Algorithm: MAST, Priority: Area, Parameters: mu=0.10, beta=1.60, Average Makespan Ratio: 1.803918
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MAST\Results_mast\Amdahl\mu_0.10_beta_1.60.csv
+
+Model: Amdahl, Algorithm: MAST, Priority: FCFS, Parameters: mu=0.88, beta=1.40, Average Makespan Ratio: 1.705246
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MAST\Results_mast\Amdahl\mu_0.88_beta_1.40.csv
+
+Model: Amdahl, Algorithm: MAST, Priority: Length, Parameters: mu=0.52, beta=1.40, Average Makespan Ratio: 1.759284
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MAST\Results_mast\Amdahl\mu_0.52_beta_1.40.csv
+
+Model: Amdahl, Algorithm: MTPA, Priority: Allocation, Parameters: mu=0.28, gamma=0.20, Average Makespan Ratio: 1.721969
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTPA\Results_mtpa\Amdahl\mu_0.28_gamma_0.20.csv
+
+Model: Amdahl, Algorithm: MTPA, Priority: Area, Parameters: mu=0.90, gamma=1.00, Average Makespan Ratio: 12.131679
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTPA\Results_mtpa\Amdahl\mu_0.90_gamma_1.00.csv
+
+Model: Amdahl, Algorithm: MTPA, Priority: FCFS, Parameters: mu=0.20, gamma=0.05, Average Makespan Ratio: 1.554130
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTPA\Results_mtpa\Amdahl\mu_0.20_gamma_0.05.csv
+
+Model: Amdahl, Algorithm: MTPA, Priority: Length, Parameters: mu=0.24, gamma=0.40, Average Makespan Ratio: 1.964595
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTPA\Results_mtpa\Amdahl\mu_0.24_gamma_0.40.csv
+
+Model: Amdahl, Algorithm: MTSA, Priority: Allocation, Parameters: mu=0.12, alpha=3.20, Average Makespan Ratio: 1.639005
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTSA\Results_mtsa\Amdahl\mu_0.12_alpha_3.20.csv
+
+Model: Amdahl, Algorithm: MTSA, Priority: Area, Parameters: mu=0.12, alpha=4.00, Average Makespan Ratio: 1.544939
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTSA\Results_mtsa\Amdahl\mu_0.12_alpha_4.00.csv
+
+Model: Amdahl, Algorithm: MTSA, Priority: FCFS, Parameters: mu=0.10, alpha=2.40, Average Makespan Ratio: 1.782164
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTSA\Results_mtsa\Amdahl\mu_0.10_alpha_2.40.csv
+
+Model: Amdahl, Algorithm: MTSA, Priority: Length, Parameters: mu=0.10, alpha=4.60, Average Makespan Ratio: 1.524249
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTSA\Results_mtsa\Amdahl\mu_0.10_alpha_4.60.csv
+
+Model: Communication, Algorithm: MAST, Priority: Allocation, Parameters: mu=0.46, beta=1.00, Average Makespan Ratio: 1.244786
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MAST\Results_mast\Communication\mu_0.46_beta_1.00.csv
+
+Model: Communication, Algorithm: MAST, Priority: Area, Parameters: mu=0.36, beta=1.00, Average Makespan Ratio: 1.262893
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MAST\Results_mast\Communication\mu_0.36_beta_1.00.csv
+
+Model: Communication, Algorithm: MAST, Priority: FCFS, Parameters: mu=0.38, beta=1.00, Average Makespan Ratio: 1.230401
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MAST\Results_mast\Communication\mu_0.38_beta_1.00.csv
+
+Model: Communication, Algorithm: MTPA, Priority: Allocation, Parameters: mu=0.82, gamma=0.20, Average Makespan Ratio: 1.272419
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTPA\Results_mtpa\Communication\mu_0.82_gamma_0.20.csv
+
+Model: Communication, Algorithm: MTPA, Priority: Area, Parameters: mu=0.52, gamma=0.00, Average Makespan Ratio: 1.321973
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTPA\Results_mtpa\Communication\mu_0.52_gamma_0.00.csv
+
+Model: Communication, Algorithm: MTPA, Priority: FCFS, Parameters: mu=0.48, gamma=0.00, Average Makespan Ratio: 1.247807
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTPA\Results_mtpa\Communication\mu_0.48_gamma_0.00.csv
+
+Model: Communication, Algorithm: MTPA, Priority: Length, Parameters: mu=0.10, gamma=0.45, Average Makespan Ratio: 1.311205
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTPA\Results_mtpa\Communication\mu_0.10_gamma_0.45.csv
+
+Model: Communication, Algorithm: MTSA, Priority: Allocation, Parameters: mu=0.10, alpha=3.80, Average Makespan Ratio: 1.229173
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTSA\Results_mtsa\Communication\mu_0.10_alpha_3.80.csv
+
+Model: Communication, Algorithm: MTSA, Priority: Area, Parameters: mu=0.40, alpha=2.40, Average Makespan Ratio: 1.271521
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTSA\Results_mtsa\Communication\mu_0.40_alpha_2.40.csv
+
+Model: Communication, Algorithm: MTSA, Priority: FCFS, Parameters: mu=0.10, alpha=5.00, Average Makespan Ratio: 1.211427
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTSA\Results_mtsa\Communication\mu_0.10_alpha_5.00.csv
+
+Model: Communication, Algorithm: MTSA, Priority: Length, Parameters: mu=0.10, alpha=3.00, Average Makespan Ratio: 1.217837
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTSA\Results_mtsa\Communication\mu_0.10_alpha_3.00.csv
+
+Model: General, Algorithm: MAST, Priority: Allocation, Parameters: mu=0.12, beta=1.40, Average Makespan Ratio: 1.538413
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MAST\Results_mast\General\mu_0.12_beta_1.40.csv
+
+Model: General, Algorithm: MAST, Priority: Area, Parameters: mu=0.28, beta=1.40, Average Makespan Ratio: 1.543434
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MAST\Results_mast\General\mu_0.28_beta_1.40.csv
+
+Model: General, Algorithm: MAST, Priority: FCFS, Parameters: mu=0.32, beta=1.20, Average Makespan Ratio: 1.402831
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MAST\Results_mast\General\mu_0.32_beta_1.20.csv
+
+Model: General, Algorithm: MAST, Priority: Length, Parameters: mu=0.14, beta=1.40, Average Makespan Ratio: 1.532164
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MAST\Results_mast\General\mu_0.14_beta_1.40.csv
+
+Model: General, Algorithm: MTPA, Priority: Allocation, Parameters: mu=0.24, gamma=0.25, Average Makespan Ratio: 1.464060
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTPA\Results_mtpa\General\mu_0.24_gamma_0.25.csv
+
+Model: General, Algorithm: MTPA, Priority: Area, Parameters: mu=0.18, gamma=0.15, Average Makespan Ratio: 1.386300
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTPA\Results_mtpa\General\mu_0.18_gamma_0.15.csv
+
+Model: General, Algorithm: MTPA, Priority: FCFS, Parameters: mu=0.12, gamma=0.10, Average Makespan Ratio: 1.331076
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTPA\Results_mtpa\General\mu_0.12_gamma_0.10.csv
+
+Model: General, Algorithm: MTPA, Priority: Length, Parameters: mu=0.14, gamma=0.20, Average Makespan Ratio: 1.414990
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTPA\Results_mtpa\General\mu_0.14_gamma_0.20.csv
+
+Model: General, Algorithm: MTSA, Priority: Allocation, Parameters: mu=0.14, alpha=2.80, Average Makespan Ratio: 1.390169
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTSA\Results_mtsa\General\mu_0.14_alpha_2.80.csv
+
+Model: General, Algorithm: MTSA, Priority: Area, Parameters: mu=0.12, alpha=3.40, Average Makespan Ratio: 1.336330
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTSA\Results_mtsa\General\mu_0.12_alpha_3.40.csv
+
+Model: General, Algorithm: MTSA, Priority: FCFS, Parameters: mu=0.14, alpha=3.00, Average Makespan Ratio: 1.353111
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTSA\Results_mtsa\General\mu_0.14_alpha_3.00.csv
+
+Model: General, Algorithm: MTSA, Priority: Length, Parameters: mu=0.14, alpha=2.80, Average Makespan Ratio: 1.380242
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTSA\Results_mtsa\General\mu_0.14_alpha_2.80.csv
+
+Model: Roofline, Algorithm: MAST, Priority: Allocation, Parameters: mu=0.72, beta=1.00, Average Makespan Ratio: 1.230253
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MAST\Results_mast\Roofline\mu_0.72_beta_1.00.csv
+
+Model: Roofline, Algorithm: MAST, Priority: Area, Parameters: mu=0.54, beta=1.00, Average Makespan Ratio: 1.386943
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MAST\Results_mast\Roofline\mu_0.54_beta_1.00.csv
+
+Model: Roofline, Algorithm: MAST, Priority: FCFS, Parameters: mu=0.88, beta=1.00, Average Makespan Ratio: 1.213831
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MAST\Results_mast\Roofline\mu_0.88_beta_1.00.csv
+
+Model: Roofline, Algorithm: MAST, Priority: Length, Parameters: mu=0.86, beta=1.20, Average Makespan Ratio: 1.334073
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MAST\Results_mast\Roofline\mu_0.86_beta_1.20.csv
+
+Model: Roofline, Algorithm: MTPA, Priority: Allocation, Parameters: mu=0.90, gamma=0.75, Average Makespan Ratio: 1.187869
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTPA\Results_mtpa\Roofline\mu_0.90_gamma_0.75.csv
+
+Model: Roofline, Algorithm: MTPA, Priority: Area, Parameters: mu=0.48, gamma=0.80, Average Makespan Ratio: 1.205857
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTPA\Results_mtpa\Roofline\mu_0.48_gamma_0.80.csv
+
+Model: Roofline, Algorithm: MTPA, Priority: FCFS, Parameters: mu=0.90, gamma=0.75, Average Makespan Ratio: 1.214232
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTPA\Results_mtpa\Roofline\mu_0.90_gamma_0.75.csv
+
+Model: Roofline, Algorithm: MTPA, Priority: Length, Parameters: mu=0.90, gamma=0.30, Average Makespan Ratio: 1.288255
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTPA\Results_mtpa\Roofline\mu_0.90_gamma_0.30.csv
+
+Model: Roofline, Algorithm: MTSA, Priority: Allocation, Parameters: mu=0.44, alpha=3.20, Average Makespan Ratio: 1.182183
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Allocation\BO_MTSA\Results_mtsa\Roofline\mu_0.44_alpha_3.20.csv
+
+Model: Roofline, Algorithm: MTSA, Priority: Area, Parameters: mu=0.66, alpha=3.00, Average Makespan Ratio: 1.317082
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Area\BO_MTSA\Results_mtsa\Roofline\mu_0.66_alpha_3.00.csv
+
+Model: Roofline, Algorithm: MTSA, Priority: FCFS, Parameters: mu=0.44, alpha=5.00, Average Makespan Ratio: 1.182403
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\FCFS\BO_MTSA\Results_mtsa\Roofline\mu_0.44_alpha_5.00.csv
+
+Model: Roofline, Algorithm: MTSA, Priority: Length, Parameters: mu=0.42, alpha=1.00, Average Makespan Ratio: 1.236011
+Source file: C:\repos\EXTENSION_SCHEDULING\OnlineTaskScheduling\Length\BO_MTSA\Results_mtsa\Roofline\mu_0.42_alpha_1.00.csv
+

@@ -1,0 +1,76 @@
+Average of value column for each model, algorithm, and priority
+================================================================================
+
+Model: Amdahl, Algorithm: MAST, Priority: Allocation, Average value: 4.281874
+Model: Amdahl, Algorithm: MAST, Priority: Area, Average value: 5.501102
+Model: Amdahl, Algorithm: MAST, Priority: FCFS, Average value: 5.929912
+Model: Amdahl, Algorithm: MAST, Priority: Length, Average value: 4.581500
+Model: Amdahl, Algorithm: MTPA, Priority: Allocation, Average value: 4.463618
+Model: Amdahl, Algorithm: MTPA, Priority: Area, Average value: 8.299060
+Model: Amdahl, Algorithm: MTPA, Priority: FCFS, Average value: 3.612755
+Model: Amdahl, Algorithm: MTPA, Priority: Length, Average value: 5.263158
+Model: Amdahl, Algorithm: MTSA, Priority: Allocation, Average value: 3.199957
+Model: Amdahl, Algorithm: MTSA, Priority: Area, Average value: 4.813403
+Model: Amdahl, Algorithm: MTSA, Priority: FCFS, Average value: 5.428896
+Model: Amdahl, Algorithm: MTSA, Priority: Length, Average value: 7.571927
+Model: Amdahl, Algorithm: bo_results, Priority: OnlineTaskScheduling, Average value: 6.304089
+Model: General, Algorithm: MAST, Priority: Allocation, Average value: 4.262265
+Model: General, Algorithm: MAST, Priority: Area, Average value: 4.338381
+Model: General, Algorithm: MAST, Priority: FCFS, Average value: 4.145234
+Model: General, Algorithm: MAST, Priority: Length, Average value: 4.423652
+Model: General, Algorithm: MTPA, Priority: Allocation, Average value: 3.177334
+Model: General, Algorithm: MTPA, Priority: Area, Average value: 3.249258
+Model: General, Algorithm: MTPA, Priority: FCFS, Average value: 3.738319
+Model: General, Algorithm: MTPA, Priority: Length, Average value: 3.479449
+Model: General, Algorithm: MTSA, Priority: Allocation, Average value: 3.600438
+Model: General, Algorithm: MTSA, Priority: Area, Average value: 4.368521
+Model: General, Algorithm: MTSA, Priority: FCFS, Average value: 3.727481
+Model: General, Algorithm: MTSA, Priority: Length, Average value: 3.976856
+Model: General, Algorithm: bo_results, Priority: OnlineTaskScheduling, Average value: 4.188942
+Model: Roofline, Algorithm: MAST, Priority: Allocation, Average value: 4.184148
+Model: Roofline, Algorithm: MAST, Priority: Area, Average value: 3.970494
+Model: Roofline, Algorithm: MAST, Priority: FCFS, Average value: 4.654499
+Model: Roofline, Algorithm: MAST, Priority: Length, Average value: 3.627028
+Model: Roofline, Algorithm: MTPA, Priority: Allocation, Average value: 8.216703
+Model: Roofline, Algorithm: MTPA, Priority: Area, Average value: 13.954603
+Model: Roofline, Algorithm: MTPA, Priority: FCFS, Average value: 19.372119
+Model: Roofline, Algorithm: MTPA, Priority: Length, Average value: 19.243721
+Model: Roofline, Algorithm: MTSA, Priority: Allocation, Average value: 2.573710
+Model: Roofline, Algorithm: MTSA, Priority: Area, Average value: 2.912216
+Model: Roofline, Algorithm: MTSA, Priority: FCFS, Average value: 2.543748
+Model: Roofline, Algorithm: MTSA, Priority: Length, Average value: 2.666886
+Model: Roofline, Algorithm: bo_results, Priority: OnlineTaskScheduling, Average value: 4.150949
+Model: comm, Algorithm: MAST, Priority: Allocation, Average value: 4.769220
+Model: comm, Algorithm: MAST, Priority: Area, Average value: 4.989093
+Model: comm, Algorithm: MAST, Priority: FCFS, Average value: 5.020371
+Model: comm, Algorithm: MAST, Priority: Length, Average value: 4.870955
+Model: comm, Algorithm: MTPA, Priority: Allocation, Average value: 3.946648
+Model: comm, Algorithm: MTPA, Priority: Area, Average value: 5.702480
+Model: comm, Algorithm: MTPA, Priority: FCFS, Average value: 4.014746
+Model: comm, Algorithm: MTPA, Priority: Length, Average value: 4.224445
+Model: comm, Algorithm: MTSA, Priority: Allocation, Average value: 2.571778
+Model: comm, Algorithm: MTSA, Priority: Area, Average value: 3.913634
+Model: comm, Algorithm: MTSA, Priority: FCFS, Average value: 6.339712
+Model: comm, Algorithm: MTSA, Priority: Length, Average value: 4.238940
+Model: comm, Algorithm: bo_results, Priority: OnlineTaskScheduling, Average value: 4.136597
+
+
+Summary grouped by model and algorithm across all priorities
+================================================================================
+
+Model: Amdahl, Algorithm: MAST, Average across priorities: 5.073597
+Model: Amdahl, Algorithm: MTPA, Average across priorities: 5.409648
+Model: Amdahl, Algorithm: MTSA, Average across priorities: 5.253546
+Model: Amdahl, Algorithm: bo_results, Average across priorities: 6.304089
+Model: General, Algorithm: MAST, Average across priorities: 4.292383
+Model: General, Algorithm: MTPA, Average across priorities: 3.411090
+Model: General, Algorithm: MTSA, Average across priorities: 3.918324
+Model: General, Algorithm: bo_results, Average across priorities: 4.188942
+Model: Roofline, Algorithm: MAST, Average across priorities: 4.109042
+Model: Roofline, Algorithm: MTPA, Average across priorities: 15.196787
+Model: Roofline, Algorithm: MTSA, Average across priorities: 2.674140
+Model: Roofline, Algorithm: bo_results, Average across priorities: 4.150949
+Model: comm, Algorithm: MAST, Average across priorities: 4.912410
+Model: comm, Algorithm: MTPA, Average across priorities: 4.472080
+Model: comm, Algorithm: MTSA, Average across priorities: 4.266016
+Model: comm, Algorithm: bo_results, Average across priorities: 4.136597
